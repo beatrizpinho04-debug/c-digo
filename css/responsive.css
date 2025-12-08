@@ -1,0 +1,88 @@
+/* ---------- Tablets (≤ 768px) ---------- */
+@media (max-width: 768px) {
+
+  /* Container geral */
+  .container {
+    max-width: 90%;
+    gap: 1.25rem;
+  }
+
+  /* Card */
+  .card {
+    padding: 1.5rem;
+  }
+
+  /* Texto */
+  .titulo {
+    font-size: 1.6rem;
+  }
+
+  .subtítulo {
+    font-size: 1rem;
+  }
+
+  .entrar {
+    font-size: 1.35rem;
+  }
+
+  /* Inputs */
+  input[type="email"],
+  input[type="password"] {
+    padding: 0.65rem 0.9rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* ---------- Telemóveis (≤ 480px) ---------- */
+@media (max-width: 480px) {
+
+  /* Container */
+  .container {
+    max-width: 95%;
+    gap: 1rem;
+    padding: 0;
+  }
+
+  /* Card */
+  .card {
+    padding: 1.2rem;
+    border-radius: 0.65rem;
+  }
+
+  /* Texto */
+  .titulo {
+    font-size: 1.35rem;
+  }
+
+  .subtítulo {
+    font-size: 0.85rem;
+  }
+
+  .entrar {
+    font-size: 1.25rem;
+  }
+
+  /* Formulário */
+  input[type="email"],
+  input[type="password"] {
+    font-size: 0.9rem;
+    padding: 0.55rem 0.75rem;
+  }
+
+  .btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .btn-full {
+    width: 100%;
+  }
+
+  /* Footer */
+  .footer {
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem; /* distância do fundo */
+  }
+}
+
