@@ -1,20 +1,20 @@
 <?php
 // Se as variáveis não existirem, vai buscá-las à sessão
-if (!isset($userName)) $userName = isset($_SESSION['name']) ? $_SESSION['name'] : 'Utilizador';
-if (!isset($userType)) $userType = isset($_SESSION['userType']) ? $_SESSION['userType'] : '';
-if (!isset($userSurname)) $userSurname = isset($_SESSION['surname']) ? $_SESSION['surname'] : '';
-if (!isset($profilePic)) $profilePic = isset($_SESSION['profilePic']) ? $_SESSION['profilePic'] : 'foto\12225881.png';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+$userName = isset($_SESSION['name']) ? $_SESSION['name'] : 'Utilizador';
+$userSurname = isset($_SESSION['surname']) ? $_SESSION['surname'] : '';
+$userType = isset($_SESSION['userType']) ? $_SESSION['userType'] : '';
+$profilePic = isset($_SESSION['profilePic']) ? $_SESSION['profilePic'] : 'foto/12225881.png';
+$roleLabel = isset($_SESSION['roleLabel']) ? $_SESSION['roleLabel'] : $userType;
 
 //Definir a cor do Badge consoante o cargo
+$badgeClass = 'badge-blue';
 if ($userType === 'Físico Médico') {
     $badgeClass = 'badge-purple';
-    $roleLabel = 'Físico Médico';
 } elseif ($userType === 'Administrador') {
     $badgeClass = 'badge-red';
-    $roleLabel = 'Administrador';
-} elseif ($userType === 'Profissional de Saúde') {
-    $badgeClass = 'badge-blue';
-    $roleLabel = 'Prof. de Saúde';
 }
 ?>
 
@@ -35,7 +35,7 @@ if ($userType === 'Físico Médico') {
                             <?php echo htmlspecialchars($userName . ' ' . $userSurname); ?>
                         </span>
                         <span class="role-badge <?php echo $badgeClass; ?>">
-                            <?php echo $roleLabel; ?>
+                            <?php echo htmlspecialchars($roleLabel); ?>
                         </span>
                     </div>
 
