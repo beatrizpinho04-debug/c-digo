@@ -1,45 +1,28 @@
 <?php
 session_start();
 
-require_once("database/connection.php");
-
-$db = getDatabaseConnection();
-if (isset($_SESSION['login_error'])) {
-    $error = $_SESSION['login_error'];
-    unset($_SESSION['login_error']);
-}
-
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $email = $_POST["email"];
-    $password = $_POST["password"];
-
-    //Procurar utilizador pelo email
-    $stmt = $db->prepare("SELECT * FROM User WHERE email = ?");
-    $stmt->execute([$email]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$user ||!password_verify($password, $user["password"])) {
-        $_SESSION['login_error'] = "Email ou palavra-passe incorretos! Tente de novo.";
-        header("Location: index.php");
-        exit();
-    } else { //Login bem-sucedido
-        switch ($user["userType"]) {
-            case "Administrador":
-                header("Location: admin.php");
-                exit();
-            case "Físico Médico":
-                header("Location: physicist.php");
-                exit();
-            case "Profissional de Saúde":
-                header("Location: HP.php");
-                exit();
-            default:
-                $_SESSION['login_error'] = "Erro interno: tipo de utilizador desconhecido.";
-                header("Location: index.php");
-                exit();
-        }
+// 1. Se o utilizador já estiver logado, redireciona-o automaticamente para a página certa, sem mostrar o formulário de login.
+if (isset($_SESSION['idU'])) {
+    switch ($_SESSION['userType']) {
+        case "Administrador":
+            header("Location: admin.php");
+            exit();
+        case "Físico Médico":
+            header("Location: physicist.php");
+            exit();
+        case "Profissional de Saúde":
+            header("Location: HP.php");
+            exit();
     }
 }
+
+// 2. Mensagens de erro (vindas do LogIn.php)
+$error = '';
+if (isset($_SESSION['login_error'])) {
+    $error = $_SESSION['login_error'];
+    unset($_SESSION['login_error']); // Para não aparecer sempre
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -71,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 </div>
                 <div class="card">
                     <h2 class="entrar text-center mb1_5">Entrar</h2>
-                    <form method="POST" class="login-form">
+                    <form action="LogIn.php" method="POST" class="login-form">
                         <!-- Email -->
                         <div class="form-group">
                             <label for="email">Email</label>
