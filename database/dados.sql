@@ -15,7 +15,8 @@ CREATE TABLE IF NOT EXISTS User (
     password TEXT NOT NULL,
     phoneN TEXT CHECK(phoneN GLOB '+[0-9][0-9][0-9]*'),
     userType TEXT CHECK(userType IN ('Administrador', 'Físico Médico', 'Profissional de Saúde')) NOT NULL,
-    userStatus BOOLEAN DEFAULT 1
+    userStatus BOOLEAN DEFAULT 1,
+    profilePic TEXT DEFAULT 'foto/12225881.png'
 );
 
 ---------------------------------------------------
