@@ -14,21 +14,11 @@ if ($_SESSION['userType'] !== "Profissional de Saúde") {
     header("Location: index.php");
     exit();
 }
+    // 3. Include do HEAD (CSS e metadados)
+    include 'templates/header.php';
 ?>
-<!DOCTYPE html>
-<html lang="pt">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profissional de Saúde</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    <link rel="icon" type="image/png" href="css\icon.svg">
-</head>
-
 <body>
-    <h1>Sucesso – Profissional de Saúde</h1>
-</body>
-
-</html>
+    <div class="page-wrapper">
+        <?php include 'templates/nav.php'; ?>
+        <h1>Sucesso – Profissional de Saúde</h1>
+        <?php include 'templates/footer.php'; ?>

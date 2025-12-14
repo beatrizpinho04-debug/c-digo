@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// 1. Se o utilizador já estiver logado, redireciona-o automaticamente para a página certa, sem mostrar esta página de login.
+//Se o utilizador já estiver logado, redireciona-o automaticamente para a página certa, sem mostrar esta página de login.
 if (isset($_SESSION['idU'])) {
     switch ($_SESSION['userType']) {
         case "Administrador":
@@ -16,25 +16,17 @@ if (isset($_SESSION['idU'])) {
     }
 }
 
-// 2. Mensagens de erro (vindas do LogIn.php)
+//Mensagens de erro (vindas do LogIn.php)
 $error = '';
 if (isset($_SESSION['login_error'])) {
     $error = $_SESSION['login_error'];
     unset($_SESSION['login_error']); // Para não aparecer sempre
 }
 
+//Nome da página e buscar o header
+$title = "Sistema de Gestão de Dosimetros";
+include 'templates/header.php';
 ?>
-<!DOCTYPE html>
-<html lang="pt">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Gestão de Dosimetros</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    <link rel="icon" type="image/png" href="css\icon.svg">
-</head>
 
 <body>
     <?php if ($error): ?>
@@ -72,8 +64,4 @@ if (isset($_SESSION['login_error'])) {
             </div>
         </div>
         <!-- Footer -->
-        <footer class="footer mb2">Gestão de Dosimetros © 2025</footer>
-    </div>
-</body>
-
-</html>
+        <?php include 'templates/footer.php'; ?>
