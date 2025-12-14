@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// 1. Se o utilizador já estiver logado, redireciona-o automaticamente para a página certa, sem mostrar o formulário de login.
+// 1. Se o utilizador já estiver logado, redireciona-o automaticamente para a página certa, sem mostrar esta página de login.
 if (isset($_SESSION['idU'])) {
     switch ($_SESSION['userType']) {
         case "Administrador":

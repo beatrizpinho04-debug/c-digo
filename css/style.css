@@ -34,12 +34,6 @@ body {
 }
 
 /*Index-Login*/
-.page-wrapper {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
 .flex-center {
   flex: 1;
   display: flex;
@@ -124,6 +118,12 @@ textarea:focus {
 }
 
 /*Usado em várias ocasiões*/
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 :where(p, h1, h2) {
   overflow-wrap: anywhere;
   word-break: break-word;
@@ -138,21 +138,10 @@ textarea:focus {
 }
 
 /*Margin Bottom*/
-.mb2 {
-  margin-bottom: 2rem;
-}
-
-.mb05 {
-  margin-bottom: 0.5rem;
-}
-
-.mb1 {
-  margin-bottom: 1rem;
-}
-
-.mb1_5 {
-  margin-bottom: 1.5rem;
-}
+.mb2 {margin-bottom: 2rem;}
+.mb05 {margin-bottom: 0.5rem;}
+.mb1 {margin-bottom: 1rem;}
+.mb1_5 {margin-bottom: 1.5rem;}
 
 /* Botões */
 .btn {
@@ -175,21 +164,27 @@ textarea:focus {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.btn:active {
-  transform: translateY(0);
-}
+.btn:active {transform: translateY(0);}
 
 .btn-primary {
   background: hsl(var(--primary));
   color: white;
 }
 
-.btn-primary:hover {
-  background: var(--primary-dark);
+.btn-primary:hover {background: var(--primary-dark);}
+
+.btn-full {width: 100%;}
+
+.btn-header {
+  padding: 8px;
+  background: #f8f9fa;
+  color: #555;
+  border-radius: 8px;
 }
 
-.btn-full {
-  width: 100%;
+.btn-header:hover {
+  background: #e2e6ea;
+  color: var(--primary);
 }
 
 /*Footer*/
@@ -198,4 +193,60 @@ textarea:focus {
   font-size: 0.875rem;
   color: var(--muted);
   margin-top: auto;
+}
+
+/*Cabeçalho*/
+.top-bar {
+  background-color: hsl(var(--card));
+  padding: 10px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.page-title-area {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.page-title-area h1 {
+  font-size: 1.5rem;
+  color: #333;
+  margin: 0;
+  font-weight: 600;
+}
+
+.user-area {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.user-details {
+  text-align: right;
+  line-height: 1.2;
+}
+
+.user-name {
+  display: block;
+  font-weight: bold;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.user-role {
+  display: block;
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.profile-pic {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e0e0e0;
 }

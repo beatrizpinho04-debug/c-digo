@@ -3,13 +3,13 @@ session_start();
 require_once("database/connection.php");
 require_once("database/users.php");
 
-$db = getDatabaseConnection(); // Ligar à BD
+$db = getDatabaseConnection();
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = $_POST["email"];
     $password = $_POST["password"];
 
-    // Chamar a função de verificação (que está no users.php)
+    // Função de verificação definida no users.php
     $user = userLogin($db, $email, $password);
 
     if ($user) {
@@ -17,6 +17,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $_SESSION['idU'] = $user['idU'];
         $_SESSION['name'] = $user['name'];
         $_SESSION['userType'] = $user['userType'];
+        $_SESSION['surname'] = $user['surname'];
+        $_SESSION['profilePic'] = $user['profilePic'];
 
         // Redirecionamento consoante o tipo de utilizador
         switch ($user["userType"]) {

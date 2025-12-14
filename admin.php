@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once('templates/cabecalho.php');
 
 // 1. Verifica se existe sessão ativa de um administrador 
 if (!isset($_SESSION['idU'])) {
@@ -14,21 +15,12 @@ if ($_SESSION['userType'] !== "Administrador") {
     header("Location: index.php");
     exit();
 }
+
+// 3. Definir valores para o cabeçalho
+$surname = isset($_SESSION['surname']) ? $_SESSION['surname'] : '';
+$pic = isset($_SESSION['profilePic']) ? $_SESSION['profilePic'] : '';
+
+// 4. Chamar o Cabeçalho
+output_header("Administrador", $_SESSION['userType'], $_SESSION['name'], $surname, $pic);
 ?>
-<!DOCTYPE html>
-<html lang="pt">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administrador</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    <link rel="icon" type="image/png" href="css\icon.svg">
-</head>
-
-<body>
     <h1>Sucesso – Administrador</h1>
-</body>
-
-</html>
