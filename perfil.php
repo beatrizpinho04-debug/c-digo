@@ -33,7 +33,6 @@ $title = "Perfil do Utilizador";
 <body>
     <div class="page-wrapper">
         <?php nav_set(); ?>
-
         
         <div class="dashboard-container">
             <aside class="settings-sidebar">
