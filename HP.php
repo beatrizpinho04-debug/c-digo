@@ -1,5 +1,8 @@
 <?php
 session_start();
+    require_once ("templates/header.php");
+    require_once ("templates/nav.php");
+    require_once ("templates/footer.php");
 
     //Verifica se existe sessão ativa de um administrador 
     if (!isset($_SESSION['idU'])) {
@@ -15,11 +18,11 @@ session_start();
     }
     //Definir Título da Página
     $title = "Profissional de Saúde";
-    // header
-    include 'templates/header.php';
+
 ?>
+<?php header_set(); ?>
 <body>
     <div class="page-wrapper">
-        <?php include 'templates/nav.php'; ?>
+        <?php nav_set(); ?>
         <h1>Sucesso – Profissional de Saúde</h1>
-        <?php include 'templates/footer.php'; ?>
+        <?php renderFooter(); ?>

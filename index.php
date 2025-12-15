@@ -1,5 +1,7 @@
 <?php
 session_start();
+require_once ("templates/header.php");
+require_once ("templates/footer.php");
 
 //Se o utilizador já estiver logado, redireciona-o automaticamente para a página certa, sem mostrar esta página de login.
 if (isset($_SESSION['idU'])) {
@@ -25,9 +27,8 @@ if (isset($_SESSION['login_error'])) {
 
 //Nome da página e buscar o header
 $title = "Sistema de Gestão de Dosimetros";
-include 'templates/header.php';
 ?>
-
+<?php header_set(); ?>
 <body>
     <?php if ($error): ?>
         <script>
@@ -64,4 +65,4 @@ include 'templates/header.php';
             </div>
         </div>
         <!-- Footer -->
-        <?php include 'templates/footer.php'; ?>
+        <?php renderFooter(); ?>

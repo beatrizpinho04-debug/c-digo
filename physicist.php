@@ -1,6 +1,8 @@
 <?php
 session_start();
-
+    require_once ("templates/header.php");
+    require_once ("templates/nav.php");
+    require_once ("templates/footer.php");
     // 1. Verifica se existe sessão ativa de um administrador 
     if (!isset($_SESSION['idU'])) {
         // Se não houver sessão, manda para o login com um erro
@@ -15,11 +17,10 @@ session_start();
     }
     //Definir Título da Página
     $title = "Físico Médico";
-    // header
-    include 'templates/header.php';
 ?>
+<?php header_set(); ?>
 <body>
     <div class="page-wrapper">
-        <?php include 'templates/nav.php'; ?>
+        <?php nav_set(); ?>
         <h1>Sucesso – Físico Médico</h1>
-        <?php include 'templates/footer.php'; ?>
+        <?php renderFooter(); ?>
