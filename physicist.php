@@ -3,7 +3,7 @@ session_start();
 require_once("templates/header.php");
 require_once("templates/nav.php");
 require_once("templates/footer.php");
-// 1. Verifica se existe sessão ativa de um fi
+// 1. Verifica se existe sessão ativa
 if (!isset($_SESSION['idU'])) {
     // Se não houver sessão, manda para o login com um erro
     $_SESSION['login_error'] = "Acesso negado. Por favor faça login.";

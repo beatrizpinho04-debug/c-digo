@@ -9,11 +9,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = $_POST["email"];
     $password = $_POST["password"];
 
-    // Função de verificação definida no users.php
     $user = userLogin($db, $email, $password);
 
     if ($user) {
-        // Sucesso no login. Guardar dados na sessão
+        if ($user['userStatus'] == 0) {
+            $_SESSION['login_error'] = "A sua conta encontra-se desativada. Contacte o administrador.";
+            header("Location: index.php");
+            exit();
+        }
+
+        // Sucesso
         $_SESSION['idU'] = $user['idU'];
         $_SESSION['name'] = $user['name'];
         $_SESSION['surname'] = $user['surname'];
@@ -26,27 +31,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $hpData = $stmtHP->fetch();
 
             if ($hpData && !empty($hpData['profession'])) {
-                // Guarda a respetiva profissão na sessão
                 $_SESSION['roleLabel'] = $hpData['profession'];
             } else {
                 $_SESSION['roleLabel'] = 'Profissional de Saúde';
             }
         } else {
-            // Para Admin e Físico, o label é o próprio tipo
             $_SESSION['roleLabel'] = $user['userType'];
         }
 
-        // Redirecionamento consoante o tipo de utilizador
+        // Redirecionamento
         switch ($user["userType"]) {
-            case "Administrador": 
-                header("Location: admin.php"); 
-                break;
-            case "Físico Médico": 
-                header("Location: physicist.php"); 
-                break;
-            case "Profissional de Saúde": 
-                header("Location: HP.php"); 
-                break;
+            case "Administrador": header("Location: admin.php"); break;
+            case "Físico Médico": header("Location: physicist.php"); break;
+            case "Profissional de Saúde": header("Location: HP.php"); break;
             default:
                 $_SESSION['login_error'] = "Erro: Tipo de utilizador desconhecido.";
                 header("Location: index.php");
@@ -54,7 +51,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit();
 
     } else {
-        // Falha no login
         $_SESSION['login_error'] = "Email ou palavra-passe incorretos!";
         header("Location: index.php");
         exit();

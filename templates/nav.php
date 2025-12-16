@@ -1,5 +1,4 @@
 <?php function nav_set() { 
-    // Se as variáveis não existirem, vai buscá-las à sessão
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
@@ -9,7 +8,7 @@
     $profilePic = isset($_SESSION['profilePic']) ? $_SESSION['profilePic'] : 'foto/12225881.png';
     $roleLabel = isset($_SESSION['roleLabel']) ? $_SESSION['roleLabel'] : $userType;
 
-    //Definir a cor do Badge consoante o cargo
+    //Cor do Badge/Etiqueta consoante o cargo
     $badgeClass = 'badge-blue';
     if ($userType === 'Físico Médico') {
         $badgeClass = 'badge-purple';

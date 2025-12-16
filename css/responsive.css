@@ -86,3 +86,12 @@
   }
 }
 
+
+@media (min-width: 640px) {
+    .profile-form-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .col-span-2 {
+        grid-column: span 2;
+    }
+}
