@@ -1,34 +1,66 @@
 <?php
 session_start();
+require_once "database/connection.php";
+require_once "database/admin_db.php";
+require_once "templates/header.php";
+require_once "templates/nav.php";
+require_once "templates/footer.php";
+require_once "templates/admin_views.php";
 
-require_once("templates/header.php");
-require_once("templates/nav.php");
-require_once("templates/footer.php");
-
-//Verifica se existe sessão ativa
-if (!isset($_SESSION['idU'])) {
-    // Se não houver sessão, manda para o login com um erro
-    $_SESSION['login_error'] = "Acesso negado. Por favor faça login.";
+if (!isset($_SESSION['idU']) || $_SESSION['userType'] !== "Administrador") {
     header("Location: index.php");
     exit();
 }
 
-//Verifica se o tipo de utilizador é Administrador
-if ($_SESSION['userType'] !== "Administrador") {
-    header("Location: index.php");
-    exit();
-}
-//Título da Página
-$title = "Administrador";
+$db = getDatabaseConnection();
+$title = "Administração";
+$tab = isset($_GET['tab']) ? $_GET['tab'] : 'associacao';
+
+header_set();
 ?>
-<?php header_set(); ?>
-
 <body>
     <div class="page-wrapper">
         <?php nav_set(); ?>
-        <h1>Sucesso – Administrador</h1>
+
+        <main class="profile-main-container" style="max-width: 80rem;">
+            <div class="mb2">
+                <h1 class="titulo">Administração</h1>
+                <p class="subtítulo">Gestão do sistema de dosimetria</p>
+            </div>
+
+            <?php if (isset($_SESSION['message'])): ?>
+                <div class="alert-container <?php echo ($_SESSION['message_type'] == 'success') ? 'alert-success' : 'alert-error'; ?>">
+                    <?php echo $_SESSION['message']; unset($_SESSION['message']); unset($_SESSION['message_type']); ?>
+                </div>
+            <?php endif; ?>
+
+            <?php renderAdminTabs($tab); ?>
+
+            <?php 
+            // 1. Mostrar sempre o conteúdo da aba
+            if ($tab === 'associacao') {
+                $pendingList = getPendingAssociations($db);
+                renderAssociationTable($pendingList); // Desenha a tabela no fundo
+
+                // 2. Se houver pedido de associação, desenha a "janela" por cima
+                if (isset($_GET['associar'])) {
+                    $userToAssociate = isset($_GET['user']) ? $_GET['user'] : 'Utilizador';
+                    renderAssociateForm($_GET['associar'], $userToAssociate);
+                }
+            } 
+            elseif ($tab === 'gestao') {
+                echo "<div class='card'><p>Gestão (Em breve)</p></div>";
+            } 
+            elseif ($tab === 'pedidos') {
+                echo "<div class='card'><p>Pedidos (Em breve)</p></div>";
+            } 
+            elseif ($tab === 'users') {
+                echo "<div class='card'><p>Utilizadores (Em breve)</p></div>";
+            }
+            ?>
+        </main>
+
         <?php renderFooter(); ?>
     </div>
 </body>
-
 </html>
