@@ -1,6 +1,5 @@
 <?php
-
-// Função para buscar pedidos aprovados que ainda não têm dosímetro (status = 'Por_Associar')
+// Função para buscar pedidos aprovados que ainda não têm dosímetro
 function getPendingAssociations($db) {
     $sql = "
         SELECT 

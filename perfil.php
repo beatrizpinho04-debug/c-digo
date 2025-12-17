@@ -30,15 +30,14 @@ if ($user['userType'] === 'Profissional de Saúde') {
     $stmtHP = $db->prepare("SELECT profession, department FROM HealthProfessional WHERE idU = ?");
     $stmtHP->execute([$user['idU']]);
     $hpData = $stmtHP->fetch();
-    
+
     if ($hpData) {
         $profession = $hpData['profession'];
         $department = $hpData['department'];
     }
-    
-    $badgeClass = 'badge-blue'; 
-    $roleLabel = !empty($profession) ? $profession : 'Profissional de Saúde';
 
+    $badgeClass = 'badge-blue';
+    $roleLabel = !empty($profession) ? $profession : 'Profissional de Saúde';
 } elseif ($user['userType'] === 'Físico Médico') {
     $profession = 'Físico Médico';
     $department = 'Física Médica';
@@ -59,7 +58,7 @@ $title = "Perfil";
 <body>
     <div class="page-wrapper">
         <?php nav_set(); ?>
-        <main class="profile-main-container">
+        <main class="main-container" style="max-width: 45rem">
             <div class="profile-header-flex">
                 <div class="profile-header-left">
                     <a href="index.php" class="voltar" title="Voltar">
@@ -72,14 +71,13 @@ $title = "Perfil";
             </div>
             <?php if (isset($_SESSION['message'])): ?>
                 <div class="alert-container <?php echo ($_SESSION['message_type'] == 'success') ? 'alert-success' : 'alert-error'; ?>">
-                    <?php 
-                        echo $_SESSION['message']; 
-                        unset($_SESSION['message']);
-                        unset($_SESSION['message_type']);
+                    <?php
+                    echo $_SESSION['message'];
+                    unset($_SESSION['message']);
+                    unset($_SESSION['message_type']);
                     ?>
                 </div>
             <?php endif; ?>
-            
             <div class="card1">
                 <div class="card1-header">
                     <h1 class="card1-title">Perfil de Utilizador</h1>
@@ -103,7 +101,6 @@ $title = "Perfil";
                             </span>
                         </div>
                     </div>
-                    
                     <form id="profileForm" action="processa_perfil.php" method="POST" enctype="multipart/form-data">
                         <div class="profile-form-grid">
                             <div>
@@ -120,26 +117,25 @@ $title = "Perfil";
                             </div>
                             <div>
                                 <label class="profile-label">Telemóvel</label>
-                                <input 
-                                    type="text" 
-                                    id="phoneN" 
-                                    name="phoneN" 
-                                    class="profile-input" 
-                                    value="<?php echo htmlspecialchars($user['phoneN']); ?>" 
-                                    <?php echo $disabledStr; ?> 
+                                <input
+                                    type="text"
+                                    id="phoneN"
+                                    name="phoneN"
+                                    class="profile-input"
+                                    value="<?php echo htmlspecialchars($user['phoneN']); ?>"
+                                    <?php echo $disabledStr; ?>
                                     placeholder="+351912345678"
-                                    pattern="^\+[0-9]{9,15}$" 
-                                    title="Deve começar com '+' seguido do indicativo e número (Ex: +351912345678)"
-                                >
+                                    pattern="^\+[0-9]{9,15}$"
+                                    title="Deve começar com '+' seguido do indicativo e número (Ex: +351912345678)">
                                 <p class="comentario-tel">
                                     Formato obrigatório: +CódigoPaís + Número (Ex: +351912345678)
                                 </p>
                             </div>
-                            <div class="col-span-2">
+                            <div class="g2">
                                 <label class="profile-label" for="birthDate">Data de Nascimento</label>
                                 <input type="date" id="birthDate" name="birthDate" class="profile-input" value="<?php echo htmlspecialchars($user['birthDate']); ?>" <?php echo $disabledStr; ?> required>
                             </div>
-                            
+
                             <?php if ($user['userType'] === 'Profissional de Saúde' || $user['userType'] === 'Físico Médico'): ?>
                                 <div>
                                     <label class="profile-label">Profissão</label>
@@ -147,12 +143,12 @@ $title = "Perfil";
                                 </div>
                                 <div>
                                     <label class="profile-label">Departamento</label>
-                                    <input type="text" name="department" class="profile-input" value="<?php echo htmlspecialchars($department); ?>" 
-                                    <?php echo ($isEditing && $user['userType'] === 'Profissional de Saúde') ? '' : 'disabled'; ?>>
+                                    <input type="text" name="department" class="profile-input" value="<?php echo htmlspecialchars($department); ?>"
+                                        <?php echo ($isEditing && $user['userType'] === 'Profissional de Saúde') ? '' : 'disabled'; ?>>
                                 </div>
                             <?php endif; ?>
-                            
-                            <div class="col-span-2">
+
+                            <div class="g2">
                                 <label class="profile-label" for="sex">Sexo</label>
                                 <select id="sex" name="sex" class="profile-input" <?php echo $disabledStr; ?>>
                                     <option value="Male" <?php echo ($user['sex'] === 'Male') ? 'selected' : ''; ?>>Masculino</option>
@@ -160,9 +156,9 @@ $title = "Perfil";
                                     <option value="Other" <?php echo ($user['sex'] === 'Other') ? 'selected' : ''; ?>>Outro</option>
                                 </select>
                             </div>
-                            
+
                             <?php if ($isEditing): ?>
-                                <div class="col-span-2">
+                                <div class="g2">
                                     <hr style="border: 0; border-top: 1px solid var(--border); margin: 1rem 0;">
                                     <div style="margin-bottom: 1rem;">
                                         <label class="profile-label">Nova Palavra-passe <span style="font-weight:normal; color:#6b7280;">(Opcional)</span></label>
@@ -175,18 +171,20 @@ $title = "Perfil";
                                 </div>
                             <?php endif; ?>
                         </div>
-                        
+
                         <div class="profile-actions">
                             <?php if (!$isEditing): ?>
                                 <a href="perfil.php?edit=true" class="btn btn-edit-profile" style="text-decoration:none; display:flex; align-items:center; gap:0.5rem;">
                                     <span class="lapis">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                                        </svg>
                                         Editar
                                     </span>
                                 </a>
                             <?php else: ?>
-                                <div class="editActions" style="display:flex;">
-                                    <a href="perfil.php" class="btn btn-cancel" style="text-decoration:none; display:flex; align-items:center; justify-content:center;">Cancelar</a>
+                                <div class="editActions">
+                                    <a href="perfil.php" class="btn btn-cancel cancelar">Cancelar</a>
                                     <button type="submit" class="btn btn-save-profile">Guardar</button>
                                 </div>
                             <?php endif; ?>
@@ -197,5 +195,6 @@ $title = "Perfil";
         </main>
         <?php renderFooter(); ?>
     </div>
-    </body>
+</body>
+
 </html>

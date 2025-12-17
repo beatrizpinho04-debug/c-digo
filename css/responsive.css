@@ -91,7 +91,7 @@
     .profile-form-grid {
         grid-template-columns: 1fr 1fr;
     }
-    .col-span-2 {
+    .g2 {
         grid-column: span 2;
     }
 }

@@ -22,11 +22,8 @@ header_set();
     <div class="page-wrapper">
         <?php nav_set(); ?>
 
-        <main class="profile-main-container" style="max-width: 80rem;">
-            <div class="mb2">
-                <h1 class="titulo">Administração</h1>
-                <p class="subtítulo">Gestão do sistema de dosimetria</p>
-            </div>
+        <main class="main-container">
+            <h1 class="titulo mb2">Administração</h1>
 
             <?php if (isset($_SESSION['message'])): ?>
                 <div class="alert-container <?php echo ($_SESSION['message_type'] == 'success') ? 'alert-success' : 'alert-error'; ?>">

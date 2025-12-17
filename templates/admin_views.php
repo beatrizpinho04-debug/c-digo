@@ -1,25 +1,21 @@
 <?php
-// templates/admin_views.php
-
-// 1. Menu (Mantém-se igual)
 function renderAdminTabs($currentTab) {
     ?>
     <div class="admin-tabs">
-        <a href="admin.php?tab=associacao" class="tab-link <?php echo $currentTab === 'associacao' ? 'active' : ''; ?>">Associação</a>
-        <a href="admin.php?tab=gestao" class="tab-link <?php echo $currentTab === 'gestao' ? 'active' : ''; ?>">Gestão</a>
-        <a href="admin.php?tab=pedidos" class="tab-link <?php echo $currentTab === 'pedidos' ? 'active' : ''; ?>">Pedidos</a>
+        <a href="admin.php?tab=associacao" class="tab-link <?php echo $currentTab === 'associacao' ? 'active' : ''; ?>">Associação de Dosímetros</a>
+        <a href="admin.php?tab=gestao" class="tab-link <?php echo $currentTab === 'gestao' ? 'active' : ''; ?>">Gestão de Dosímetros</a>
+        <a href="admin.php?tab=pedidos" class="tab-link <?php echo $currentTab === 'pedidos' ? 'active' : ''; ?>">Pedidos de Suspensão/Ativação</a>
         <a href="admin.php?tab=users" class="tab-link <?php echo $currentTab === 'users' ? 'active' : ''; ?>">Utilizadores</a>
     </div>
     <?php
 }
 
-// 2. Tabela (Mantém-se igual)
 function renderAssociationTable($pendingData) {
     ?>
     <div class="card">
         <div style="margin-bottom: 1.5rem;">
-            <h2 style="font-size:1.25rem; font-weight:600;">Associação Pendente</h2>
-            <p class="subtítulo">Associe os números de série aos novos pedidos.</p>
+            <h2 style="font-size:1.25rem; font-weight:600;">Associação de Dosímetros</h2>
+            <p class="subtítulo">Dosímetros ainda por associar a pedidos aprovados</p>
         </div>
 
         <?php if (empty($pendingData)): ?>
@@ -30,9 +26,9 @@ function renderAssociationTable($pendingData) {
                     <thead>
                         <tr>
                             <th>Profissional</th>
-                            <th>Tipo</th>
-                            <th>Freq.</th>
-                            <th>Risco</th>
+                            <th>Tipo de dosímetro</th>
+                            <th>Periocidade</th>
+                            <th>Tipo de Risco</th>
                             <th style="text-align:right;">Ação</th>
                         </tr>
                     </thead>
@@ -60,7 +56,7 @@ function renderAssociationTable($pendingData) {
     <?php
 }
 
-// 3. Formulário "Modal" (Com as novas classes CSS)
+
 function renderAssociateForm($idDA, $userName) {
     ?>
     <div class="modal-overlay-php">

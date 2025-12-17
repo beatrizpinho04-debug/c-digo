@@ -59,7 +59,7 @@ $title = "Sistema de Gestão de Dosimetros";
                             <label for="password">Password</label>
                             <input type="password" id="password" name="password" required>
                         </div>
-                        <!-- Submit Button -->
+                        <!-- Submit Botão -->
                         <button type="submit" class="btn btn-primary btn-full">Entrar</button>
                     </form>
                 </div>
