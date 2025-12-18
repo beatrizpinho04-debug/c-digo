@@ -48,7 +48,7 @@ $title = "Sistema de Gestão de Dosimetros";
                 </div>
                 <div class="card">
                     <h2 class="entrar text-center mb1_5">Entrar</h2>
-                    <form action="LogIn.php" method="POST" class="login-form">
+                    <form action="LogIn.php" method="POST" class="form-group">
                         <!-- Email -->
                         <div class="form-group">
                             <label for="email">Email</label>

@@ -60,7 +60,7 @@ $title = "Perfil";
         <?php nav_set(); ?>
         <main class="main-container" style="max-width: 45rem">
             <div class="profile-header-flex mb1_5">
-                <div class="profile-header-left">
+                <div class="user-area">
                     <a href="index.php" class="btn voltar" title="Voltar">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="m12 19-7-7 7-7"></path>
@@ -159,9 +159,9 @@ $title = "Perfil";
 
                             <?php if ($isEditing): ?>
                                 <div class="g2">
-                                    <hr style="border: 0; border-top: 1px solid var(--border); margin: 1rem 0;">
-                                    <div style="margin-bottom: 1rem;">
-                                        <label class="profile-label">Nova Palavra-passe <span style="font-weight:normal; color:#6b7280;">(Opcional)</span></label>
+                                    <hr class="nova-pass">
+                                    <div class="mb1">
+                                        <label class="profile-label">Nova Palavra-passe <span class="opcional">(Opcional)</span></label>
                                         <input type="password" name="password" class="profile-input" placeholder="Deixe vazio para manter a atual">
                                     </div>
                                     <div>
@@ -183,8 +183,8 @@ $title = "Perfil";
                                     </span>
                                 </a>
                             <?php else: ?>
-                                <div class="editActions">
-                                    <a href="perfil.php" class="btn btn-cancel cancelar">Cancelar</a>
+                                <div class="action-buttons">
+                                    <a href="perfil.php" class="btn btn-cancel">Cancelar</a>
                                     <button type="submit" class="btn btn-save-profile">Guardar</button>
                                 </div>
                             <?php endif; ?>

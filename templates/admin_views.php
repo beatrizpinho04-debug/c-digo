@@ -13,13 +13,13 @@ function renderAdminTabs($currentTab) {
 function renderAssociationTable($pendingData) {
     ?>
     <div class="card">
-        <div style="margin-bottom: 1.5rem;">
-            <h2 style="font-size:1.25rem; font-weight:600;">Associação de Dosímetros</h2>
+        <div class="mb1_5">
+            <h2 class="titulo-separador">Associação de Dosímetros</h2>
             <p class="subtítulo">Dosímetros ainda por associar a pedidos aprovados</p>
         </div>
 
         <?php if (empty($pendingData)): ?>
-            <div class="alert-container alert-success" style="justify-content:center;">✅ Tudo em dia!</div>
+            <div class="alert-container alert-success">✅ Tudo em dia!</div>
         <?php else: ?>
             <div class="table-container">
                 <table class="admin-table">
@@ -29,21 +29,19 @@ function renderAssociationTable($pendingData) {
                             <th>Tipo de dosímetro</th>
                             <th>Periocidade</th>
                             <th>Tipo de Risco</th>
-                            <th style="text-align:right;">Ação</th>
+                            <th class="txt-right">Ação</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($pendingData as $row): ?>
                             <tr>
-                                <td><span style="font-weight:600; color:var(--text-main);"><?php echo htmlspecialchars($row['name'] . ' ' . $row['surname']); ?></span></td>
+                                <td><span class="nome-tab"><?php echo htmlspecialchars($row['name'] . ' ' . $row['surname']); ?></span></td>
                                 <td><?php echo htmlspecialchars($row['dosimeterType']); ?></td>
                                 <td><?php echo htmlspecialchars($row['periodicity']); ?></td>
-                                <td><span class="role-badge badge-gray"><?php echo htmlspecialchars($row['riskCategory']); ?></span></td>
-                                <td style="text-align:right;">
+                                <td><span class="role-badge"><?php echo htmlspecialchars($row['riskCategory']); ?></span></td>
+                                <td class="txt-right">
                                     <a href="admin.php?tab=associacao&associar=<?php echo $row['idDA']; ?>&user=<?php echo urlencode($row['name'] . ' ' . $row['surname']); ?>" 
-                                       class="btn btn-primary" 
-                                       style="padding: 0.4rem 0.8rem; font-size:0.8rem; text-decoration:none;">
-                                        Associar
+                                       class="btn btn-primary"> Associar
                                     </a>
                                 </td>
                             </tr>
@@ -81,7 +79,7 @@ function renderAssociateForm($idDA, $userName) {
                 </div>
 
                 <div style="display:flex; justify-content:flex-end; gap:0.5rem;">
-                    <a href="admin.php?tab=associacao" class="btn btn-cancel" style="text-decoration:none; display:flex; align-items:center;">Cancelar</a>
+                    <a href="admin.php?tab=associacao" class="btn btn-cancel">Cancelar</a>
                     <button type="submit" class="btn btn-save-profile">Confirmar</button>
                 </div>
             </form>
