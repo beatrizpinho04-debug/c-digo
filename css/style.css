@@ -7,26 +7,26 @@
   --secondary: #2b9a66;
   --secondary-light: #4db88a;
   --white: #ffffff;
-  --foreground: #1a1a1a;/*usado*/
-  --border: #e5e7eb;/*usado*/
-  --input-bg: #f9fafb;/*usado*/
-  --muted: #6b7280;/*usado*/
-  --background: #dbeafe;/*usado*/
-  --background2: #b2cdf0;/*usado*/
-  --bg-body: #f3f4f6;/*usado*/
-  --text-main: #111827;/*usado*/
-  --green-light: #dcfce7; /*usado*/
-  --green:#166534; /*usado*/
-  --green-light2:#bbf7d0;  /*usado*/
-  --red-light: #fee2e2; /*usado*/
-  --red:#991b1b; /*usado*/
-  --red-light2:#fecaca;  /*usado*/
-  --green2: #15803d;/*usado*/
-  --green3:#16a34a;/*usado*/
-  --badge-blue:#1d4ed8;/*usado*/
-  --badge-purple-background:#f3e8ff;/*usado*/
-  --badge-purple: #7e22ce;/*usado*/
-  --badge-red: #b91c1c;/*usado*/
+  --foreground: #1a1a1a;
+  --border: #e5e7eb;
+  --input-bg: #f9fafb;
+  --muted: #6b7280;
+  --background: #dbeafe;
+  --background2: #b2cdf0;
+  --bg-body: #f3f4f6;
+  --text-main: #111827;
+  --green-light: #dcfce7;
+  --green:#166534;
+  --green-light2:#bbf7d0;
+  --red-light: #fee2e2;
+  --red:#991b1b;
+  --red-light2:#fecaca;
+  --green2: #15803d;
+  --green3:#16a34a;
+  --badge-blue:#1d4ed8;
+  --badge-purple-background:#f3e8ff;
+  --badge-purple: #7e22ce;
+  --badge-red: #b91c1c;
 }
 
 
@@ -150,6 +150,10 @@ label, .profile-label { font-size: 14px; font-weight: 500; color: var(--foregrou
 }
 .user-name { font-size: 0.875rem; font-weight: 600;}
 .lapis {gap:0.5rem;}
+.logo-text { display: flex; flex-direction: column; justify-content: center; line-height: 1.1; margin-right: 1rem;}
+.logo-text h1 {font-size: 1.875rem; font-weight: 700; color: var(--text-main); margin: 0; white-space: nowrap;}
+.logo-text p {font-size: 1rem; color: var(--muted); margin: 0; font-weight: normal; white-space: nowrap;}
+
 
 /*Etiquetas/Badges*/
 .badge-blue { background-color: var(--background); color: var(--badge-blue); }
@@ -180,15 +184,12 @@ label, .profile-label { font-size: 14px; font-weight: 500; color: var(--foregrou
 
 
 /*----Tabelas----*/
-.admin-tabs {
-    display: flex; gap: 1rem; border-bottom: 1px solid var(--border);
-    margin-bottom: 2rem; overflow-x: auto; padding-bottom: 2px;
-}
+.admin-tabs {display: flex; gap: 1rem; margin-bottom: 2rem; overflow-x: auto; padding-bottom: 2px;}
 .tab-link { 
   padding: 0.75rem 1rem; color: var(--muted); text-decoration: none; font-size: 0.875rem;
   font-weight: 500; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap;
 }
-.tab-link:hover { color: var(--text-main); background-color: var(--bg-body); border-radius: 0.375rem 0.375rem 0 0; }
+.tab-link:hover { color: var(--text-main); background-color: var(--background2); border-radius: 0.375rem 0.375rem 0 0; }
 .tab-link.active { color: var(--primary); border-bottom-color: var(--primary); }
 .table-container {
   width: 100%; overflow-x: auto; border: 1px solid var(--border); 

@@ -1,92 +1,21 @@
-/* ---------- Tablets (≤ 768px) ---------- */
-@media (max-width: 768px) {
+/* -------------------------------------------------------------------------
+   RESPONSIVE.CSS
+   Ajustes de layout para diferentes tamanhos de ecrã.
+   -------------------------------------------------------------------------
+*/
 
-  /* Container geral */
-  .container {
-    max-width: 90%;
-    gap: 1.25rem;
-  }
-
-  /* Card */
-  .card {
-    padding: 1.5rem;
-  }
-
-  /* Texto */
-  .titulo {
-    font-size: 1.6rem;
-  }
-
-  .subtítulo {
-    font-size: 1rem;
-  }
-
-  .entrar {
-    font-size: 1.35rem;
-  }
-
-  /* Inputs */
-  input[type="email"],
-  input[type="password"] {
-    padding: 0.65rem 0.9rem;
-    font-size: 0.95rem;
-  }
+/* --- Animações --- */
+@keyframes aparecer {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-/* ---------- Telemóveis (≤ 480px) ---------- */
-@media (max-width: 480px) {
-
-  /* Container */
-  .container {
-    max-width: 95%;
-    gap: 1rem;
-    padding: 0;
-  }
-
-  /* Card */
-  .card {
-    padding: 1.2rem;
-    border-radius: 0.65rem;
-  }
-
-  /* Texto */
-  .titulo {
-    font-size: 1.35rem;
-  }
-
-  .subtítulo {
-    font-size: 0.85rem;
-  }
-
-  .entrar {
-    font-size: 1.25rem;
-  }
-
-  /* Formulário */
-  input[type="email"],
-  input[type="password"] {
-    font-size: 0.9rem;
-    padding: 0.55rem 0.75rem;
-  }
-
-  .btn {
-    padding: 0.6rem 1rem;
-    font-size: 0.9rem;
-  }
-
-  .btn-full {
-    width: 100%;
-  }
-
-  /* Footer */
-  .footer {
-    font-size: 0.8rem;
-    margin-top: 0.5rem;
-    margin-bottom: 1rem; /* distância do fundo */
-  }
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-
+/* --- Desktop e Tablets Grandes (≥ 640px) --- */
 @media (min-width: 640px) {
     .profile-form-grid {
         grid-template-columns: 1fr 1fr;
@@ -96,11 +25,97 @@
     }
 }
 
-@keyframes aparecer {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
+/* --- Tablets e Ecrãs Médios (≤ 768px) --- */
+@media (max-width: 768px) {
+    .main-container, .header-container {
+        padding: 0 1rem;
+    }
+
+    .container {
+        max-width: 90%;
+    }
+
+    /* Tipografia Ajustada */
+    .titulo, .card1-title { font-size: 1.6rem; }
+    .entrar { font-size: 1.35rem; }
+
+    /* --- LIMPEZA DO CABEÇALHO (CRUCIAL) --- */
+    /* Escondemos o nome e cargo AQUI (768px) para evitar que o layout parta em tablets */
+    .user-info {
+        display: none !important;
+    }
+
+    /* Escondemos o subtítulo do site para poupar espaço */
+    .logo-text p {
+        display: none !important;
+    }
+
+    /* Ajustar o título principal para não ser gigante */
+    .logo-text h1 {
+        font-size: 1.25rem; /* ~20px */
+    }
 }
-@keyframes slideDown {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
+
+/* --- Telemóveis (≤ 480px) --- */
+@media (max-width: 480px) {
+
+  /* --- HEADER MAIS COMPACTO --- */
+  .header-container { padding: 0 0.5rem; }
+  .user-area { gap: 0.5rem; } 
+  
+  /* Título ainda mais pequeno no telemóvel */
+  .logo-text h1 { font-size: 1rem; }
+  
+  /* Foto mais pequena para garantir que cabe tudo */
+  .profile-pic { width: 36px; height: 36px; } 
+
+  /* Botões do header lado a lado */
+  .header1 .action-buttons {
+      flex-direction: row; 
+      width: auto;
+  }
+  .header1 .btn { width: auto; padding: 8px; } 
+
+  /* --- RESTO DO DESIGN --- */
+  .main-container { padding: 1rem 0.5rem; }
+  .container { max-width: 95%; gap: 1rem; padding: 0; }
+  
+  .card, .card1, .card1-content, .card1-header {
+      padding: 1rem; 
+  }
+  
+  .foto-section-gray {
+      flex-direction: column;
+      text-align: center;
+      gap: 0.75rem;
+  }
+
+  /* Tipografia reduzida */
+  .titulo, .card1-title { font-size: 1.4rem; }
+  .subtítulo { font-size: 0.9rem; }
+  .entrar { font-size: 1.25rem; }
+
+  /* Inputs e Botões Gerais */
+  input[type="text"], input[type="email"], input[type="password"], 
+  select, .profile-input, .btn {
+      padding: 0.6rem 0.8rem;
+      font-size: 14px;
+  }
+
+  /* Botões de ação (ex: perfil) empilhados */
+  .action-buttons, .profile-actions {
+      flex-direction: column;
+      width: 100%;
+  }
+  
+  /* Exceção: manter os botões do header em linha (reforço) */
+  .header1 .action-buttons { flex-direction: row !important; }
+
+  .btn { width: 100%; }
+  /* Exceção botões header */
+  .header1 .btn { width: auto; }
+
+  .footer { font-size: 0.8rem; margin-top: 0.5rem; margin-bottom: 1rem; }
+  
+  .table-container { overflow-x: auto; display: block; }
 }

@@ -23,8 +23,7 @@
                         <div class="logo-box">
                             <img src="css/icon.svg" width="48" height="48" alt="Logo">
                         </div>
-                        <div class="logo-text"> 
-                            <!-- não existe logo-text -->
+                        <div class="logo-text">
                             <h1>Gestão de Dosímetros</h1>
                             <p>Sistema de Gestão para Instituições de Saúde</p>
                         </div>
