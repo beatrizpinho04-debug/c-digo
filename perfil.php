@@ -59,9 +59,9 @@ $title = "Perfil";
     <div class="page-wrapper">
         <?php nav_set(); ?>
         <main class="main-container" style="max-width: 45rem">
-            <div class="profile-header-flex">
+            <div class="profile-header-flex mb1_5">
                 <div class="profile-header-left">
-                    <a href="index.php" class="voltar" title="Voltar">
+                    <a href="index.php" class="btn voltar" title="Voltar">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="m12 19-7-7 7-7"></path>
                             <path d="M19 12H5"></path>
@@ -80,8 +80,8 @@ $title = "Perfil";
             <?php endif; ?>
             <div class="card1">
                 <div class="card1-header">
-                    <h1 class="card1-title">Perfil de Utilizador</h1>
-                    <p class="card1-desc"><?php echo $isEditing ? "Edite os seus dados" : "Dados pessoais"; ?></p>
+                    <h1 class="card1-title">Perfil do Utilizador</h1>
+                    <p class="subtítulo"><?php echo $isEditing ? "Edite os seus dados" : "Dados pessoais"; ?></p>
                 </div>
                 <div class="card1-content">
                     <div class="foto-section-gray">
@@ -174,7 +174,7 @@ $title = "Perfil";
 
                         <div class="profile-actions">
                             <?php if (!$isEditing): ?>
-                                <a href="perfil.php?edit=true" class="btn btn-edit-profile" style="text-decoration:none; display:flex; align-items:center; gap:0.5rem;">
+                                <a href="perfil.php?edit=true" class="btn btn-primary">
                                     <span class="lapis">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>

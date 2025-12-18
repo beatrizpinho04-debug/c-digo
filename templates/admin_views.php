@@ -62,7 +62,7 @@ function renderAssociateForm($idDA, $userName) {
     <div class="modal-overlay-php">
         <div class="modal-box-php">
             <h3 style="font-size:1.25rem; font-weight:bold; margin-bottom:0.5rem;">Associar Dosímetro</h3>
-            <p style="font-size:0.875rem; color:var(--text-muted); margin-bottom:1.5rem;">
+            <p style="font-size:0.875rem; color:var(--muted); margin-bottom:1.5rem;">
                 Insira os dados para <span style="font-weight:bold; color:var(--foreground);"><?php echo htmlspecialchars($userName); ?></span>.
             </p>
 
