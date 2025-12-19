@@ -79,7 +79,7 @@ function renderManagementTab($stats, $activeDosimeters, $searchTerm) {
             
             <form action="admin.php" method="GET" class="search-form">
                 <input type="hidden" name="tab" value="gestao">
-                <input type="text" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Nome ou Serial..." class="profile-input input-search">
+                <input type="text" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Nome, email ..." class="profile-input input-search">
                 <button type="submit" class="btn btn-primary">🔍</button>
             </form>
         </div>
@@ -89,6 +89,7 @@ function renderManagementTab($stats, $activeDosimeters, $searchTerm) {
                 <thead>
                     <tr>
                         <th>Profissional</th>
+                        <th>Email</th>
                         <th>Dosímetro</th>
                         <th>Associado em</th>
                         <th>Próxima Troca</th>
@@ -105,6 +106,7 @@ function renderManagementTab($stats, $activeDosimeters, $searchTerm) {
                         ?>
                             <tr>
                                 <td><span class="nome-tab"><?php echo htmlspecialchars($row['name'] . ' ' . $row['surname']); ?></span></td>
+                                <td><?php echo htmlspecialchars($row['email']); ?></td>
                                 <td><?php echo htmlspecialchars($row['dosimeterSerial']); ?></td>
                                 <td><?php echo date('d/m/Y', strtotime($row['assignmentDate'])); ?></td>
                                 <td class="<?php echo $dateClass; ?>"><?php echo date('d/m/Y', strtotime($row['nextReplacementDate'])); ?></td>
@@ -131,7 +133,15 @@ function renderRequestsTab($requests) {
         <?php else: ?>
             <div class="table-container">
                 <table class="admin-table">
-                    <thead><tr><th>Utilizador</th><th>Tipo</th><th>Data</th><th>Justificação</th><th class="txt-right">Ação</th></tr></thead>
+                    <thead>
+                        <tr>
+                            <th>Utilizador</th>
+                            <th>Tipo</th>
+                            <th>Data</th>
+                            <th>Justificação</th>
+                            <th class="txt-right">Ação</th>
+                        </tr>
+                    </thead>
                     <tbody>
                     <?php foreach ($requests as $req): ?>
                         <tr>
@@ -162,9 +172,7 @@ function renderUsersTab($users, $searchTerm) {
     ?>
     <div class="card mb2">
         <div class="mb1 header-flex">
-            <a href="admin.php?tab=users&action=create" class="btn btn-primary" style="text-decoration:none;">
-                + Novo Utilizador
-            </a>
+            <a href="admin.php?tab=users&action=create" class="btn btn-primary" style="text-decoration:none;">+ Novo Utilizador</a>
             <form action="admin.php" method="GET" class="search-form">
                 <input type="hidden" name="tab" value="users">
                 <input type="text" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Nome, Email..." class="profile-input input-search">
@@ -174,12 +182,20 @@ function renderUsersTab($users, $searchTerm) {
 
         <div class="table-container">
             <table class="admin-table">
-                <thead><tr><th>Nome</th><th>Profissão / Tipo</th><th>Email</th><th>Estado</th><th class="txt-right">Ver</th></tr></thead>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Profissão / Tipo</th>
+                        <th>Email</th>
+                        <th>Estado</th>
+                        <th class="txt-right">Ver</th>
+                    </tr>
+                </thead>
                 <tbody>
                 <?php foreach ($users as $u): 
                     $prof = $u['profession'] ? $u['profession'] : $u['userType'];
-                    $activeText = $u['active'] ? 'Ativo' : 'Inativo';
-                    $badgeStyle = $u['active'] ? 'alert-success' : 'alert-error';
+                    $activeText = $u['userStatus'] ? 'Ativo' : 'Inativo';
+                    $badgeStyle = $u['userStatus'] ? 'alert-success' : 'alert-error';
                 ?>
                     <tr>
                         <td><span class="nome-tab"><?php echo htmlspecialchars($u['name'].' '.$u['surname']); ?></span></td>
@@ -203,26 +219,17 @@ function renderAssociateForm($idDA, $userName) {
     ?>
     <div class="modal-overlay-php">
         <div class="modal-box-php">
-            <h3 style="font-size:1.25rem; font-weight:bold; margin-bottom:0.5rem;">Associar Dosímetro</h3>
-            <p style="font-size:0.875rem; color:var(--muted); margin-bottom:1.5rem;">
-                Insira os dados para <span style="font-weight:bold; color:var(--foreground);"><?php echo htmlspecialchars($userName); ?></span>.
-            </p>
+            <h3 class="titulo">Associar Dosímetro</h3>
+            <p class="subtítulo mb1">Insira os dados para <?php echo htmlspecialchars($userName); ?></p>
 
             <form action="processa_admin.php" method="POST">
                 <input type="hidden" name="action" value="associar_dosimetro">
-                <input type="hidden" name="idDA" value="<?php echo htmlspecialchars($idDA); ?>">
-
-                <div class="form-group mb1">
-                    <label for="serial" class="profile-label">Número de Série</label>
-                    <input type="text" name="serial" id="serial" class="profile-input" required placeholder="Ex: 10203040" autofocus>
-                </div>
-
-                <div class="form-group mb1_5">
-                    <label for="notes" class="profile-label">Notas <span style="font-weight:normal; color:var(--muted);">(Opcional)</span></label>
-                    <textarea name="notes" id="notes" class="profile-input" style="height: auto; min-height: 80px; resize: vertical; padding: 0.5rem;"></textarea>
-                </div>
-
-                <div style="display:flex; justify-content:flex-end; gap:0.5rem;">
+                <input type="hidden" name="idDA" value="<?php echo $idDA; ?>">
+                <label class="profile-label">Número de Série</label>
+                <input type="text" name="serial" class="profile-input mb1" required autofocus>
+                <label class="profile-label">Notas (Opcional)</label>
+                <textarea name="notes" class="profile-input mb1"></textarea>
+                <div class="modal-actions">
                     <a href="admin.php?tab=associacao" class="btn btn-cancel">Cancelar</a>
                     <button type="submit" class="btn btn-save-profile">Confirmar</button>
                 </div>
@@ -248,7 +255,7 @@ function renderSwapModal($idDA, $name) {
                 
                 <div class="modal-actions">
                     <a href="admin.php?tab=gestao" class="btn btn-cancel">Cancelar</a>
-                    <button type="submit" class="btn btn-primary">Confirmar</button>
+                    <button type="submit" class="btn btn-save-profile">Confirmar</button>
                 </div>
             </form>
         </div>
@@ -260,18 +267,36 @@ function renderSwapModal($idDA, $name) {
 function renderCreateUserModal() {
     ?>
     <div class="modal-overlay">
-        <div class="modal-box" style="max-width:600px;">
+        <div class="modal-box">
             <h3 class="titulo mb1">Novo Utilizador</h3>
             <form action="processa_admin.php" method="POST">
                 <input type="hidden" name="action" value="create_user">
                 
                 <div class="profile-form-grid">
-                    <div><label class="profile-label">Nome</label><input type="text" name="name" class="profile-input" required></div>
-                    <div><label class="profile-label">Apelido</label><input type="text" name="surname" class="profile-input" required></div>
-                    <div class="g2"><label class="profile-label">Email</label><input type="email" name="email" class="profile-input" required></div>
-                    <div><label class="profile-label">Password</label><input type="password" name="password" class="profile-input" required></div>
-                    <div><label class="profile-label">Telemóvel</label><input type="text" name="phoneN" class="profile-input" required></div>
-                    <div><label class="profile-label">Data Nasc.</label><input type="date" name="birthDate" class="profile-input" required></div>
+                    <div>
+                        <label class="profile-label">Nome</label>
+                        <input type="text" name="name" class="profile-input" required>
+                    </div>
+                    <div>
+                        <label class="profile-label">Apelido</label>
+                        <input type="text" name="surname" class="profile-input" required>
+                    </div>
+                    <div class="g2">
+                        <label class="profile-label">Email</label>
+                        <input type="email" name="email" class="profile-input" required>
+                    </div>
+                    <div>
+                        <label class="profile-label">Password</label>
+                        <input type="password" name="password" class="profile-input" required>
+                    </div>
+                    <div>
+                        <label class="profile-label">Telemóvel</label>
+                        <input type="text" name="phoneN" class="profile-input" required>
+                    </div>
+                    <div>
+                        <label class="profile-label">Data Nasc.</label>
+                        <input type="date" name="birthDate" class="profile-input" required>
+                    </div>
                     <div>
                         <label class="profile-label">Sexo</label>
                         <select name="sex" class="profile-input">

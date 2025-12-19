@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS ApprovedRequest (
     idR INTEGER NOT NULL,
     idP INTEGER NOT NULL,
     approvalDate DATETIME NOT NULL,
-    periodicity TEXT NOT NULL,
+    periodicity TEXT CHECK(periodicity IN ('Mensal','Trimestral')) NOT NULL,
     riskCategory TEXT CHECK(riskCategory IN ('A', 'B')) NOT NULL,
     dosimeterType TEXT CHECK(dosimeterType IN ('Corpo Inteiro','Extremidade')) NOT NULL,
     status TEXT CHECK(status IN ('Ativo', 'Suspenso')) DEFAULT 'Ativo',
@@ -124,7 +124,7 @@ CREATE TABLE IF NOT EXISTS DosimeterAssignment (
     dosimeterSerial TEXT,
     assignmentDate DATE,
     nextReplacementDate DATE,
-    periodicity TEXT NOT NULL,
+    periodicity TEXT CHECK(periodicity IN ('Mensal','Trimestral')) NOT NULL,
     status TEXT CHECK(status IN ('Por_Associar','Em_Uso','Suspenso')) DEFAULT 'Por_Associar',
     notes TEXT,
     FOREIGN KEY (idA) REFERENCES ApprovedRequest(idA) ON DELETE CASCADE

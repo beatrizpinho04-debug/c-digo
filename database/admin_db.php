@@ -3,21 +3,13 @@ require_once 'connection.php';
 
 // 1. ASSOCIAÇÃO: Pedidos aprovados sem dosímetro
 function getPendingAssociations($db) {
-    $sql = "
-        SELECT 
-            DA.idDA,
-            U.name,
-            U.surname,
-            U.email,
-            AR.dosimeterType,
-            AR.periodicity,
-            AR.riskCategory
-        FROM DosimeterAssignment DA
-        JOIN ApprovedRequest AR ON DA.idA = AR.idA
-        JOIN User U ON AR.idP = U.idU
-        WHERE DA.status = 'Por_Associar'
-        ORDER BY AR.approvalDate ASC
-    ";
+    $sql = "SELECT DA.idDA, U.name, U.surname, U.email, AR.dosimeterType, AR.periodicity, AR.riskCategory
+            FROM DosimeterAssignment DA
+            JOIN ApprovedRequest AR ON DA.idA = AR.idA
+            JOIN DosimeterRequest DR ON AR.idR = DR.idR
+            JOIN User U ON DR.idU = U.idU
+            WHERE DA.status = 'Por_Associar'
+            ORDER BY AR.approvalDate ASC";
     
     $stmt = $db->prepare($sql);
     $stmt->execute();
@@ -67,18 +59,18 @@ function getDosimeterStats($db) {
 
 // 2. Gestão de Dosimetros: Lista de só pessoas com pedidos/aprovações Ativas (com filtro de pesquisa)
 function getActiveDosimeters($db, $search = '') {
-    $sql = "SELECT DA.idDA, DA.dosimeterSerial, DA.assignmentDate, DA.nextReplacementDate, 
-                   U.name, U.surname, AR.dosimeterType
+    $sql = "SELECT DA.idDA, DA.dosimeterSerial, DA.assignmentDate, DA.nextReplacementDate, U.name, U.surname, U.email, AR.dosimeterType
             FROM DosimeterAssignment DA
             JOIN ApprovedRequest AR ON DA.idA = AR.idA
-            JOIN User U ON AR.idP = U.idU
+            JOIN DosimeterRequest DR ON AR.idR = DR.idR
+            JOIN User U ON DR.idU = U.idU
             WHERE DA.status = 'Em_Uso'";
     
     $params = [];
     if (!empty($search)) {
-        $sql .= " AND (U.name LIKE ? OR U.surname LIKE ? OR DA.dosimeterSerial LIKE ?)";
+        $sql .= " AND (U.name LIKE ? OR U.surname LIKE ? OR U.email LIKE ? OR DA.dosimeterSerial LIKE ?)";
         $term = "%$search%";
-        $params = [$term, $term, $term];
+        $params = [$term, $term, $term, $term];
     }
     
     $sql .= " ORDER BY DA.nextReplacementDate ASC";
@@ -90,9 +82,9 @@ function getActiveDosimeters($db, $search = '') {
 
 // 3. Pedidos de Suspensão/Ativação
 function getPendingChangeRequests($db) {
-    $sql = "SELECT CR.*, U.name, U.surname 
+    $sql = "SELECT CR.*, U.name, U.surname, U.email 
             FROM ChangeRecord CR
-            JOIN User U ON CR.idU = U.idU
+            JOIN User U ON CR.idUser = U.idU
             WHERE CR.status = 'Pendente' ORDER BY CR.requestDate ASC";
     $stmt = $db->prepare($sql);
     $stmt->execute();
