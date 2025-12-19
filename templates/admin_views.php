@@ -10,7 +10,7 @@ function renderAdminTabs($currentTab) {
     <?php
 }
 
-// Associação de Dosimetros
+// 1. Associação de Dosimetros
 function renderAssociationTable($pendingData) {
     ?>
     <div class="card">

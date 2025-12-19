@@ -1,19 +1,19 @@
 -- 1. Inserir Users
-INSERT INTO User (name, surname, birthDate, sex, email, password, phoneN, userType, userStatus)
+INSERT INTO User (name, surname, birthDate, sex, email, password, phoneN, userType, userStatus, profilePic)
 VALUES
 -- Administradores
-('Ana','Ferreira','1978-04-12','Female','ana.admin@hospital.pt','$2y$10$2auDYhZCi32TRIF6iW1HOuj8mYt9glxgREcrK.eJMZwMBQnzzG9/y','+351912111111','Administrador',1),
-('Miguel','Santos','1982-09-30','Male','miguel.admin@hospital.pt','$2y$10$2auDYhZCi32TRIF6iW1HOuj8mYt9glxgREcrK.eJMZwMBQnzzG9/y','+351912222222','Administrador',1),
+('Ana','Ferreira','1978-04-12','Female','ana.admin@hospital.pt','$2y$10$2auDYhZCi32TRIF6iW1HOuj8mYt9glxgREcrK.eJMZwMBQnzzG9/y','+351912111111','Administrador',1, 'foto/1.png'),
+('Miguel','Santos','1982-09-30','Male','miguel.admin@hospital.pt','$2y$10$2auDYhZCi32TRIF6iW1HOuj8mYt9glxgREcrK.eJMZwMBQnzzG9/y','+351912222222','Administrador',1, 'foto/2.png'),
 
 -- Físicos Médicos
-('João','Almeida','1985-02-18','Male','joao.fisico@hospital.pt','$2y$10$2auDYhZCi32TRIF6iW1HOuj8mYt9glxgREcrK.eJMZwMBQnzzG9/y','+351913333333','Físico Médico',1),
+('João','Almeida','1985-02-18','Male','joao.fisico@hospital.pt','$2y$10$2auDYhZCi32TRIF6iW1HOuj8mYt9glxgREcrK.eJMZwMBQnzzG9/y','+351913333333','Físico Médico',1, 'foto/3.png'),
 
-('Rita','Pereira','1990-06-22','Female','rita.fisica@hospital.pt','$2y$10$2auDYhZCi32TRIF6iW1HOuj8mYt9glxgREcrK.eJMZwMBQnzzG9/y','+351914444444','Físico Médico',1),
+('Rita','Pereira','1990-06-22','Female','rita.fisica@hospital.pt','$2y$10$2auDYhZCi32TRIF6iW1HOuj8mYt9glxgREcrK.eJMZwMBQnzzG9/y','+351914444444','Físico Médico',1, 'foto/4.png'),
 
 -- Profissionais de Saúde
-('Carlos','Mendes','1988-01-15','Male','carlos.mendes@hospital.pt','$2y$10$2auDYhZCi32TRIF6iW1HOuj8mYt9glxgREcrK.eJMZwMBQnzzG9/y','+351915555555','Profissional de Saúde',1),
-('Inês','Rocha','1992-11-05','Female','ines.rocha@hospital.pt','$2y$10$2auDYhZCi32TRIF6iW1HOuj8mYt9glxgREcrK.eJMZwMBQnzzG9/y','+351916666666','Profissional de Saúde',1),
-('Paulo','Teixeira','1980-03-28','Male','paulo.teixeira@hospital.pt','$2y$10$2auDYhZCi32TRIF6iW1HOuj8mYt9glxgREcrK.eJMZwMBQnzzG9/y','+351917777777','Profissional de Saúde',0);
+('Carlos','Mendes','1988-01-15','Male','carlos.mendes@hospital.pt','$2y$10$2auDYhZCi32TRIF6iW1HOuj8mYt9glxgREcrK.eJMZwMBQnzzG9/y','+351915555555','Profissional de Saúde',1, 'foto/5.png'),
+('Inês','Rocha','1992-11-05','Female','ines.rocha@hospital.pt','$2y$10$2auDYhZCi32TRIF6iW1HOuj8mYt9glxgREcrK.eJMZwMBQnzzG9/y','+351916666666','Profissional de Saúde',1, 'foto/6.png'),
+('Paulo','Teixeira','1980-03-28','Male','paulo.teixeira@hospital.pt','$2y$10$2auDYhZCi32TRIF6iW1HOuj8mYt9glxgREcrK.eJMZwMBQnzzG9/y','+351917777777','Profissional de Saúde',0, 'foto/7.png');
 
 -- ===============================================
 -- 2. Definir Health Professionals
