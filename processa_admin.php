@@ -41,8 +41,11 @@ try {
 
         // B. Calcular a data quando se faz a mudança + da periocidade)
         $dataHoje = date('Y-m-d');
-        $days = ($info['periodicity'] === 'Trimestral') ? 90 : 30;
-        $next = date('Y-m-d', strtotime("+$days days"));
+        if ($info['periodicity'] === 'Trimestral') {
+            $next = date('Y-m-d', strtotime("+90 days"));
+        } else {
+            $next = date('Y-m-d', strtotime("+30 days"));
+        }
 
         // C. Atualizar tabela DosimeterAssignment
         $stmtUpd = $db->prepare(" UPDATE DosimeterAssignment 
@@ -79,8 +82,11 @@ try {
 
         // Recalcular datas
         $dataHoje = date('Y-m-d');
-        $days = ($current['periodicity'] === 'Trimestral') ? 90 : 30;
-        $newNext = date('Y-m-d', strtotime("+$days days"));
+        if ($current['periodicity'] === 'Trimestral') {
+            $newNext = date('Y-m-d', strtotime("+90 days"));
+        } else {
+            $newNext = date('Y-m-d', strtotime("+30 days"));
+        }
         
         // Inserir o NOVO serial no histórico
         $stmtHist = $db->prepare(" INSERT INTO DosimeterAssignmentHistory (idA, dosimeterSerial, insertDate) VALUES (?, ?, ?)");

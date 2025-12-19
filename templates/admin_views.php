@@ -62,14 +62,12 @@ function renderManagementTab($stats, $activeDosimeters, $searchTerm) {
     ?>
     <div class="profile-form-grid mb2">
         <div class="card card-stat-primary">
-            <p class="subtítulo">Para Análise (<?php echo $stats['periodo_analise']; ?>)</p>
+            <p class="subtítulo">Dosímetros recolhidos entre <?php echo $stats['periodo_analise']; ?>:</p>
             <h2 class="titulo stat-number text-primary"><?php echo $stats['enviados']; ?></h2>
-            <p class="subtítulo">Dosímetros recolhidos</p>
         </div>
         <div class="card card-stat-green">
-            <p class="subtítulo">A Pedir (p/ <?php echo $stats['mes_abastecimento']; ?>)</p>
+            <p class="subtítulo">Quantidade de dosímetros necessários para <?php echo $stats['mes_abastecimento']; ?>:</p>
             <h2 class="titulo stat-number text-green"><?php echo $stats['pedir']; ?></h2>
-            <p class="subtítulo">Para trocas previstas</p>
         </div>
     </div>
 

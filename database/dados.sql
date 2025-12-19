@@ -1,4 +1,5 @@
-PRAGMA foreign_keys = ON;
+PRAGMA FOREIGN KEY = ON;
+PRAGMA PRIMARY KEY = ON;
 .headers on
 .mode columns
 
