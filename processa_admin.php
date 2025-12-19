@@ -53,10 +53,6 @@ try {
         WHERE idDA = ?");
         $stmtUpd->execute([$serial, $dataHoje, $next, $notes, $idDA]);
 
-        // D. Inserir no Histórico (Nota: o teu SQL usa idA e insertDate)
-        $stmtHist = $db->prepare(" INSERT INTO DosimeterAssignmentHistory (idA, dosimeterSerial, insertDate) VALUES (?, ?, ?)");
-        $stmtHist->execute([$info['idA'], $serial, date('Y-m-d H:i:s')]);
-
         $db->commit();
         $_SESSION['message'] = "Dosímetro associado com sucesso!";
         $_SESSION['message_type'] = "success";
@@ -87,10 +83,6 @@ try {
         } else {
             $newNext = date('Y-m-d', strtotime("+30 days"));
         }
-        
-        // Inserir o NOVO serial no histórico
-        $stmtHist = $db->prepare(" INSERT INTO DosimeterAssignmentHistory (idA, dosimeterSerial, insertDate) VALUES (?, ?, ?)");
-        $stmtHist->execute([$current['idA'], $newSerial, date('Y-m-d H:i:s')]);
 
         // Atualizar tabela DosimeterAssignment
         $stmtUpd = $db->prepare("UPDATE DosimeterAssignment 

@@ -62,12 +62,12 @@ function renderManagementTab($stats, $activeDosimeters, $searchTerm) {
     ?>
     <div class="profile-form-grid mb2">
         <div class="card card-stat-primary">
-            <p class="subtítulo">Dosímetros recolhidos entre <?php echo $stats['periodo_analise']; ?>:</p>
-            <h2 class="titulo stat-number text-primary"><?php echo $stats['enviados']; ?></h2>
+            <p class="com-laranja">Dosímetros recolhidos entre <?php echo $stats['periodo_analise']; ?>:</p>
+            <h2 class=" stat-number text-primary"><?php echo $stats['enviados']; ?></h2>
         </div>
         <div class="card card-stat-green">
-            <p class="subtítulo">Quantidade de dosímetros necessários para <?php echo $stats['mes_abastecimento']; ?>:</p>
-            <h2 class="titulo stat-number text-green"><?php echo $stats['pedir']; ?></h2>
+            <p class="com-verde">Quantidade de dosímetros necessários para <?php echo $stats['mes_abastecimento']; ?>:</p>
+            <h2 class=" stat-number text-green"><?php echo $stats['pedir']; ?></h2>
         </div>
     </div>
 
@@ -109,7 +109,7 @@ function renderManagementTab($stats, $activeDosimeters, $searchTerm) {
                                 <td><?php echo date('d/m/Y', strtotime($row['assignmentDate'])); ?></td>
                                 <td class="<?php echo $dateClass; ?>"><?php echo date('d/m/Y', strtotime($row['nextReplacementDate'])); ?></td>
                                 <td class="txt-right">
-                                    <a href="admin.php?tab=gestao&action=swap&idDA=<?php echo $row['idDA']; ?>&name=<?php echo urlencode($row['name']); ?>" class="btn btn-cancel btn-sm">Trocar</a>
+                                    <a href="admin.php?tab=gestao&action=swap&idDA=<?php echo $row['idDA']; ?>&name=<?php echo urlencode($row['name']); ?>" class="btn btn-primary">Trocar</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

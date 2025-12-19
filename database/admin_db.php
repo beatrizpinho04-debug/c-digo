@@ -39,8 +39,14 @@ function getDosimeterStats($db) {
     $stmt->execute([$dataInicioAnalise, $dataFimAnalise]);
     $enviadosAnalise = $stmt->fetchColumn();
 
-    $sqlPedir = "SELECT COUNT(*) FROM DosimeterAssignment 
-                 WHERE status = 'Em_Uso' AND nextReplacementDate BETWEEN ? AND ?";
+    $sqlPedir = "SELECT COUNT(*) 
+                 FROM DosimeterAssignment DA
+                 JOIN ApprovedRequest AR ON DA.idA = AR.idA
+                 JOIN DosimeterRequest DR ON AR.idR = DR.idR
+                 JOIN User U ON DR.idU = U.idU
+                 WHERE DA.status = 'Em_Uso' 
+                   AND U.userStatus = 1
+                   AND DA.nextReplacementDate BETWEEN ? AND ?";
     $stmt2 = $db->prepare($sqlPedir);
     $stmt2->execute([$inicioProxMes, $fimProxMes]);
     $aPedir = $stmt2->fetchColumn();
@@ -68,9 +74,9 @@ function getActiveDosimeters($db, $search = '') {
     
     $params = [];
     if (!empty($search)) {
-        $sql .= " AND (U.name LIKE ? OR U.surname LIKE ? OR U.email LIKE ? OR DA.dosimeterSerial LIKE ?)";
+        $sql .= " AND (U.name LIKE ? OR U.surname LIKE ? OR (U.name || ' ' || U.surname) LIKE ? OR U.email LIKE ? OR DA.dosimeterSerial LIKE ?)";
         $term = "%$search%";
-        $params = [$term, $term, $term, $term];
+        $params = [$term, $term, $term, $term, $term];
     }
     
     $sql .= " ORDER BY DA.nextReplacementDate ASC";
@@ -100,9 +106,9 @@ function getAllUsers($db, $search = '') {
             
     $params = [];
     if (!empty($search)) {
-        $sql .= " AND (U.name LIKE ? OR U.surname LIKE ? OR U.email LIKE ? OR HP.profession LIKE ?)";
+        $sql .= " AND (U.name LIKE ? OR U.surname LIKE ? OR (U.name || ' ' || U.surname) LIKE ? OR U.email LIKE ? OR HP.profession LIKE ?)";
         $term = "%$search%";
-        $params = [$term, $term, $term, $term];
+        $params = [$term, $term, $term, $term, $term];
     }
     
     $sql .= " ORDER BY U.name ASC";
