@@ -1,4 +1,4 @@
-PRAGMA foreign_keys = ON;
+
 .headers on
 .mode columns
 
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS ApprovedRequest (
     idR INTEGER NOT NULL,
     idP INTEGER NOT NULL,
     approvalDate DATETIME NOT NULL,
-    periodicity TEXT NOT NULL,
+    periodicity TEXT CHECK(periodicity IN ('Mensal','Trimestral')) NOT NULL,
     riskCategory TEXT CHECK(riskCategory IN ('A', 'B')) NOT NULL,
     dosimeterType TEXT CHECK(dosimeterType IN ('Corpo Inteiro','Extremidade')) NOT NULL,
     status TEXT CHECK(status IN ('Ativo', 'Suspenso')) DEFAULT 'Ativo',
@@ -124,7 +124,7 @@ CREATE TABLE IF NOT EXISTS DosimeterAssignment (
     dosimeterSerial TEXT,
     assignmentDate DATE,
     nextReplacementDate DATE,
-    periodicity TEXT NOT NULL,
+    periodicity TEXT CHECK(periodicity IN ('Mensal','Trimestral')) NOT NULL,
     status TEXT CHECK(status IN ('Por_Associar','Em_Uso','Suspenso')) DEFAULT 'Por_Associar',
     notes TEXT,
     FOREIGN KEY (idA) REFERENCES ApprovedRequest(idA) ON DELETE CASCADE
@@ -151,3 +151,15 @@ CREATE TABLE IF NOT EXISTS DosimeterAssignmentHistory (
     insertDate DATETIME NOT NULL,
     FOREIGN KEY (idA) REFERENCES ApprovedRequest(idA) ON DELETE CASCADE
 );
+
+---------------------------------------------------
+-- TRIGGER: Guardar o histórico de cada associação a dosimetro
+---------------------------------------------------
+CREATE TRIGGER IF NOT EXISTS AutoLogHistory
+AFTER UPDATE ON DosimeterAssignment
+FOR EACH ROW
+WHEN NEW.status = 'Em_Uso' AND (OLD.status != 'Em_Uso' OR OLD.dosimeterSerial != NEW.dosimeterSerial)
+BEGIN
+    INSERT INTO DosimeterAssignmentHistory (idA, dosimeterSerial, insertDate)
+    VALUES (NEW.idA, NEW.dosimeterSerial, NEW.assignmentDate);
+END;

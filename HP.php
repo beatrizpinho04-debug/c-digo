@@ -19,6 +19,37 @@ if ($_SESSION['userType'] !== "Profissional de Saúde") {
 //Título da Página
 $title = "Profissional de Saúde";
 
+// ================== DADOS TEMPORÁRIOS (MOCK) ==================
+
+// Pedido atual (null = sem pedido)
+$currentRequest = [
+    'estado' => 'Aprovado',
+    'data_submissao' => '2025-03-12',
+    'servico' => 'Radiologia',
+    'funcao' => 'Técnico de Radiologia',
+    'observacoes' => 'Trabalho com equipamentos de imagem'
+];
+
+// Histórico de pedidos
+$requestHistory = [
+    ['id' => 1, 'data_submissao' => '2024-09-10', 'estado' => 'Rejeitado'],
+    ['id' => 2, 'data_submissao' => '2025-03-12', 'estado' => 'Aprovado']
+];
+
+// Histórico de dosímetros
+$dosimeterHistory = [
+    ['codigo' => 'DOS-001', 'data_inicio' => '2025-03-20', 'data_fim' => null],
+    ['codigo' => 'DOS-145', 'data_inicio' => '2024-09-15', 'data_fim' => '2025-03-19']
+];
+
+// Histórico ativo / suspenso
+$statusHistory = [
+    ['estado' => 'Ativo', 'data' => '2025-03-20'],
+    ['estado' => 'Suspenso', 'data' => '2024-12-01'],
+    ['estado' => 'Ativo', 'data' => '2024-09-15']
+];
+
+
 ?>
 <?php header_set(); ?>
 
@@ -27,65 +58,70 @@ $title = "Profissional de Saúde";
 
     <?php nav_set(); ?>
 
-    <main class="main-container health-page">
+    <main class="main-container">
 
-        <!-- ESTADO DO PEDIDO -->
-        <div class="card card-stat-primary mb2">
-            <h2 class="titulo-separador">Estado do pedido</h2>
+    <h1 class="titulo mb2">Área do Profissional de Saúde</h1>
 
-            <p class="nome mb05">Pedido ativo</p>
-            <span class="etiqueta badge-purple mb1">Dosímetro associado</span>
+    <!-- ESTADO DO PEDIDO -->
+    <div class="card1 mb2">
+    <div class="card1-header">
+        <h2 class="card1-title">Dados do Pedido</h2>
+    </div>
+    <div class="card1-content">
+        <div class="info-grid">
+            <div><strong>Serviço:</strong> Radiologia</div>
+            <div><strong>Função:</strong> Técnico de Radiologia</div>
+            <div class="info-full">
+                <strong>Observações:</strong> Trabalho com equipamentos de imagem
+            </div>
+        </div>
+    </div>
 
-            <p class="subtítulo">
-                Pedido aprovado em: <strong>12/03/2025</strong>
-            </p>
 
-            <div class="profile-actions">
-                <button class="btn btn-cancel">Pedir suspensão</button>
+
+    <!-- DOSÍMETRO -->
+   <div class="card1 mb2">
+    <div class="card1-header">
+        <h2 class="card1-title">Histórico de Dosímetros</h2>
+    </div>
+    <div class="card1-content">
+        <div class="list-item">
+            <span class="nome-tab">DOS-001</span>
+            <span>Desde 2025-03-20</span>
+            <span class="badge-blue etiqueta">Atual</span>
+        </div>
+
+        <div class="list-item">
+            <span class="nome-tab">DOS-145</span>
+            <span>2024-09-15 → 2025-03-19</span>
+        </div>
+    </div>
+
+
+
+    <!-- HISTÓRICOS -->
+        <div class="card1 mb2">
+        <div class="card1-header">
+            <h2 class="card1-title">Histórico de Pedidos</h2>
+        </div>
+        <div class="card1-content">
+            <div class="list-item">
+                <span>2024-09-10</span>
+                <span class="badge-red etiqueta">Rejeitado</span>
+                <a href="#" class="text-primary">Ver detalhes</a>
+            </div>
+
+            <div class="list-item">
+                <span>2025-03-12</span>
+                <span class="badge-blue etiqueta">Aprovado</span>
+                <a href="#" class="text-primary">Ver detalhes</a>
             </div>
         </div>
 
-        <!-- DADOS DO PEDIDO -->
-        <div class="card1">
-            <div class="card1-header">
-            <h3 class="card1-title">Dados do pedido</h3>
-            <p class="subtítulo">Informação associada ao pedido</p>
-        </div>
-            <div class="card1-content">
-            <p><strong>Departamento:</strong> Técnico de Radiologia</p>
-            <p><strong>N.º identicação profissional:</strong> 123456</p>
-         <p><strong>Data de início:</strong> 01/04/2025</p>
-        </div>
-</div>
 
-
-        <!-- DOSÍMETRO -->
-        <div class="card1 card-stat-green">
-            <div class="card1-header">
-                <h3 class="card1-title">Dosímetro atual</h3>
-            </div>
-            <div class="card1-content">
-                <p><strong>Código:</strong> D-45892</p>
-                <p><strong>Associado em:</strong> 20/11/2025</p>
-                <p><strong>Próxima troca:</strong> 20/12/2025</p>
-            </div>
-        </div>
-
-        <!-- HISTÓRICO -->
-        <div class="card1">
-            <div class="card1-header">
-                <h3 class="card1-title">Histórico</h3>
-            </div>
-            <div class="card1-content">
-                <ul class="subtítulo">
-                    <li>01/02/2025 – Pedido submetido</li>
-                    <li>12/03/2025 – Pedido aprovado</li>
-                    <li>20/11/2025 – Dosímetro associado</li>
-                </ul>
-            </div>
-        </div>
 
     </main>
+
 
     <?php renderFooter(); ?>
 
