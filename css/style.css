@@ -307,3 +307,20 @@ label, .profile-label { font-size: 14px; font-weight: 500; color: var(--foregrou
     margin-bottom: 0.5rem;
     font-style: italic;
 }
+
+
+
+/*------PROFISSIONAL DE SAÙDE---------*/
+
+.health-page {
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .health-page {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+
