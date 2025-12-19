@@ -15,6 +15,8 @@ if (!isset($_SESSION['idU']) || $_SESSION['userType'] !== "Administrador") {
 $db = getDatabaseConnection();
 $title = "Administração";
 $tab = isset($_GET['tab']) ? $_GET['tab'] : 'associacao';
+$search = isset($_GET['search']) ? $_GET['search'] : '';
+$action = isset($_GET['action']) ? $_GET['action'] : '';
 
 header_set();
 ?>
@@ -45,14 +47,32 @@ header_set();
                     renderAssociateForm($_GET['associar'], $userToAssociate);
                 }
             } 
+            // 2. Gestão de Dosímetros 
             elseif ($tab === 'gestao') {
-                echo "<div class='card'><p>Gestão (Em breve)</p></div>";
-            } 
+                $stats = getDosimeterStats($db);
+                $activeList = getActiveDosimeters($db, $search);
+                renderManagementTab($stats, $activeList, $search);
+                
+                if ($action === 'swap' && isset($_GET['idDA'])) {
+                    renderSwapModal($_GET['idDA'], isset($_GET['name']) ? $_GET['name'] : '');
+                }
+            }
+            // 3. Pedidos de Suspensão/Ativação
             elseif ($tab === 'pedidos') {
-                echo "<div class='card'><p>Pedidos (Em breve)</p></div>";
-            } 
+                $reqs = getPendingChangeRequests($db);
+                renderRequestsTab($reqs);
+            }
+            // 4. Utilizadores
             elseif ($tab === 'users') {
-                echo "<div class='card'><p>Utilizadores (Em breve)</p></div>";
+                $users = getAllUsers($db, $search);
+                renderUsersTab($users, $search);
+                
+                if ($action === 'create') {
+                    renderCreateUserModal();
+                } elseif ($action === 'view' && isset($_GET['idU'])) {
+                    $uDetails = getUserFullDetails($db, $_GET['idU']);
+                    renderUserDetailModal($uDetails);
+                }
             }
             ?>
         </main>
