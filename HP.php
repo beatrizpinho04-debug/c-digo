@@ -36,7 +36,7 @@ header_set();
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
                 <div class="info-grid" style="flex: 1;">
                     <div><span class="text-muted">Serviço:</span> <strong>Radiologia</strong></div>
-                    <div><span class="text-muted">Função:</span> <strong>Técnico</strong></div>
+                    <div><span class="text-muted">Função:</span> git push</div>
                     <div><span class="text-muted">Estado:</span> <span class="badge-green role-badge">Ativo</span></div>
                 </div>
 
@@ -48,7 +48,7 @@ header_set();
             </div>
             
             <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
-                <span class="text-muted" style="font-size: 0.9rem;">Observações: Trabalho com equipamentos de imagem</span>
+                <span class="text-muted" style="font-size: 0.9rem;"> <strong>Observações</strong>: Trabalho com equipamentos de imagem</span>
             </div>
         </div>
 
