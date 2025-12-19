@@ -6,52 +6,20 @@ require_once("templates/footer.php");
 
 //Verifica se existe sessão ativa
 if (!isset($_SESSION['idU'])) {
-    // Se não houver sessão, manda para o login com um erro
     $_SESSION['login_error'] = "Acesso negado. Por favor faça login.";
     header("Location: index.php");
     exit();
 }
-//Verifica se o tipo de utilizador é Profissional de Saúde
+//Verifica se é Profissional de Saúde
 if ($_SESSION['userType'] !== "Profissional de Saúde") {
     header("Location: index.php");
     exit();
 }
-//Título da Página
+
 $title = "Profissional de Saúde";
-
-// ================== DADOS TEMPORÁRIOS (MOCK) ==================
-
-// Pedido atual (null = sem pedido)
-$currentRequest = [
-    'estado' => 'Aprovado',
-    'data_submissao' => '2025-03-12',
-    'servico' => 'Radiologia',
-    'funcao' => 'Técnico de Radiologia',
-    'observacoes' => 'Trabalho com equipamentos de imagem'
-];
-
-// Histórico de pedidos
-$requestHistory = [
-    ['id' => 1, 'data_submissao' => '2024-09-10', 'estado' => 'Rejeitado'],
-    ['id' => 2, 'data_submissao' => '2025-03-12', 'estado' => 'Aprovado']
-];
-
-// Histórico de dosímetros
-$dosimeterHistory = [
-    ['codigo' => 'DOS-001', 'data_inicio' => '2025-03-20', 'data_fim' => null],
-    ['codigo' => 'DOS-145', 'data_inicio' => '2024-09-15', 'data_fim' => '2025-03-19']
-];
-
-// Histórico ativo / suspenso
-$statusHistory = [
-    ['estado' => 'Ativo', 'data' => '2025-03-20'],
-    ['estado' => 'Suspenso', 'data' => '2024-12-01'],
-    ['estado' => 'Ativo', 'data' => '2024-09-15']
-];
-
+header_set(); 
 
 ?>
-<?php header_set(); ?>
 
 <body>
 <div class="page-wrapper">
@@ -60,68 +28,93 @@ $statusHistory = [
 
     <main class="main-container">
 
-    <h1 class="titulo mb2">Área do Profissional de Saúde</h1>
+        <h1 class="titulo mb2">Área do Profissional de Saúde</h1>
 
-    <!-- ESTADO DO PEDIDO -->
-    <div class="card1 mb2">
-    <div class="card1-header">
-        <h2 class="card1-title">Dados do Pedido</h2>
-    </div>
-    <div class="card1-content">
-        <div class="info-grid">
-            <div><strong>Serviço:</strong> Radiologia</div>
-            <div><strong>Função:</strong> Técnico de Radiologia</div>
-            <div class="info-full">
-                <strong>Observações:</strong> Trabalho com equipamentos de imagem
+        <div class="card mb2">
+            <h2 class="nome mb1">O Meu Pedido Atual</h2>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                <div class="info-grid" style="flex: 1;">
+                    <div><span class="text-muted">Serviço:</span> <strong>Radiologia</strong></div>
+                    <div><span class="text-muted">Função:</span> <strong>Técnico</strong></div>
+                    <div><span class="text-muted">Estado:</span> <span class="badge-green role-badge">Ativo</span></div>
+                </div>
+
+                <div>
+                    <button class="btn btn-cancel" style="border-color: var(--red); color: var(--red);">
+                        Pedir Suspensão
+                    </button>
+                </div>
             </div>
-        </div>
-    </div>
-
-
-
-    <!-- DOSÍMETRO -->
-   <div class="card1 mb2">
-    <div class="card1-header">
-        <h2 class="card1-title">Histórico de Dosímetros</h2>
-    </div>
-    <div class="card1-content">
-        <div class="list-item">
-            <span class="nome-tab">DOS-001</span>
-            <span>Desde 2025-03-20</span>
-            <span class="badge-blue etiqueta">Atual</span>
-        </div>
-
-        <div class="list-item">
-            <span class="nome-tab">DOS-145</span>
-            <span>2024-09-15 → 2025-03-19</span>
-        </div>
-    </div>
-
-
-
-    <!-- HISTÓRICOS -->
-        <div class="card1 mb2">
-        <div class="card1-header">
-            <h2 class="card1-title">Histórico de Pedidos</h2>
-        </div>
-        <div class="card1-content">
-            <div class="list-item">
-                <span>2024-09-10</span>
-                <span class="badge-red etiqueta">Rejeitado</span>
-                <a href="#" class="text-primary">Ver detalhes</a>
-            </div>
-
-            <div class="list-item">
-                <span>2025-03-12</span>
-                <span class="badge-blue etiqueta">Aprovado</span>
-                <a href="#" class="text-primary">Ver detalhes</a>
+            
+            <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+                <span class="text-muted" style="font-size: 0.9rem;">Observações: Trabalho com equipamentos de imagem</span>
             </div>
         </div>
 
 
+        <div class="health-page">
+            
+            <div class="card">
+                <h2 class="nome mb1">Dosímetros Atribuídos</h2>
+                
+                <div class="table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Período</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>DOS-001</strong></td>
+                                <td>Desde 20/03/2025</td>
+                                <td><span class="badge-blue role-badge">Em Uso</span></td>
+                            </tr>
+                            <tr>
+                                <td>DOS-145</td>
+                                <td>Set 2024 - Mar 2025</td>
+                                <td><span class="badge-gray role-badge;">Devolvido</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="nome mb1">Histórico de Pedidos</h2>
+                
+                <div class="table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>12/03/2025</td>
+                                <td><span class="badge-green role-badge">Aprovado</span></td>
+                            </tr>
+                            <tr>
+                                <td>10/09/2024</td>
+                                <td><span class="badge-red role-badge">Rejeitado</span></td>
+                            </tr>
+                            <tr>
+                                <td>01/01/2024</td>
+                                <td><span class="badge-purple role-badge">Concluído</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
 
     </main>
-
 
     <?php renderFooter(); ?>
 
