@@ -43,7 +43,7 @@ if ($subtab === 'pedidos') {
 }
 
 // 5. Renderizar
-$title = "Detalhes: " . $user['name'];
+$title = "Informações de " . $user['name'];
 header_set($title);
 ?>
 <body>
@@ -51,10 +51,16 @@ header_set($title);
         <?php nav_set(); ?>
 
         <main class="main-container">
-            <div class="mb1">
-                <a href="admin.php?tab=users" class="btn btn-header" style="padding-left:0;">← Voltar à Lista</a>
+            <div class="profile-header-flex mb1_5">
+                <div class="user-area">
+                    <a href="admin.php?tab=users" class="btn voltar" title="Voltar">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m12 19-7-7 7-7"></path>
+                            <path d="M19 12H5"></path>
+                        </svg>
+                    </a>
+                </div>
             </div>
-
             <?php 
             // Chama a função que está no novo ficheiro de template
             renderUserDetailsPage($user, $subtab, $tabData); 

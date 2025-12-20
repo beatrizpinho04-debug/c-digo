@@ -27,9 +27,9 @@ function renderUserDetailsPage($user, $subtab, $data) {
                 <input type="hidden" name="currentStatus" value="<?php echo $user['userStatus']; ?>">
                 <input type="hidden" name="source_page" value="details"> 
                 <?php if($isActive): ?>
-                    <button type="submit" class="btn btn-cancel" style="color:var(--red); border-color:var(--red);">Bloquear Conta</button>
+                    <button type="submit" class="btn btn-no">Desativar Utilizador</button>
                 <?php else: ?>
-                    <button type="submit" class="btn btn-primary" style="background:var(--green);">Ativar Conta</button>
+                    <button type="submit" class="btn btn-save-profile">Ativar Utilizador</button>
                 <?php endif; ?>
             </form>
         </div>
