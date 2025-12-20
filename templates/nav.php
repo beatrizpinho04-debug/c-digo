@@ -25,6 +25,7 @@
                         </div>
                         <div class="logo-text">
                             <h1>Gestão de Dosímetros</h1>
+                            <p>Sistema de Gestão para Instituições de Saúde</p>
                         </div>
                     </div>
                     <div class="user-area"> 

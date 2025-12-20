@@ -378,4 +378,4 @@ function renderUserDetailModal($user) {
     <?php
 }
 
-?>
+?> 
