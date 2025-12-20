@@ -3,7 +3,7 @@ require_once 'connection.php';
 
 // 1. ASSOCIAÇÃO: Pedidos aprovados sem dosímetro
 function getPendingAssociations($db) {
-    $sql = "SELECT DA.idDA, U.name, U.surname, U.email, AR.dosimeterType, AR.periodicity, AR.riskCategory
+    $sql = "SELECT DA.idDA, U.name, U.surname, U.email, AR.dosimeterType, AR.periodicity, AR.riskCategory, DR.pratica
             FROM DosimeterAssignment DA
             JOIN ApprovedRequest AR ON DA.idA = AR.idA
             JOIN DosimeterRequest DR ON AR.idR = DR.idR
@@ -65,7 +65,7 @@ function getDosimeterStats($db) {
 
 // 2. Gestão de Dosimetros: Lista de só pessoas com pedidos/aprovações Ativas (com filtro de pesquisa)
 function getActiveDosimeters($db, $search = '') {
-    $sql = "SELECT DA.idDA, DA.dosimeterSerial, DA.assignmentDate, DA.nextReplacementDate, U.name, U.surname, U.email, AR.dosimeterType
+    $sql = "SELECT DA.idDA, DA.dosimeterSerial, DA.assignmentDate, DA.nextReplacementDate, U.name, U.surname, U.email, AR.dosimeterType, DR.pratica
             FROM DosimeterAssignment DA
             JOIN ApprovedRequest AR ON DA.idA = AR.idA
             JOIN DosimeterRequest DR ON AR.idR = DR.idR

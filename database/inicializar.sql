@@ -1,3 +1,5 @@
+PRAGMA FOREIGN KEY = OFF;
+PRAGMA PRIMARY KEY = OFF;
 
 DELETE FROM ChangeRecord;
 DELETE FROM DosimeterAssignmentHistory;
@@ -7,8 +9,10 @@ DELETE FROM ApprovedRequest;
 DELETE FROM DosimeterRequest;
 DELETE FROM HealthProfessional;
 DELETE FROM User;
-
 DELETE FROM sqlite_sequence;
+
+PRAGMA FOREIGN KEY = ON;
+PRAGMA PRIMARY KEY = ON;
 
 -- 1. UTILIZADORES
 INSERT INTO User (name, surname, birthDate, sex, email, password, phoneN, userType, userStatus, profilePic) VALUES
@@ -73,36 +77,35 @@ INSERT INTO ApprovedRequest (idR, idP, approvalDate, periodicity, riskCategory, 
 
 
 -- =================================================================================
--- 3. ASSOCIAÇÕES (Assignments) - TRIGGER FAZ O RESTO
+-- 3. ASSOCIAÇÕES (Assignments)
 -- =================================================================================
 
--- Carlos (Mensal): O trigger vai guardar no histórico automaticamente!
+-- Carlos
 UPDATE DosimeterAssignment SET dosimeterSerial='M-CARLOS-01', assignmentDate=DATE('now', '-15 days'), nextReplacementDate=DATE('now', '-15 days', '+30 days'), status='Em_Uso', periodicity='Mensal' WHERE idA=1;
 
--- Inês (Trimestral)
+-- Inês
 UPDATE DosimeterAssignment SET dosimeterSerial='T-INES-01', assignmentDate=DATE('now', '-80 days'), nextReplacementDate=DATE('now', '-80 days', '+90 days'), status='Em_Uso', periodicity='Trimestral' WHERE idA=2;
 
--- Paulo (Atrasado)
+-- Paulo
 UPDATE DosimeterAssignment SET dosimeterSerial='M-PAULO-LATE', assignmentDate=DATE('now', '-35 days'), nextReplacementDate=DATE('now', '-35 days', '+30 days'), status='Em_Uso', periodicity='Mensal' WHERE idA=3;
 
--- Bruno (Hoje)
+-- Bruno
 UPDATE DosimeterAssignment SET dosimeterSerial='M-BRUNO-HOJE', assignmentDate=DATE('now'), nextReplacementDate=DATE('now', '+30 days'), status='Em_Uso', periodicity='Mensal' WHERE idA=5;
 
--- Lara (Suspensa) - Trigger não dispara aqui porque status != Em_Uso
+-- Lara
 UPDATE DosimeterAssignment SET dosimeterSerial='T-LARA-SUSP', assignmentDate=DATE('now', '-6 months'), nextReplacementDate=DATE('now'), status='Suspenso', periodicity='Trimestral' WHERE idA=6;
 
--- Rui (Ativo)
+-- Rui
 UPDATE DosimeterAssignment SET dosimeterSerial='M-RUI-05', assignmentDate=DATE('now', '-5 days'), nextReplacementDate=DATE('now', '-5 days', '+30 days'), status='Em_Uso', periodicity='Mensal' WHERE idA=7;
 
--- Marta (Suspensa)
+-- Marta
 UPDATE DosimeterAssignment SET dosimeterSerial='T-MARTA-LAST', assignmentDate=DATE('now', '-1 year'), nextReplacementDate=DATE('now'), status='Suspenso', periodicity='Trimestral' WHERE idA=8;
 
--- Tiago (Ativo)
+-- Tiago
 UPDATE DosimeterAssignment SET dosimeterSerial='M-TIAGO-09', assignmentDate=DATE('now', '-10 days'), nextReplacementDate=DATE('now', '-10 days', '+30 days'), status='Em_Uso', periodicity='Mensal' WHERE idA=9;
 
--- Vera (Suspensa)
+-- Vera
 UPDATE DosimeterAssignment SET dosimeterSerial='M-VERA-LAST', assignmentDate=DATE('now', '-3 months'), nextReplacementDate=DATE('now'), status='Suspenso', periodicity='Mensal' WHERE idA=10;
-
 
 -- =================================================================================
 -- 4. HISTÓRICO MANUAL (Só dosímetros ANTIGOS ou SUSPENSOS)
@@ -114,7 +117,6 @@ INSERT INTO DosimeterAssignmentHistory (idA, dosimeterSerial, insertDate) VALUES
 (7, 'M-RUI-02', DATE('now', '-125 days')), 
 (7, 'M-RUI-03', DATE('now', '-95 days')), 
 (7, 'M-RUI-04', DATE('now', '-65 days'));
--- Nota: O 'M-RUI-05' já foi inserido pelo trigger acima!
 
 -- Histórico Lara (Antigo + Devolução Suspensão)
 INSERT INTO DosimeterAssignmentHistory (idA, dosimeterSerial, insertDate) VALUES (6, 'T-LARA-01', DATE('now', '-6 months'));
@@ -140,7 +142,9 @@ INSERT INTO DosimeterAssignmentHistory (idA, dosimeterSerial, insertDate) VALUES
 (10, 'M-VERA-SUSP2', DATE('now', '-2 months'));
 
 -- 5. HISTÓRICO DE PEDIDOS
+INSERT INTO ChangeRecord (idA, idUser, requestType, message, requestDate, status, idAdmin, decisionDate, finalStatus, adminNote) VALUES (10, 12, 'Suspender', 'Licença', DATE('now', '-18 months'), 'Concluído', 1, DATE('now', '-18 months', '+1 day'), 'Suspenso', 'Aprovado conforme regulamento.');
+INSERT INTO ChangeRecord (idA, idUser, requestType, message, requestDate, status, idAdmin, decisionDate, finalStatus, adminNote) VALUES (10, 12, 'Ativar', 'Regresso', DATE('now', '-12 months'), 'Concluído', 1, DATE('now', '-12 months', '+1 day'), 'Ativo', NULL);
+INSERT INTO ChangeRecord (idA, idUser, requestType, message, requestDate, status, idAdmin, decisionDate, finalStatus, adminNote) VALUES (10, 12, 'Suspender', 'Doutoramento', DATE('now', '-2 months'), 'Concluído', 1, DATE('now', '-2 months', '+1 day'), 'Suspenso', 'Autorizado pela direção.');
+
+-- Pedido Pendente (Carlos)
 INSERT INTO ChangeRecord (idA, idUser, requestType, message, requestDate, status) VALUES (1, 3, 'Suspender', 'Férias.', DATE('now'), 'Pendente');
-INSERT INTO ChangeRecord (idA, idUser, requestType, message, requestDate, status, idAdmin, decisionDate, finalStatus) VALUES (10, 12, 'Suspender', 'Licença', DATE('now', '-18 months'), 'Concluído', 1, DATE('now', '-18 months', '+1 day'), 'Suspenso');
-INSERT INTO ChangeRecord (idA, idUser, requestType, message, requestDate, status, idAdmin, decisionDate, finalStatus) VALUES (10, 12, 'Ativar', 'Regresso', DATE('now', '-12 months'), 'Concluído', 1, DATE('now', '-12 months', '+1 day'), 'Ativo');
-INSERT INTO ChangeRecord (idA, idUser, requestType, message, requestDate, status, idAdmin, decisionDate, finalStatus) VALUES (10, 12, 'Suspender', 'Doutoramento', DATE('now', '-2 months'), 'Concluído', 1, DATE('now', '-2 months', '+1 day'), 'Suspenso');

@@ -61,6 +61,11 @@ header_set($title);
             elseif ($tab === 'pedidos') {
                 $reqs = getPendingChangeRequests($db);
                 renderRequestsTab($reqs);
+
+                // ADICIONADO: Verifica se há pedido de decisão e abre o modal
+                if (isset($_GET['decidir'])) {
+                    renderDecisionModal($_GET['decidir'], $_GET['user'], $_GET['type']);
+                }
             }
             // 4. Utilizadores
             elseif ($tab === 'users') {

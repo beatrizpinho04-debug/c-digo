@@ -28,6 +28,7 @@ function renderAssociationTable($pendingData) {
                         <tr>
                             <th>Profissional</th>
                             <th>Email</th>
+                            <th>Prática</th>
                             <th>Tipo de dosímetro</th>
                             <th>Periocidade</th>
                             <th>Tipo de Risco</th>
@@ -39,6 +40,7 @@ function renderAssociationTable($pendingData) {
                             <tr>
                                 <td><span class="nome-tab"><?php echo htmlspecialchars($row['name'] . ' ' . $row['surname']); ?></span></td>
                                 <td><?php echo htmlspecialchars($row['email']); ?></td>
+                                <td><?php echo htmlspecialchars($row['pratica']); ?></td>
                                 <td><?php echo htmlspecialchars($row['dosimeterType']); ?></td>
                                 <td><?php echo htmlspecialchars($row['periodicity']); ?></td>
                                 <td><span class="role-badge"><?php echo htmlspecialchars($row['riskCategory']); ?></span></td>
@@ -88,6 +90,7 @@ function renderManagementTab($stats, $activeDosimeters, $searchTerm) {
                     <tr>
                         <th>Profissional</th>
                         <th>Email</th>
+                        <th>Prática</th>
                         <th>Dosímetro</th>
                         <th>Associado em</th>
                         <th>Próxima Troca</th>
@@ -105,6 +108,7 @@ function renderManagementTab($stats, $activeDosimeters, $searchTerm) {
                             <tr>
                                 <td><span class="nome-tab"><?php echo htmlspecialchars($row['name'] . ' ' . $row['surname']); ?></span></td>
                                 <td><?php echo htmlspecialchars($row['email']); ?></td>
+                                <td><?php echo htmlspecialchars($row['pratica']); ?></td>
                                 <td><?php echo htmlspecialchars($row['dosimeterSerial']); ?></td>
                                 <td><?php echo date('d/m/Y', strtotime($row['assignmentDate'])); ?></td>
                                 <td class="<?php echo $dateClass; ?>"><?php echo date('d/m/Y', strtotime($row['nextReplacementDate'])); ?></td>
@@ -134,6 +138,7 @@ function renderRequestsTab($requests) {
                     <thead>
                         <tr>
                             <th>Utilizador</th>
+                            <th>Email</th>
                             <th>Tipo</th>
                             <th>Data</th>
                             <th>Justificação</th>
@@ -144,16 +149,17 @@ function renderRequestsTab($requests) {
                     <?php foreach ($requests as $req): ?>
                         <tr>
                             <td><span class="nome-tab"><?php echo htmlspecialchars($req['name'].' '.$req['surname']); ?></span></td>
+                            <td><?php echo htmlspecialchars($req['email']); ?></td>
                             <td>
                                 <span class="role-badge <?php echo $req['requestType'] == 'Suspender' ? 'badge-red' : 'badge-green'; ?>">
                                     <?php echo htmlspecialchars($req['requestType']); ?>
                                 </span>
                             </td>
                             <td><?php echo date('d/m/Y', strtotime($req['requestDate'])); ?></td>
-                            <td class="subtítulo"><?php echo htmlspecialchars($req['justification']); ?></td>
+                            <td class="subtítulo"><?php echo htmlspecialchars($req['message']); ?></td>
                             <td class="txt-right">
-                                <a href="processa_admin.php?action=decide_suspensao&idCR=<?php echo $req['idCR']; ?>&decisao=aprovado" class="btn btn-primary btn-sm">✔</a>
-                                <a href="processa_admin.php?action=decide_suspensao&idCR=<?php echo $req['idCR']; ?>&decisao=rejeitado" class="btn btn-cancel btn-sm">✖</a>
+                                <a href="admin.php?tab=pedidos&decidir=<?php echo $req['idCR']; ?>&user=<?php echo urlencode($req['name'].' '.$req['surname']); ?>&type=<?php echo $req['requestType']; ?>" 
+                                   class="btn btn-primary btn-sm">Decidir</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -225,8 +231,6 @@ function renderAssociateForm($idDA, $userName) {
                 <input type="hidden" name="idDA" value="<?php echo $idDA; ?>">
                 <label class="profile-label">Número de Série</label>
                 <input type="text" name="serial" class="profile-input mb1" required autofocus>
-                <label class="profile-label">Notas (Opcional)</label>
-                <textarea name="notes" class="profile-input mb1"></textarea>
                 <div class="modal-actions">
                     <a href="admin.php?tab=associacao" class="btn btn-cancel">Cancelar</a>
                     <button type="submit" class="btn btn-save-profile">Confirmar</button>
@@ -254,6 +258,41 @@ function renderSwapModal($idDA, $name) {
                 <div class="modal-actions">
                     <a href="admin.php?tab=gestao" class="btn btn-cancel">Cancelar</a>
                     <button type="submit" class="btn btn-save-profile">Confirmar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <?php
+}
+
+// Modal para Suspender/Ativar um pedido
+function renderDecisionModal($idCR, $userName, $requestType) {
+    ?>
+    <div class="modal-overlay-php">
+        <div class="modal-box-php">
+            <h3 class="titulo mb1">Decidir Pedido</h3>
+            <p class="subtítulo mb1">
+                O utilizador <b><?php echo htmlspecialchars($userName); ?></b> pediu para: 
+                <span class="role-badge <?php echo $requestType == 'Suspender' ? 'badge-red' : 'badge-green'; ?>">
+                    <?php echo htmlspecialchars($requestType); ?>
+                </span>
+            </p>
+
+            <form action="processa_admin.php" method="POST">
+                <input type="hidden" name="action" value="decide_suspensao">
+                <input type="hidden" name="idCR" value="<?php echo htmlspecialchars($idCR); ?>">
+
+                <div class="form-group mb1_5">
+                    <label class="profile-label">Nota do Administrador (Justificação)</label>
+                    <textarea name="adminNote" class="profile-input" rows="3"  placeholder="Escreva o motivo da decisão..."></textarea>
+                </div>
+
+                <div class="modal-actions" style="justify-content: space-between;">
+                    <a href="admin.php?tab=pedidos" class="btn btn-cancel">Cancelar</a>
+                    <div style="display:flex; gap:0.5rem;">
+                        <button type="submit" name="decisao" value="rejeitado" class="btn btn-primary" style="background:var(--red);">Rejeitar</button>
+                        <button type="submit" name="decisao" value="aprovado" class="btn btn-save-profile">Aprovar</button>
+                    </div>
                 </div>
             </form>
         </div>

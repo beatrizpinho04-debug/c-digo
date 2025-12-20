@@ -49,9 +49,9 @@ try {
 
         // C. Atualizar tabela DosimeterAssignment
         $stmtUpd = $db->prepare(" UPDATE DosimeterAssignment 
-        SET dosimeterSerial = ?, assignmentDate = ?, nextReplacementDate = ?, status = 'Em_Uso', notes = ?
+        SET dosimeterSerial = ?, assignmentDate = ?, nextReplacementDate = ?, status = 'Em_Uso'
         WHERE idDA = ?");
-        $stmtUpd->execute([$serial, $dataHoje, $next, $notes, $idDA]);
+        $stmtUpd->execute([$serial, $dataHoje, $next, $idDA]);
 
         $db->commit();
         $_SESSION['message'] = "Dosímetro associado com sucesso!";
@@ -102,6 +102,7 @@ try {
     elseif ($action === 'decide_suspensao') {
         $idCR = $_GET['idCR'];
         $decisao = $_GET['decisao'];
+        $adminNote = trim($_POST['adminNote']);
         $adminId = $_SESSION['idU'];
         $now = date('Y-m-d H:i:s');
 
@@ -112,8 +113,9 @@ try {
 
         if ($req) {
             $finalStatus = ($decisao === 'aprovado') ? 'Concluído' : 'Rejeitado';
-            $stmt = $db->prepare("UPDATE ChangeRecord SET status = ?, idAdmin = ?, decisionDate = ? WHERE idCR = ?");
-            $stmt->execute([$finalStatus, $adminId, $now, $idCR]);
+            $final = ($decisao === 'aprovado') ? ($req['requestType'] === 'Suspender' ? 'Suspenso' : 'Ativo') : null;
+            $stmt = $db->prepare("UPDATE ChangeRecord SET status = ?, idAdmin = ?, decisionDate = ?, finalStatus = ?, adminNote = ? WHERE idCR = ?");
+            $stmt->execute([$finalStatus, $adminId, $now, $final, $adminNote, $idCR]);
 
             if ($decisao === 'aprovado') {
                 if ($req['requestType'] === 'Suspender') {
@@ -125,7 +127,7 @@ try {
                     $serial = $stmtS->fetchColumn();
                     if($serial) {
                         $db->prepare("INSERT INTO DosimeterAssignmentHistory (idA, dosimeterSerial, insertDate) VALUES (?, ?, ?)")
-                           ->execute([$req['idA'], $serial . ' (Suspenso)', $now]);
+                           ->execute([$req['idA'], $serial, $now]);
                     }
 
                 } elseif ($req['requestType'] === 'Ativar') {

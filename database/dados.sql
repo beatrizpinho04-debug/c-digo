@@ -1,4 +1,5 @@
-
+PRAGMA FOREIGN KEY = ON;
+PRAGMA PRIMARY KEY = ON;
 .headers ON
 .mode columns
 
@@ -109,6 +110,7 @@ CREATE TABLE IF NOT EXISTS ChangeRecord (
     idAdmin INTEGER,
     decisionDate DATETIME,
     finalStatus TEXT CHECK(finalStatus IN ('Ativo','Suspenso')),
+    adminNote TEXT,
 
     FOREIGN KEY (idA) REFERENCES ApprovedRequest(idA) ON DELETE CASCADE,
     FOREIGN KEY (idUser) REFERENCES User(idU),
@@ -126,7 +128,6 @@ CREATE TABLE IF NOT EXISTS DosimeterAssignment (
     nextReplacementDate DATE,
     periodicity TEXT CHECK(periodicity IN ('Mensal','Trimestral')) NOT NULL,
     status TEXT CHECK(status IN ('Por_Associar','Em_Uso','Suspenso')) DEFAULT 'Por_Associar',
-    notes TEXT,
     FOREIGN KEY (idA) REFERENCES ApprovedRequest(idA) ON DELETE CASCADE
 );
 
