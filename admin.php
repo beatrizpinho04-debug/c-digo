@@ -38,8 +38,8 @@ header_set($title);
             <?php 
             // 1. Mostrar sempre o conteúdo da aba
             if ($tab === 'associacao') {
-                $pendingList = getPendingAssociations($db);
-                renderAssociationTable($pendingList); // Desenha a tabela no fundo
+                $pendingList = getPendingAssociations($db, $search);
+                renderAssociationTable($pendingList, $search); // Desenha a tabela no fundo
 
                 // 2. Se houver pedido de associação, desenha a "janela" por cima
                 if (isset($_GET['associar'])) {
@@ -59,10 +59,9 @@ header_set($title);
             }
             // 3. Pedidos de Suspensão/Ativação
             elseif ($tab === 'pedidos') {
-                $reqs = getPendingChangeRequests($db);
-                renderRequestsTab($reqs);
+                $reqs = getPendingChangeRequests($db, $search);
+                renderRequestsTab($reqs, $search);
 
-                // ADICIONADO: Verifica se há pedido de decisão e abre o modal
                 if (isset($_GET['decidir'])) {
                     renderDecisionModal($_GET['decidir'], $_GET['user'], $_GET['type']);
                 }

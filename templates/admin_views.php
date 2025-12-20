@@ -11,16 +11,23 @@ function renderAdminTabs($currentTab) {
 }
 
 // 1. Associação de Dosimetros
-function renderAssociationTable($pendingData) {
+function renderAssociationTable($pendingData, $searchTerm) {
     ?>
     <div class="card">
-        <div class="mb1_5">
-            <h2 class="titulo-separador">Associação de Dosímetros</h2>
-            <p class="subtítulo">Dosímetros ainda por associar a pedidos aprovados</p>
+        <div class="mb1 header-flex">
+            <div>
+                <h2 class="titulo-separador">Associação de Dosímetros</h2>
+                <p class="subtítulo">Dosímetros ainda por associar</p>
+            </div>
+            <form action="admin.php" method="GET" class="search-form">
+                <input type="hidden" name="tab" value="associacao">
+                <input type="text" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Nome, Email, Prática..." class="profile-input input-search">
+                <button type="submit" class="btn btn-primary">🔍</button>
+            </form>
         </div>
 
         <?php if (empty($pendingData)): ?>
-            <div class="alert-container alert-success">✅ Tudo em dia!</div>
+            <div class="alert-container alert-success">✅ Tudo em dia (ou sem resultados)!</div>
         <?php else: ?>
             <div class="table-container">
                 <table class="admin-table">
@@ -126,12 +133,20 @@ function renderManagementTab($stats, $activeDosimeters, $searchTerm) {
 }
 
 // 3. Pedidos de Suspensão/Ativação
-function renderRequestsTab($requests) {
+function renderRequestsTab($requests, $searchTerm) {
     ?>
     <div class="card">
-        <h2 class="titulo-separador mb1">Pedidos Pendentes</h2>
+        <div class="mb1 header-flex">
+            <h2 class="titulo-separador">Pedidos Pendentes</h2>
+            <form action="admin.php" method="GET" class="search-form">
+                <input type="hidden" name="tab" value="pedidos">
+                <input type="text" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Nome, Email..." class="profile-input input-search">
+                <button type="submit" class="btn btn-primary">🔍</button>
+            </form>
+        </div>
+
         <?php if (empty($requests)): ?>
-             <p class="subtítulo">Não existem pedidos pendentes.</p>
+             <p class="subtítulo" style="padding: 1rem;">Não existem pedidos pendentes (ou sem resultados).</p>
         <?php else: ?>
             <div class="table-container">
                 <table class="admin-table">
@@ -159,7 +174,7 @@ function renderRequestsTab($requests) {
                             <td class="subtítulo"><?php echo htmlspecialchars($req['message']); ?></td>
                             <td class="txt-right">
                                 <a href="admin.php?tab=pedidos&decidir=<?php echo $req['idCR']; ?>&user=<?php echo urlencode($req['name'].' '.$req['surname']); ?>&type=<?php echo $req['requestType']; ?>" 
-                                   class="btn btn-primary btn-sm">Decidir</a>
+                                   class="btn btn-primary">Decidir</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

@@ -24,7 +24,6 @@ try {
     if ($action === 'associar_dosimetro') {
         $idDA = $_POST['idDA'];
         $serial = trim($_POST['serial']);
-        $notes = isset($_POST['notes']) ? trim($_POST['notes']) : '';
 
         if (empty($serial)) throw new Exception("Número de série é obrigatório.");
 
@@ -100,9 +99,9 @@ try {
     }
     // 3. Suspender ou ativar pedido/autorização
     elseif ($action === 'decide_suspensao') {
-        $idCR = $_GET['idCR'];
-        $decisao = $_GET['decisao'];
-        $adminNote = trim($_POST['adminNote']);
+        $idCR = $_POST['idCR'];
+        $decisao = $_POST['decisao'];
+        $adminNote = isset($_POST['adminNote']) ? trim($_POST['adminNote']) : '';
         $adminId = $_SESSION['idU'];
         $now = date('Y-m-d H:i:s');
 
@@ -111,31 +110,34 @@ try {
         $stmt->execute([$idCR]);
         $req = $stmt->fetch();
 
-        if ($req) {
-            $finalStatus = ($decisao === 'aprovado') ? 'Concluído' : 'Rejeitado';
-            $final = ($decisao === 'aprovado') ? ($req['requestType'] === 'Suspender' ? 'Suspenso' : 'Ativo') : null;
-            $stmt = $db->prepare("UPDATE ChangeRecord SET status = ?, idAdmin = ?, decisionDate = ?, finalStatus = ?, adminNote = ? WHERE idCR = ?");
-            $stmt->execute([$finalStatus, $adminId, $now, $final, $adminNote, $idCR]);
+        if (!$req) {
+            throw new Exception("Pedido não encontrado (ChangeRecord idCR={$idCR}).");
+        }
 
-            if ($decisao === 'aprovado') {
-                if ($req['requestType'] === 'Suspender') {
-                    $db->prepare("UPDATE ApprovedRequest SET status = 'Suspenso' WHERE idA = ?")->execute([$req['idA']]);
-                    $db->prepare("UPDATE DosimeterAssignment SET status = 'Suspenso' WHERE idA = ?")->execute([$req['idA']]);
-                    
-                    $stmtS = $db->prepare("SELECT dosimeterSerial FROM DosimeterAssignment WHERE idA = ?");
-                    $stmtS->execute([$req['idA']]);
-                    $serial = $stmtS->fetchColumn();
-                    if($serial) {
-                        $db->prepare("INSERT INTO DosimeterAssignmentHistory (idA, dosimeterSerial, insertDate) VALUES (?, ?, ?)")
-                           ->execute([$req['idA'], $serial, $now]);
-                    }
+        $finalStatus = ($decisao === 'aprovado') ? 'Concluído' : 'Rejeitado';
+        $final = ($decisao === 'aprovado') ? ($req['requestType'] === 'Suspender' ? 'Suspenso' : 'Ativo') : null;
+        $stmtUpd = $db->prepare("UPDATE ChangeRecord SET status = ?, idAdmin = ?, decisionDate = ?, finalStatus = ?, adminNote = ? WHERE idCR = ?");
+        $stmtUpd->execute([$finalStatus, $adminId, $now, $final, $adminNote, $idCR]);
 
-                } elseif ($req['requestType'] === 'Ativar') {
-                    $db->prepare("UPDATE ApprovedRequest SET status = 'Ativo' WHERE idA = ?")->execute([$req['idA']]);
-                    $db->prepare("UPDATE DosimeterAssignment SET status = 'Por_Associar' WHERE idA = ?")->execute([$req['idA']]);
+        if ($decisao === 'aprovado') {
+            if ($req['requestType'] === 'Suspender') {
+                $db->prepare("UPDATE ApprovedRequest SET status = 'Suspenso' WHERE idA = ?")->execute([$req['idA']]);
+                $db->prepare("UPDATE DosimeterAssignment SET status = 'Suspenso' WHERE idA = ?")->execute([$req['idA']]);
+
+                $stmtS = $db->prepare("SELECT dosimeterSerial FROM DosimeterAssignment WHERE idA = ?");
+                $stmtS->execute([$req['idA']]);
+                $serial = $stmtS->fetchColumn();
+                if ($serial) {
+                    $db->prepare("INSERT INTO DosimeterAssignmentHistory (idA, dosimeterSerial, insertDate) VALUES (?, ?, ?)")
+                       ->execute([$req['idA'], $serial, $now]);
                 }
+
+            } elseif ($req['requestType'] === 'Ativar') {
+                $db->prepare("UPDATE ApprovedRequest SET status = 'Ativo' WHERE idA = ?")->execute([$req['idA']]);
+                $db->prepare("UPDATE DosimeterAssignment SET status = 'Por_Associar' WHERE idA = ?")->execute([$req['idA']]);
             }
         }
+
         $db->commit();
         $_SESSION['message'] = "Pedido processado.";
         $_SESSION['message_type'] = "success";

@@ -144,7 +144,12 @@ INSERT INTO DosimeterAssignmentHistory (idA, dosimeterSerial, insertDate) VALUES
 -- 5. HISTÓRICO DE PEDIDOS
 INSERT INTO ChangeRecord (idA, idUser, requestType, message, requestDate, status, idAdmin, decisionDate, finalStatus, adminNote) VALUES (10, 12, 'Suspender', 'Licença', DATE('now', '-18 months'), 'Concluído', 1, DATE('now', '-18 months', '+1 day'), 'Suspenso', 'Aprovado conforme regulamento.');
 INSERT INTO ChangeRecord (idA, idUser, requestType, message, requestDate, status, idAdmin, decisionDate, finalStatus, adminNote) VALUES (10, 12, 'Ativar', 'Regresso', DATE('now', '-12 months'), 'Concluído', 1, DATE('now', '-12 months', '+1 day'), 'Ativo', NULL);
+
+-- NOVO EXEMPLO: Pedido de suspensão rejeitado
+INSERT INTO ChangeRecord (idA, idUser, requestType, message, requestDate, status, idAdmin, decisionDate, finalStatus, adminNote) 
+VALUES (10, 12, 'Suspender', 'Prefiro não usar', DATE('now', '-6 months'), 'Rejeitado', 1, DATE('now', '-6 months', '+1 day'), 'Ativo', 'Uso obrigatório nesta prática.');
+
 INSERT INTO ChangeRecord (idA, idUser, requestType, message, requestDate, status, idAdmin, decisionDate, finalStatus, adminNote) VALUES (10, 12, 'Suspender', 'Doutoramento', DATE('now', '-2 months'), 'Concluído', 1, DATE('now', '-2 months', '+1 day'), 'Suspenso', 'Autorizado pela direção.');
 
--- Pedido Pendente (Carlos)
+-- Pedido Pendente
 INSERT INTO ChangeRecord (idA, idUser, requestType, message, requestDate, status) VALUES (1, 3, 'Suspender', 'Férias.', DATE('now'), 'Pendente');

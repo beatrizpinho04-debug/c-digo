@@ -2,15 +2,27 @@
 require_once 'connection.php';
 
 // 1. ASSOCIAÇÃO: Pedidos aprovados sem dosímetro
-function getPendingAssociations($db) {
+function getPendingAssociations($db, $search = '') {
     $sql = "SELECT DA.idDA, U.name, U.surname, U.email, AR.dosimeterType, AR.periodicity, AR.riskCategory, DR.pratica
             FROM DosimeterAssignment DA
             JOIN ApprovedRequest AR ON DA.idA = AR.idA
             JOIN DosimeterRequest DR ON AR.idR = DR.idR
             JOIN User U ON DR.idU = U.idU
-            WHERE DA.status = 'Por_Associar'
-            ORDER BY AR.approvalDate ASC";
-    
+            WHERE DA.status = 'Por_Associar'";
+            
+    $params = [];
+    if (!empty($search)) {
+        $sql .= " AND (
+                    U.name LIKE ? OR 
+                    U.surname LIKE ? OR 
+                    (U.name || ' ' || U.surname) LIKE ? OR 
+                    U.email LIKE ? OR 
+                    DR.pratica LIKE ?
+                  )";
+        $term = "%$search%";
+        $params = [$term, $term, $term, $term, $term];
+    }
+
     $stmt = $db->prepare($sql);
     $stmt->execute();
     return $stmt->fetchAll();
@@ -87,11 +99,25 @@ function getActiveDosimeters($db, $search = '') {
 }
 
 // 3. Pedidos de Suspensão/Ativação
-function getPendingChangeRequests($db) {
+function getPendingChangeRequests($db, $search = '') {
     $sql = "SELECT CR.*, U.name, U.surname, U.email 
             FROM ChangeRecord CR
             JOIN User U ON CR.idUser = U.idU
-            WHERE CR.status = 'Pendente' ORDER BY CR.requestDate ASC";
+            WHERE CR.status = 'Pendente'";
+
+    $params = [];
+    if (!empty($search)) {
+        $sql .= " AND (
+                    U.name LIKE ? OR 
+                    U.surname LIKE ? OR 
+                    (U.name || ' ' || U.surname) LIKE ? OR 
+                    U.email LIKE ?
+                  )";
+        $term = "%$search%";
+        $params = [$term, $term, $term, $term];
+    }
+
+    $sql .= " ORDER BY CR.requestDate ASC";
     $stmt = $db->prepare($sql);
     $stmt->execute();
     return $stmt->fetchAll();

@@ -105,7 +105,7 @@ CREATE TABLE IF NOT EXISTS ChangeRecord (
     requestType TEXT CHECK(requestType IN ('Suspender','Ativar')) NOT NULL,
     message TEXT NOT NULL,
     requestDate DATETIME NOT NULL,
-    status TEXT CHECK(status IN ('Pendente','Concluído')) DEFAULT 'Pendente',
+    status TEXT CHECK(status IN ('Pendente','Concluído', 'Rejeitado')) DEFAULT 'Pendente',
 
     idAdmin INTEGER,
     decisionDate DATETIME,
