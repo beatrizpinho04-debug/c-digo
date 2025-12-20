@@ -30,6 +30,7 @@
   --dosimetro1: #fff7ed;
   --borda1:#d97706;
   --dosimetro2:#f0fdf4;
+  --rejeitar: #ef4444e6;
 }
 
 
@@ -107,11 +108,13 @@ label, .profile-label { font-size: 14px; font-weight: 500; color: var(--foregrou
 .voltar:hover { background-color: var(--background2);}
 .btn-cancel {
   background-color: var(--white); border: 1px solid var(--border); color: var(--text-main);
-  text-decoration:none; display:flex; align-items:center;
+  text-decoration:none;  align-items:center;
 }
 .btn-cancel:hover { background-color: var(--bg-body); }
 .btn-save-profile { background-color: var(--green3); color: var(--white);}
 .btn-save-profile:hover { background-color: var(--green2); }
+.btn-no { background-color: var(--rejeitar); color: var(--white);}
+.btn-no:hover { background-color: var(--badge-red);}
 .action-buttons { display: flex; gap: 0.5rem; }
 .profile-actions {
   display: flex; gap: 0.75rem; justify-content: flex-end;
@@ -281,11 +284,11 @@ label, .profile-label { font-size: 14px; font-weight: 500; color: var(--foregrou
 }
 .modal-actions {
     display: flex;
-    justify-content: flex-end;
     margin-top: 1.5rem;
     gap: 0.5rem;
     border-top: 1px solid var(--border);
     padding-top: 1rem;
+    justify-content: space-between;
 }
 .modal-user-header {
     display: flex;

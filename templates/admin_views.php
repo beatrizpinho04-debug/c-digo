@@ -259,7 +259,7 @@ function renderUsersTab($users, $searchTerm) {
     <?php
 }
 
-//Modal para associar um dosimetro a um user
+//1. Associação de Dosímetros: Modal para associar um dosimetro a um user
 function renderAssociateForm($idDA, $userName) {
     ?>
     <div class="modal-overlay-php">
@@ -282,7 +282,7 @@ function renderAssociateForm($idDA, $userName) {
     <?php
 }
 
-// Modal para trocar o dosimetro a um user
+// 2. Gestão de Dosímetros: Modal para trocar o dosimetro a um user
 function renderSwapModal($idDA, $name) {
     ?>
     <div class="modal-overlay">
@@ -306,7 +306,7 @@ function renderSwapModal($idDA, $name) {
     <?php
 }
 
-// Modal para Suspender/Ativar um pedido
+// 3. Pedidos de Suspensão/Ativação: Modal para Suspender/Ativar um pedido
 function renderDecisionModal($idCR, $userName, $requestType) {
     ?>
     <div class="modal-overlay-php">
@@ -328,10 +328,10 @@ function renderDecisionModal($idCR, $userName, $requestType) {
                     <textarea name="adminNote" class="profile-input" rows="3"  placeholder="Escreva o motivo da decisão..."></textarea>
                 </div>
 
-                <div class="modal-actions" style="justify-content: space-between;">
+                <div class="modal-actions">
                     <a href="admin.php?tab=pedidos" class="btn btn-cancel">Cancelar</a>
-                    <div style="display:flex; gap:0.5rem;">
-                        <button type="submit" name="decisao" value="rejeitado" class="btn btn-primary" style="background:var(--red);">Rejeitar</button>
+                    <div>
+                        <button type="submit" name="decisao" value="rejeitado" class="btn btn-no">Rejeitar</button>
                         <button type="submit" name="decisao" value="aprovado" class="btn btn-save-profile">Aprovar</button>
                     </div>
                 </div>
