@@ -247,7 +247,7 @@ function renderUsersTab($users, $searchTerm) {
                             <td><?php echo htmlspecialchars($u['email']); ?></td>
                             <td><span class="role-badge <?php echo $badgeStyle; ?>"><?php echo $activeText; ?></span></td>
                             <td class="txt-right">
-                                <a href="admin.php?tab=users&action=view&idU=<?php echo $u['idU']; ?>" class="btn btn-header">👁️</a>
+                                <a href="user_details.php?idU=<?php echo $u['idU']; ?>" class="btn btn-header">👁️</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -341,11 +341,11 @@ function renderDecisionModal($idCR, $userName, $requestType) {
     <?php
 }
 
-//Modal para criar um user
+//4. Utilizadores: Modal para criar um user
 function renderCreateUserModal() {
     ?>
-    <div class="modal-overlay">
-        <div class="modal-box">
+    <div class="modal-overlay-php">
+        <div class="modal-box-php" style="max-width: 600px;">
             <h3 class="titulo mb1">Novo Utilizador</h3>
             <form action="processa_admin.php" method="POST">
                 <input type="hidden" name="action" value="create_user">
@@ -359,7 +359,7 @@ function renderCreateUserModal() {
                         <label class="profile-label">Apelido</label>
                         <input type="text" name="surname" class="profile-input" required>
                     </div>
-                    <div class="g2">
+                    <div class="g2" style="grid-column: span 2;">
                         <label class="profile-label">Email</label>
                         <input type="email" name="email" class="profile-input" required>
                     </div>
@@ -369,7 +369,7 @@ function renderCreateUserModal() {
                     </div>
                     <div>
                         <label class="profile-label">Telemóvel</label>
-                        <input type="text" name="phoneN" class="profile-input" required>
+                        <input type="text" name="phoneN" class="profile-input" required placeholder="+351...">
                     </div>
                     <div>
                         <label class="profile-label">Data Nasc.</label>
@@ -383,20 +383,35 @@ function renderCreateUserModal() {
                             <option value="Other">Outro</option>
                         </select>
                     </div>
-                    <div class="g2">
-                        <label class="profile-label">Tipo de Utilizador</label>
-                        <select name="userType" class="profile-input">
-                            <option value="Profissional de Saúde">Profissional de Saúde</option>
-                            <option value="Físico Médico">Físico Médico</option>
-                            <option value="Administrador">Administrador</option>
-                        </select>
-                    </div>
 
-                    <div class="g2 hp-only-fields">
-                        <p class="hp-note">Preencha apenas se for Profissional de Saúde:</p>
-                        <div class="profile-form-grid" style="grid-template-columns: 1fr 1fr; gap:1rem;">
-                            <div><label class="profile-label">Profissão</label><input type="text" name="profession" class="profile-input"></div>
-                            <div><label class="profile-label">Departamento</label><input type="text" name="department" class="profile-input"></div>
+                    <div class="g2" style="grid-column: span 2;">
+                        <label class="profile-label">Tipo de Utilizador</label>
+                        
+                        <div class="type-selector-wrapper">
+                            
+                            <input type="radio" name="userType" value="Administrador" id="t_admin" required>
+                            <label for="t_admin">Administrador</label>
+
+                            <input type="radio" name="userType" value="Físico Médico" id="t_fisico" required>
+                            <label for="t_fisico">Físico Médico</label>
+
+                            <input type="radio" name="userType" value="Profissional de Saúde" id="type_hp" required>
+                            <label for="type_hp">Profissional de Saúde</label>
+
+                            <div class="hp-only-fields">
+                                <p class="hp-note"><strong>Dados Profissionais:</strong> (Obrigatórios)</p>
+                                <div class="profile-form-grid" style="grid-template-columns: 1fr 1fr; gap:1rem;">
+                                    <div>
+                                        <label class="profile-label">Profissão</label>
+                                        <input type="text" name="profession" class="profile-input" placeholder="Ex: Enfermeiro">
+                                    </div>
+                                    <div>
+                                        <label class="profile-label">Departamento</label>
+                                        <input type="text" name="department" class="profile-input" placeholder="Ex: Urgência">
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -410,52 +425,4 @@ function renderCreateUserModal() {
     </div>
     <?php
 }
-
-//Modal para ver as informações de um user
-function renderUserDetailModal($user) {
-    if (!$user) return;
-    $isActive = $user['active'] == 1;
-    ?>
-    <div class="modal-overlay">
-        <div class="modal-box">
-            <div class="modal-user-header mb1">
-                <h3 class="titulo"><?php echo htmlspecialchars($user['name'].' '.$user['surname']); ?></h3>
-                <span class="role-badge <?php echo $isActive?'alert-success':'alert-error'; ?>">
-                    <?php echo $isActive?'Ativo':'Inativo'; ?>
-                </span>
-            </div>
-            
-            <div class="profile-form-grid mb1_5">
-                <div><label class="profile-label">Email</label><input disabled value="<?php echo $user['email']; ?>" class="profile-input"></div>
-                <div><label class="profile-label">Telemóvel</label><input disabled value="<?php echo $user['phoneN']; ?>" class="profile-input"></div>
-                <div><label class="profile-label">Tipo</label><input disabled value="<?php echo $user['userType']; ?>" class="profile-input"></div>
-                <?php if(isset($user['profession'])): ?>
-                    <div><label class="profile-label">Profissão</label><input disabled value="<?php echo $user['profession']; ?>" class="profile-input"></div>
-                <?php endif; ?>
-            </div>
-
-            <div class="modal-user-buttons">
-                <button class="btn btn-full btn-cancel">📜 Ver Histórico Pedidos</button>
-                <button class="btn btn-full btn-cancel">☢️ Ver Histórico Dosímetros</button>
-            </div>
-
-            <div class="modal-actions">
-                <a href="admin.php?tab=users" class="btn btn-header">Fechar</a>
-                
-                <form action="processa_admin.php" method="POST" style="margin-left:auto;">
-                    <input type="hidden" name="action" value="toggle_status">
-                    <input type="hidden" name="idU" value="<?php echo $user['idU']; ?>">
-                    <input type="hidden" name="currentStatus" value="<?php echo $user['active']; ?>">
-                    <?php if($isActive): ?>
-                        <button type="submit" class="btn btn-primary" style="background:var(--red);">Desativar Conta</button>
-                    <?php else: ?>
-                        <button type="submit" class="btn btn-primary" style="background:var(--green);">Reativar Conta</button>
-                    <?php endif; ?>
-                </form>
-            </div>
-        </div>
-    </div>
-    <?php
-}
-
 ?> 

@@ -146,36 +146,57 @@ try {
     }
     // 3. Criar Utilizador
     elseif ($action === 'create_user') {
-        $pass = $_POST['password']; 
+        $email = trim($_POST['email']);
+        $phone = trim($_POST['phoneN']);
+        $rawPass = $_POST['password'];
+        $userType = $_POST['userType'];
+        
+        // A. Validar Email Único
+        $stmtEmail = $db->prepare("SELECT idU FROM User WHERE email = ?");
+        $stmtEmail->execute([$email]);
+        if ($stmtEmail->fetch()) {
+            throw new Exception("Erro: O email '$email' já está registado.");
+        }
+
+        // B. Validar Formato Telemóvel (+351...)
+        // Regex: Começa com + e tem entre 9 a 15 dígitos
+        if (!preg_match('/^\+[0-9]{11,15}$/', $phone)) {
+            throw new Exception("Erro: O telemóvel deve estar no formato internacional (ex: +351912345678).");
+        }
+
+        // C. Hash da Password
+        $hashedPass = password_hash($rawPass, PASSWORD_DEFAULT);
+
+        // D. Validar campos extra se for Profissional de Saúde
+        $profession = null;
+        $department = null;
+        if ($userType === 'Profissional de Saúde') {
+            $profession = trim($_POST['profession']);
+            $department = trim($_POST['department']);
+            if (empty($profession) || empty($department)) {
+                throw new Exception("Erro: Profissão e Departamento são obrigatórios para Profissionais de Saúde.");
+            }
+        }
 
         $db->beginTransaction();
-        $stmt = $db->prepare("INSERT INTO User (name, surname, email, password, phoneN, birthDate, sex, userType, userStatus) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)");
-        $stmt->execute([$_POST['name'], $_POST['surname'], $_POST['email'], $pass, $_POST['phoneN'], $_POST['birthDate'], $_POST['sex'], $_POST['userType']]);
+        
+        // Inserir User (userStatus = 1 ativo, profilePic é default na base)
+        $stmt = $db->prepare("INSERT INTO User (name, surname, email, password, phoneN, birthDate, sex, userType) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$_POST['name'], $_POST['surname'], $email, $hashedPass, $phone, $_POST['birthDate'], $_POST['sex'], $_POST['userType']]);
         $idU = $db->lastInsertId();
 
-        // Inserir nas tabelas específicas
-        if ($_POST['userType'] === 'Profissional de Saúde') {
-            $stmt = $db->prepare("INSERT INTO HealthProfessional (idU, profession, department) VALUES (?, ?, ?)");
-            $stmt->execute([$idU, $_POST['profession'], $_POST['department']]);
+        // Inserir HealthProfessional se necessário
+        if ($userType === 'Profissional de Saúde') {
+            $stmtHP = $db->prepare("INSERT INTO HealthProfessional (idU, profession, department) VALUES (?, ?, ?)");
+            $stmtHP->execute([$idU, $profession, $department]);
         }
+
         $db->commit();
         $_SESSION['message'] = "Utilizador criado!";
         $_SESSION['message_type'] = "success";
         header("Location: admin.php?tab=users");
         exit();
     }
-    // 4. Ativar/Desativar User
-    elseif ($action === 'toggle_status') {
-        $newStatus = $_POST['currentStatus'] == 1 ? 0 : 1;
-        $stmt = $db->prepare("UPDATE User SET userStatus = ? WHERE idU = ?");
-        $stmt->execute([$newStatus, $_POST['idU']]);
-        
-        $_SESSION['message'] = "Estado do utilizador alterado.";
-        $_SESSION['message_type'] = "success";
-        header("Location: admin.php?tab=users");
-        exit();
-    }
-
     
 } catch (Exception $e) {
     if ($db->inTransaction()) {
@@ -185,7 +206,8 @@ try {
     $_SESSION['message_type'] = "error";
     if ($action == 'associar_dosimetro') header("Location: admin.php?tab=associacao");
     elseif ($action == 'trocar_dosimetro') header("Location: admin.php?tab=gestao");
-    elseif ($action == 'create_user' || $action == 'toggle_status') header("Location: admin.php?tab=users");
+    elseif ($action == 'decide_suspensao') header("Location: admin.php?tab=pedidos");
+    elseif ($action == 'create_user') header("Location: admin.php?tab=users");
     else header("Location: admin.php");
     exit();
 }

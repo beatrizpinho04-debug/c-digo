@@ -251,6 +251,7 @@ label, .profile-label { font-size: 14px; font-weight: 500; color: var(--foregrou
 
 
 
+/*Por Organizar*/
 .header-flex {
     display: flex;
     justify-content: space-between;
@@ -317,6 +318,45 @@ label, .profile-label { font-size: 14px; font-weight: 500; color: var(--foregrou
     margin-bottom: 0.5rem;
     font-style: italic;
 }
+.type-selector-wrapper {
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 1rem;
+    align-items: center;
+}
+.type-selector-wrapper input[type="radio"] {
+    margin-right: 0.25rem;
+    cursor: pointer;
+}
+.type-selector-wrapper label {
+    cursor: pointer;
+    margin-right: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.hp-only-fields {
+    display: none;
+    width: 100%; 
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: var(--input-bg);
+    border-radius: 0.5rem;
+    border: 1px dashed var(--border);
+    animation: slideDown 0.3s ease-out;
+}
+.hp-note {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+}
+#type_hp:checked ~ .hp-only-fields {
+    display: block;
+}
+
+
+
+
+
 
 
 /*------PROFISSIONAL DE SAÙDE---------*/

@@ -73,9 +73,6 @@ header_set($title);
                 
                 if ($action === 'create') {
                     renderCreateUserModal();
-                } elseif ($action === 'view' && isset($_GET['idU'])) {
-                    $uDetails = getUserFullDetails($db, $_GET['idU']);
-                    renderUserDetailModal($uDetails);
                 }
             }
             ?>
