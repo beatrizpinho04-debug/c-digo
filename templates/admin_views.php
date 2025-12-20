@@ -27,7 +27,13 @@ function renderAssociationTable($pendingData, $searchTerm) {
         </div>
 
         <?php if (empty($pendingData)): ?>
-            <div class="alert-container alert-success">✅ Tudo em dia (ou sem resultados)!</div>
+            <?php if (!empty($searchTerm)): ?>
+                <p class="text-center" style="padding: 2rem; color: var(--muted);">
+                    Nenhum resultado encontrado para "<strong><?php echo htmlspecialchars($searchTerm); ?></strong>".
+                </p>
+            <?php else: ?>
+                <div class="alert-container alert-success">✅ Tudo em dia! Não existem associações pendentes.</div>
+            <?php endif; ?>
         <?php else: ?>
             <div class="table-container">
                 <table class="admin-table">
@@ -71,8 +77,8 @@ function renderManagementTab($stats, $activeDosimeters, $searchTerm) {
     ?>
     <div class="profile-form-grid mb2">
         <div class="card card-stat-primary">
-            <p class="com-laranja">Dosímetros recolhidos entre <?php echo $stats['periodo_analise']; ?>:</p>
-            <h2 class=" stat-number text-primary"><?php echo $stats['enviados']; ?></h2>
+            <p class="com-laranja">Dosímetros recolhidos entre <?php echo $stats['periodo_analise']; ?></p>
+            <h2 class="stat-number text-primary"><?php echo $stats['enviados']; ?></h2>
         </div>
         <div class="card card-stat-green">
             <p class="com-verde">Quantidade de dosímetros necessários para <?php echo $stats['mes_abastecimento']; ?>:</p>
@@ -83,14 +89,21 @@ function renderManagementTab($stats, $activeDosimeters, $searchTerm) {
     <div class="card">
         <div class="mb1 header-flex">
             <h2 class="titulo-separador">Dosímetros Ativos</h2>
-            
             <form action="admin.php" method="GET" class="search-form">
                 <input type="hidden" name="tab" value="gestao">
-                <input type="text" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Nome, email ..." class="profile-input input-search">
+                <input type="text" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Nome, Email, Serial..." class="profile-input input-search">
                 <button type="submit" class="btn btn-primary">🔍</button>
             </form>
         </div>
-
+        <?php if (empty($activeDosimeters)): ?>
+            <?php if (!empty($searchTerm)): ?>
+                <p class="text-center" style="padding: 2rem; color: var(--muted);">
+                    Nenhum resultado encontrado para "<strong><?php echo htmlspecialchars($searchTerm); ?></strong>".
+                </p>
+            <?php else: ?>
+                <p class="text-center" style="padding: 2rem; color: var(--muted);">Não existem dosímetros ativos no momento.</p>
+            <?php endif; ?>
+        <?php else: ?>
         <div class="table-container">
             <table class="admin-table">
                 <thead>
@@ -105,29 +118,26 @@ function renderManagementTab($stats, $activeDosimeters, $searchTerm) {
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (empty($activeDosimeters)): ?>
-                        <tr><td colspan="5" class="text-center">Nenhum resultado encontrado.</td></tr>
-                    <?php else: ?>
-                        <?php foreach ($activeDosimeters as $row): 
-                            $isLate = strtotime($row['nextReplacementDate']) < time();
-                            $dateClass = $isLate ? 'cell-date-late' : '';
-                        ?>
-                            <tr>
-                                <td><span class="nome-tab"><?php echo htmlspecialchars($row['name'] . ' ' . $row['surname']); ?></span></td>
-                                <td><?php echo htmlspecialchars($row['email']); ?></td>
-                                <td><?php echo htmlspecialchars($row['pratica']); ?></td>
-                                <td><?php echo htmlspecialchars($row['dosimeterSerial']); ?></td>
-                                <td><?php echo date('d/m/Y', strtotime($row['assignmentDate'])); ?></td>
-                                <td class="<?php echo $dateClass; ?>"><?php echo date('d/m/Y', strtotime($row['nextReplacementDate'])); ?></td>
-                                <td class="txt-right">
-                                    <a href="admin.php?tab=gestao&action=swap&idDA=<?php echo $row['idDA']; ?>&name=<?php echo urlencode($row['name']); ?>" class="btn btn-primary">Trocar</a>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
+                    <?php foreach ($activeDosimeters as $row): 
+                        $isLate = strtotime($row['nextReplacementDate']) < time();
+                        $dateClass = $isLate ? 'cell-date-late' : '';
+                    ?>
+                        <tr>
+                            <td><span class="nome-tab"><?php echo htmlspecialchars($row['name'] . ' ' . $row['surname']); ?></span></td>
+                            <td><?php echo htmlspecialchars($row['email']); ?></td>
+                            <td><?php echo htmlspecialchars($row['pratica']); ?></td>
+                            <td><?php echo htmlspecialchars($row['dosimeterSerial']); ?></td>
+                            <td><?php echo date('d/m/Y', strtotime($row['assignmentDate'])); ?></td>
+                            <td class="<?php echo $dateClass; ?>"><?php echo date('d/m/Y', strtotime($row['nextReplacementDate'])); ?></td>
+                            <td class="txt-right">
+                                <a href="admin.php?tab=gestao&action=swap&idDA=<?php echo $row['idDA']; ?>&name=<?php echo urlencode($row['name']); ?>" class="btn btn-primary">Trocar</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
+        <?php endif; ?>
     </div>
     <?php
 }
@@ -137,7 +147,7 @@ function renderRequestsTab($requests, $searchTerm) {
     ?>
     <div class="card">
         <div class="mb1 header-flex">
-            <h2 class="titulo-separador">Pedidos Pendentes</h2>
+            <h2 class="titulo-separador mb1">Pedidos Pendentes</h2>
             <form action="admin.php" method="GET" class="search-form">
                 <input type="hidden" name="tab" value="pedidos">
                 <input type="text" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Nome, Email..." class="profile-input input-search">
@@ -146,7 +156,13 @@ function renderRequestsTab($requests, $searchTerm) {
         </div>
 
         <?php if (empty($requests)): ?>
-             <p class="subtítulo" style="padding: 1rem;">Não existem pedidos pendentes (ou sem resultados).</p>
+            <?php if (!empty($searchTerm)): ?>
+                <p class="text-center" style="padding: 2rem; color: var(--muted);">
+                    Nenhum resultado encontrado para "<strong><?php echo htmlspecialchars($searchTerm); ?></strong>".
+                </p>
+            <?php else: ?>
+                <p class="subtítulo">Não existem pedidos pendentes.</p>
+            <?php endif; ?>
         <?php else: ?>
             <div class="table-container">
                 <table class="admin-table">
@@ -161,23 +177,23 @@ function renderRequestsTab($requests, $searchTerm) {
                         </tr>
                     </thead>
                     <tbody>
-                    <?php foreach ($requests as $req): ?>
-                        <tr>
-                            <td><span class="nome-tab"><?php echo htmlspecialchars($req['name'].' '.$req['surname']); ?></span></td>
-                            <td><?php echo htmlspecialchars($req['email']); ?></td>
-                            <td>
-                                <span class="role-badge <?php echo $req['requestType'] == 'Suspender' ? 'badge-red' : 'badge-green'; ?>">
-                                    <?php echo htmlspecialchars($req['requestType']); ?>
-                                </span>
-                            </td>
-                            <td><?php echo date('d/m/Y', strtotime($req['requestDate'])); ?></td>
-                            <td class="subtítulo"><?php echo htmlspecialchars($req['message']); ?></td>
-                            <td class="txt-right">
-                                <a href="admin.php?tab=pedidos&decidir=<?php echo $req['idCR']; ?>&user=<?php echo urlencode($req['name'].' '.$req['surname']); ?>&type=<?php echo $req['requestType']; ?>" 
-                                   class="btn btn-primary">Decidir</a>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
+                        <?php foreach ($requests as $req): ?>
+                            <tr>
+                                <td><span class="nome-tab"><?php echo htmlspecialchars($req['name'].' '.$req['surname']); ?></span></td>
+                                <td><?php echo htmlspecialchars($req['email']); ?></td>
+                                <td>
+                                    <span class="role-badge <?php echo $req['requestType'] == 'Suspender' ? 'badge-red' : 'badge-green'; ?>">
+                                        <?php echo htmlspecialchars($req['requestType']); ?>
+                                    </span>
+                                </td>
+                                <td><?php echo date('d/m/Y', strtotime($req['requestDate'])); ?></td>
+                                <td class="subtítulo"><?php echo htmlspecialchars($req['message']); ?></td>
+                                <td class="txt-right">
+                                    <a href="admin.php?tab=pedidos&decidir=<?php echo $req['idCR']; ?>&user=<?php echo urlencode($req['name'].' '.$req['surname']); ?>&type=<?php echo $req['requestType']; ?>" 
+                                    class="btn btn-primary">Decidir</a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
@@ -198,6 +214,15 @@ function renderUsersTab($users, $searchTerm) {
                 <button type="submit" class="btn btn-primary">🔍</button>
             </form>
         </div>
+        <?php if (empty($users)): ?>
+            <?php if (!empty($searchTerm)): ?>
+                <p class="text-center" style="padding: 2rem; color: var(--muted);">
+                    Nenhum resultado encontrado para "<strong><?php echo htmlspecialchars($searchTerm); ?></strong>".
+                </p>
+            <?php else: ?>
+                <p class="subtítulo" style="padding: 1rem;">Não existem utilizadores registados.</p>
+            <?php endif; ?>
+        <?php else: ?>
 
         <div class="table-container">
             <table class="admin-table">
@@ -211,24 +236,25 @@ function renderUsersTab($users, $searchTerm) {
                     </tr>
                 </thead>
                 <tbody>
-                <?php foreach ($users as $u): 
-                    $prof = $u['profession'] ? $u['profession'] : $u['userType'];
-                    $activeText = $u['userStatus'] ? 'Ativo' : 'Inativo';
-                    $badgeStyle = $u['userStatus'] ? 'alert-success' : 'alert-error';
-                ?>
-                    <tr>
-                        <td><span class="nome-tab"><?php echo htmlspecialchars($u['name'].' '.$u['surname']); ?></span></td>
-                        <td><?php echo htmlspecialchars($prof); ?></td>
-                        <td><?php echo htmlspecialchars($u['email']); ?></td>
-                        <td><span class="role-badge <?php echo $badgeStyle; ?>"><?php echo $activeText; ?></span></td>
-                        <td class="txt-right">
-                            <a href="admin.php?tab=users&action=view&idU=<?php echo $u['idU']; ?>" class="btn btn-header">👁️</a>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
+                    <?php foreach ($users as $u): 
+                        $prof = $u['profession'] ? $u['profession'] : $u['userType'];
+                        $activeText = $u['userStatus'] ? 'Ativo' : 'Inativo';
+                        $badgeStyle = $u['userStatus'] ? 'alert-success' : 'alert-error';
+                    ?>
+                        <tr>
+                            <td><span class="nome-tab"><?php echo htmlspecialchars($u['name'].' '.$u['surname']); ?></span></td>
+                            <td><?php echo htmlspecialchars($prof); ?></td>
+                            <td><?php echo htmlspecialchars($u['email']); ?></td>
+                            <td><span class="role-badge <?php echo $badgeStyle; ?>"><?php echo $activeText; ?></span></td>
+                            <td class="txt-right">
+                                <a href="admin.php?tab=users&action=view&idU=<?php echo $u['idU']; ?>" class="btn btn-header">👁️</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
+        <?php endif; ?>
     </div>
     <?php
 }

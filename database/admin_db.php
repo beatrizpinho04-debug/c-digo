@@ -9,7 +9,7 @@ function getPendingAssociations($db, $search = '') {
             JOIN DosimeterRequest DR ON AR.idR = DR.idR
             JOIN User U ON DR.idU = U.idU
             WHERE DA.status = 'Por_Associar'";
-            
+
     $params = [];
     if (!empty($search)) {
         $sql .= " AND (
@@ -24,7 +24,7 @@ function getPendingAssociations($db, $search = '') {
     }
 
     $stmt = $db->prepare($sql);
-    $stmt->execute();
+    $stmt->execute($params);
     return $stmt->fetchAll();
 }
 
@@ -119,7 +119,7 @@ function getPendingChangeRequests($db, $search = '') {
 
     $sql .= " ORDER BY CR.requestDate ASC";
     $stmt = $db->prepare($sql);
-    $stmt->execute();
+    $stmt->execute($params);
     return $stmt->fetchAll();
 }
 
