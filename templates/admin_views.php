@@ -22,7 +22,11 @@ function renderAssociationTable($pendingData, $searchTerm) {
             <form action="admin.php" method="GET" class="search-form">
                 <input type="hidden" name="tab" value="associacao">
                 <input type="text" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Nome, Email, Prática..." class="profile-input input-search">
-                <button type="submit" class="btn btn-primary">🔍</button>
+                <button type="submit" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+                    </svg>
+                </button>
             </form>
         </div>
 
@@ -72,6 +76,29 @@ function renderAssociationTable($pendingData, $searchTerm) {
     <?php
 }
 
+//1. Associação de Dosímetros: Modal para associar um dosimetro a um user
+function renderAssociateForm($idDA, $userName) {
+    ?>
+    <div class="modal-overlay-php">
+        <div class="modal-box-php">
+            <h3 class="titulo">Associar Dosímetro</h3>
+            <p class="subtítulo mb1">Insira os dados para <?php echo htmlspecialchars($userName); ?></p>
+
+            <form action="processa_admin.php" method="POST">
+                <input type="hidden" name="action" value="associar_dosimetro">
+                <input type="hidden" name="idDA" value="<?php echo $idDA; ?>">
+                <label class="profile-label">Número de Série</label>
+                <input type="text" name="serial" class="profile-input mb1" required autofocus>
+                <div class="modal-actions">
+                    <a href="admin.php?tab=associacao" class="btn btn-cancel">Cancelar</a>
+                    <button type="submit" class="btn btn-save-profile">Confirmar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <?php
+}
+
 // 2. Gestão de Dosímetros
 function renderManagementTab($stats, $activeDosimeters, $searchTerm) {
     ?>
@@ -92,7 +119,11 @@ function renderManagementTab($stats, $activeDosimeters, $searchTerm) {
             <form action="admin.php" method="GET" class="search-form">
                 <input type="hidden" name="tab" value="gestao">
                 <input type="text" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Nome, Email, Serial..." class="profile-input input-search">
-                <button type="submit" class="btn btn-primary">🔍</button>
+                <button type="submit" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+                    </svg>
+                </button>
             </form>
         </div>
         <?php if (empty($activeDosimeters)): ?>
@@ -142,6 +173,30 @@ function renderManagementTab($stats, $activeDosimeters, $searchTerm) {
     <?php
 }
 
+// 2. Gestão de Dosímetros: Modal para trocar o dosimetro a um user
+function renderSwapModal($idDA, $name) {
+    ?>
+    <div class="modal-overlay">
+        <div class="modal-box">
+            <h3 class="titulo">Trocar Dosímetro</h3>
+            <p class="subtítulo mb1">Profissional: <?php echo htmlspecialchars($name); ?></p>
+            <form action="processa_admin.php" method="POST">
+                <input type="hidden" name="action" value="trocar_dosimetro">
+                <input type="hidden" name="idDA" value="<?php echo $idDA; ?>">
+                
+                <label class="profile-label">Novo Nº Série</label>
+                <input type="text" name="newSerial" class="profile-input mb1" required>
+                
+                <div class="modal-actions">
+                    <a href="admin.php?tab=gestao" class="btn btn-cancel">Cancelar</a>
+                    <button type="submit" class="btn btn-save-profile">Confirmar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <?php
+}
+
 // 3. Pedidos de Suspensão/Ativação
 function renderRequestsTab($requests, $searchTerm) {
     ?>
@@ -151,7 +206,11 @@ function renderRequestsTab($requests, $searchTerm) {
             <form action="admin.php" method="GET" class="search-form">
                 <input type="hidden" name="tab" value="pedidos">
                 <input type="text" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Nome, Email..." class="profile-input input-search">
-                <button type="submit" class="btn btn-primary">🔍</button>
+                <button type="submit" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+                    </svg>
+                </button>
             </form>
         </div>
 
@@ -202,6 +261,41 @@ function renderRequestsTab($requests, $searchTerm) {
     <?php
 }
 
+// 3. Pedidos de Suspensão/Ativação: Modal para Suspender/Ativar um pedido
+function renderDecisionModal($idCR, $userName, $requestType) {
+    ?>
+    <div class="modal-overlay-php">
+        <div class="modal-box-php">
+            <h3 class="titulo mb1">Decidir Pedido</h3>
+            <p class="subtítulo mb1">
+                O utilizador <b><?php echo htmlspecialchars($userName); ?></b> pediu para: 
+                <span class="role-badge <?php echo $requestType == 'Suspender' ? 'badge-red' : 'badge-green'; ?>">
+                    <?php echo htmlspecialchars($requestType); ?>
+                </span>
+            </p>
+
+            <form action="processa_admin.php" method="POST">
+                <input type="hidden" name="action" value="decide_suspensao">
+                <input type="hidden" name="idCR" value="<?php echo htmlspecialchars($idCR); ?>">
+
+                <div class="form-group mb1_5">
+                    <label class="profile-label">Nota do Administrador (Justificação)</label>
+                    <textarea name="adminNote" class="profile-input" rows="3"  placeholder="Escreva o motivo da decisão..."></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <a href="admin.php?tab=pedidos" class="btn btn-cancel">Cancelar</a>
+                    <div>
+                        <button type="submit" name="decisao" value="rejeitado" class="btn btn-no">Rejeitar</button>
+                        <button type="submit" name="decisao" value="aprovado" class="btn btn-save-profile">Aprovar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <?php
+}
+
 // 4. Utilizadores
 function renderUsersTab($users, $searchTerm) {
     ?>
@@ -211,7 +305,11 @@ function renderUsersTab($users, $searchTerm) {
             <form action="admin.php" method="GET" class="search-form">
                 <input type="hidden" name="tab" value="users">
                 <input type="text" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Nome, Email..." class="profile-input input-search">
-                <button type="submit" class="btn btn-primary">🔍</button>
+                <button type="submit" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+                    </svg>
+                </button>
             </form>
         </div>
         <?php if (empty($users)): ?>
@@ -247,7 +345,11 @@ function renderUsersTab($users, $searchTerm) {
                             <td><?php echo htmlspecialchars($u['email']); ?></td>
                             <td><span class="role-badge <?php echo $badgeStyle; ?>"><?php echo $activeText; ?></span></td>
                             <td class="txt-right">
-                                <a href="user_details.php?idU=<?php echo $u['idU']; ?>" class="btn btn-header">👁️</a>
+                                <a href="user_details.php?idU=<?php echo $u['idU']; ?>" class="btn btn-ver">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>
+                                    </svg>
+                                </a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -255,88 +357,6 @@ function renderUsersTab($users, $searchTerm) {
             </table>
         </div>
         <?php endif; ?>
-    </div>
-    <?php
-}
-
-//1. Associação de Dosímetros: Modal para associar um dosimetro a um user
-function renderAssociateForm($idDA, $userName) {
-    ?>
-    <div class="modal-overlay-php">
-        <div class="modal-box-php">
-            <h3 class="titulo">Associar Dosímetro</h3>
-            <p class="subtítulo mb1">Insira os dados para <?php echo htmlspecialchars($userName); ?></p>
-
-            <form action="processa_admin.php" method="POST">
-                <input type="hidden" name="action" value="associar_dosimetro">
-                <input type="hidden" name="idDA" value="<?php echo $idDA; ?>">
-                <label class="profile-label">Número de Série</label>
-                <input type="text" name="serial" class="profile-input mb1" required autofocus>
-                <div class="modal-actions">
-                    <a href="admin.php?tab=associacao" class="btn btn-cancel">Cancelar</a>
-                    <button type="submit" class="btn btn-save-profile">Confirmar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    <?php
-}
-
-// 2. Gestão de Dosímetros: Modal para trocar o dosimetro a um user
-function renderSwapModal($idDA, $name) {
-    ?>
-    <div class="modal-overlay">
-        <div class="modal-box">
-            <h3 class="titulo">Trocar Dosímetro</h3>
-            <p class="subtítulo mb1">Profissional: <?php echo htmlspecialchars($name); ?></p>
-            <form action="processa_admin.php" method="POST">
-                <input type="hidden" name="action" value="trocar_dosimetro">
-                <input type="hidden" name="idDA" value="<?php echo $idDA; ?>">
-                
-                <label class="profile-label">Novo Nº Série</label>
-                <input type="text" name="newSerial" class="profile-input mb1" required>
-                
-                <div class="modal-actions">
-                    <a href="admin.php?tab=gestao" class="btn btn-cancel">Cancelar</a>
-                    <button type="submit" class="btn btn-save-profile">Confirmar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    <?php
-}
-
-// 3. Pedidos de Suspensão/Ativação: Modal para Suspender/Ativar um pedido
-function renderDecisionModal($idCR, $userName, $requestType) {
-    ?>
-    <div class="modal-overlay-php">
-        <div class="modal-box-php">
-            <h3 class="titulo mb1">Decidir Pedido</h3>
-            <p class="subtítulo mb1">
-                O utilizador <b><?php echo htmlspecialchars($userName); ?></b> pediu para: 
-                <span class="role-badge <?php echo $requestType == 'Suspender' ? 'badge-red' : 'badge-green'; ?>">
-                    <?php echo htmlspecialchars($requestType); ?>
-                </span>
-            </p>
-
-            <form action="processa_admin.php" method="POST">
-                <input type="hidden" name="action" value="decide_suspensao">
-                <input type="hidden" name="idCR" value="<?php echo htmlspecialchars($idCR); ?>">
-
-                <div class="form-group mb1_5">
-                    <label class="profile-label">Nota do Administrador (Justificação)</label>
-                    <textarea name="adminNote" class="profile-input" rows="3"  placeholder="Escreva o motivo da decisão..."></textarea>
-                </div>
-
-                <div class="modal-actions">
-                    <a href="admin.php?tab=pedidos" class="btn btn-cancel">Cancelar</a>
-                    <div>
-                        <button type="submit" name="decisao" value="rejeitado" class="btn btn-no">Rejeitar</button>
-                        <button type="submit" name="decisao" value="aprovado" class="btn btn-save-profile">Aprovar</button>
-                    </div>
-                </div>
-            </form>
-        </div>
     </div>
     <?php
 }

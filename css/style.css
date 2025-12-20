@@ -352,7 +352,16 @@ label, .profile-label { font-size: 14px; font-weight: 500; color: var(--foregrou
 #type_hp:checked ~ .hp-only-fields {
     display: block;
 }
+.btn-ver {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted); 
+    background: transparent;
+}
 
+
+.btn-ver:hover {background: var(--primary);color: var(--white);}
 
 
 
