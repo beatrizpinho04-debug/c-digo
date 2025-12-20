@@ -17,7 +17,7 @@ if ($_SESSION['userType'] !== "Profissional de Saúde") {
 }
 
 $title = "Profissional de Saúde";
-header_set(); 
+
 
 ?>
 <?php header_set($title); ?>
