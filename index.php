@@ -28,7 +28,7 @@ if (isset($_SESSION['login_error'])) {
 //Nome da página
 $title = "Sistema de Gestão de Dosimetros";
 ?>
-<?php header_set(); ?>
+<?php header_set($title); ?>
 
 <body>
     <?php if ($error): ?>

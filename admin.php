@@ -18,7 +18,7 @@ $tab = isset($_GET['tab']) ? $_GET['tab'] : 'associacao';
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 $action = isset($_GET['action']) ? $_GET['action'] : '';
 
-header_set();
+header_set($title);
 ?>
 <body>
     <div class="page-wrapper">

@@ -18,7 +18,7 @@ if ($_SESSION['userType'] !== "Físico Médico") {
 //Definir Título da Página
 $title = "Físico Médico";
 ?>
-<?php header_set(); ?>
+<?php header_set($title); ?>
 
 <body>
     <div class="page-wrapper">

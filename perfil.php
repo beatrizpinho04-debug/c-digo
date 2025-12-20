@@ -53,7 +53,7 @@ $foto_url = !empty($user['profilePic']) ? $user['profilePic'] : null;
 $title = "Perfil";
 ?>
 
-<?php header_set(); ?>
+<?php header_set($title); ?>
 
 <body>
     <div class="page-wrapper">

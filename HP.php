@@ -20,7 +20,7 @@ if ($_SESSION['userType'] !== "Profissional de Saúde") {
 $title = "Profissional de Saúde";
 
 ?>
-<?php header_set(); ?>
+<?php header_set($title); ?>
 
 <body>
     <div class="page-wrapper">
