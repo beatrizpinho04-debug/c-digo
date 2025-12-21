@@ -268,7 +268,7 @@ function renderHistoryTab($historyData, $searchTerm) {
     <?php
 }
 
-// 3. Pedidos de Suspensão/Ativação
+// 4. Pedidos de Suspensão/Ativação
 function renderRequestsTab($requests, $searchTerm) {
     ?>
     <div class="card">
@@ -332,7 +332,7 @@ function renderRequestsTab($requests, $searchTerm) {
     <?php
 }
 
-// 3. Pedidos de Suspensão/Ativação: Modal para Suspender/Ativar um pedido
+// 4. Pedidos de Suspensão/Ativação: Modal para Suspender/Ativar um pedido
 function renderDecisionModal($idCR, $userName, $requestType) {
     ?>
     <div class="modal-overlay-php">
@@ -367,7 +367,7 @@ function renderDecisionModal($idCR, $userName, $requestType) {
     <?php
 }
 
-// 4. Utilizadores
+// 5. Utilizadores
 function renderUsersTab($users, $searchTerm) {
     ?>
     <div class="card mb2">
@@ -432,7 +432,7 @@ function renderUsersTab($users, $searchTerm) {
     <?php
 }
 
-//4. Utilizadores: Modal para criar um user
+//5. Utilizadores: Modal para criar um user
 function renderCreateUserModal() {
     ?>
     <div class="modal-overlay-php">
