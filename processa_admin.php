@@ -9,22 +9,18 @@ if (!isset($_SESSION['idU']) || $_SESSION['userType'] !== "Administrador") {
 }
 
 $db = getDatabaseConnection();
-
-// Obter a ação (pode vir de POST ou GET)
 $action = isset($_POST['action']) ? $_POST['action'] : (isset($_GET['action']) ? $_GET['action'] : '');
 
-// Se não houver ação, manda de volta para o início
 if (empty($action)) {
     header("Location: admin.php");
     exit();
 }
 
 try {
-    // 1. ASSOCIAR DOSÍMETRO (Primeira vez)
+    // 1. Associar Dosímetro pela primeira vez
     if ($action === 'associar_dosimetro') {
         $idDA = $_POST['idDA'];
         $serial = trim($_POST['serial']);
-
         if (empty($serial)) throw new Exception("Número de série é obrigatório.");
 
         $db->beginTransaction();
@@ -39,11 +35,11 @@ try {
         if (!$info) throw new Exception("Atribuição não encontrada.");
 
         // B. Calcular a data quando se faz a mudança + da periocidade)
-        $dataHoje = date('Y-m-d');
+        $dataHoje = date('Y-m-d H:i:s');
         if ($info['periodicity'] === 'Trimestral') {
-            $next = date('Y-m-d', strtotime("+90 days"));
+            $next = date('Y-m-d H:i:s', strtotime("+90 days"));
         } else {
-            $next = date('Y-m-d', strtotime("+30 days"));
+            $next = date('Y-m-d H:i:s', strtotime("+30 days"));
         }
 
         // C. Atualizar tabela DosimeterAssignment
@@ -59,7 +55,7 @@ try {
         exit();
     }
 
-    // 2. Trocar dosimetro
+    // 2. Trocar de dosimetro
     elseif ($action === 'trocar_dosimetro') {
         $idDA = $_POST['idDA'];
         $newSerial = trim($_POST['newSerial']);
@@ -76,11 +72,11 @@ try {
         $current = $stmt->fetch();
 
         // Recalcular datas
-        $dataHoje = date('Y-m-d');
+        $dataHoje = date('Y-m-d H:i:s');
         if ($current['periodicity'] === 'Trimestral') {
-            $newNext = date('Y-m-d', strtotime("+90 days"));
+            $newNext = date('Y-m-d H:i:s', strtotime("+90 days"));
         } else {
-            $newNext = date('Y-m-d', strtotime("+30 days"));
+            $newNext = date('Y-m-d H:i:s', strtotime("+30 days"));
         }
 
         // Atualizar tabela DosimeterAssignment
@@ -97,6 +93,7 @@ try {
         header("Location: admin.php?tab=gestao");
         exit();
     }
+
     // 3. Suspender ou ativar pedido/autorização
     elseif ($action === 'decide_suspensao') {
         $idCR = $_POST['idCR'];
@@ -122,29 +119,21 @@ try {
         if ($decisao === 'aprovado') {
             if ($req['requestType'] === 'Suspender') {
                 $db->prepare("UPDATE ApprovedRequest SET status = 'Suspenso' WHERE idA = ?")->execute([$req['idA']]);
-                $db->prepare("UPDATE DosimeterAssignment SET status = 'Suspenso' WHERE idA = ?")->execute([$req['idA']]);
-
-                $stmtS = $db->prepare("SELECT dosimeterSerial FROM DosimeterAssignment WHERE idA = ?");
-                $stmtS->execute([$req['idA']]);
-                $serial = $stmtS->fetchColumn();
-                if ($serial) {
-                    $db->prepare("INSERT INTO DosimeterAssignmentHistory (idA, dosimeterSerial, insertDate) VALUES (?, ?, ?)")
-                       ->execute([$req['idA'], $serial, $now]);
-                }
-
-            } elseif ($req['requestType'] === 'Ativar') {
+                $db->prepare("UPDATE DosimeterAssignment SET status = 'Suspenso', dosimeterSerial = NULL, assignmentDate = NULL, nextReplacementDate = NULL WHERE idA = ?")->execute([$req['idA']]);
+            }
+            elseif ($req['requestType'] === 'Ativar') {
                 $db->prepare("UPDATE ApprovedRequest SET status = 'Ativo' WHERE idA = ?")->execute([$req['idA']]);
                 $db->prepare("UPDATE DosimeterAssignment SET status = 'Por_Associar' WHERE idA = ?")->execute([$req['idA']]);
             }
         }
-
         $db->commit();
         $_SESSION['message'] = "Pedido processado.";
         $_SESSION['message_type'] = "success";
         header("Location: admin.php?tab=pedidos");
         exit();
     }
-    // 3. Criar Utilizador
+
+    // 4. Criar Utilizador
     elseif ($action === 'create_user') {
         $email = trim($_POST['email']);
         $phone = trim($_POST['phoneN']);
@@ -159,7 +148,6 @@ try {
         }
 
         // B. Validar Formato Telemóvel (+351...)
-        // Regex: Começa com + e tem entre 9 a 15 dígitos
         if (!preg_match('/^\+[0-9]{11,15}$/', $phone)) {
             throw new Exception("Erro: O telemóvel deve estar no formato internacional (ex: +351912345678).");
         }
@@ -197,7 +185,70 @@ try {
         header("Location: admin.php?tab=users");
         exit();
     }
-    
+    // 5. Ativar/Desativar user
+    elseif ($action === 'toggle_status') {
+        $idU = $_POST['idU'];
+        $novoEstado = ($_POST['currentStatus'] == 1) ? 0 : 1;
+        $dataHoje = date('Y-m-d H:i:s');
+
+        $db->beginTransaction();
+
+        $db->prepare("UPDATE User SET userStatus = ? WHERE idU = ?")->execute([$novoEstado, $idU]);
+
+        if ($novoEstado == 0) {
+            //Desativatar
+            // 1º Suspender pedidos aprovados
+            $db->prepare("UPDATE ApprovedRequest 
+                          SET status = 'Suspenso'  
+                          WHERE idR IN (SELECT idR FROM DosimeterRequest WHERE idU = ?)")
+                ->execute([$idU]);
+
+            // 2º Recolher Dosímetros Ativos
+            $stmtReclaim = $db->prepare("UPDATE DosimeterAssignment 
+                                         SET status = 'Suspenso', dosimeterSerial = NULL, assignmentDate = NULL, nextReplacementDate = NULL 
+                                         WHERE idA IN (
+                                             SELECT AR.idA 
+                                             FROM ApprovedRequest AR
+                                             JOIN DosimeterRequest DR ON AR.idR = DR.idR
+                                             WHERE DR.idU = ?)");
+            $stmtReclaim->execute([$idU]);
+            $msg = "Utilizador desativado e dosímetros recolhidos.";
+
+        } else {
+            // Ativar
+            // 1º Ativar pedidos aprovados associados a este user
+            $db->prepare("UPDATE ApprovedRequest 
+                          SET status = 'Ativo' 
+                          WHERE idR IN (SELECT idR FROM DosimeterRequest WHERE idU = ?)")
+                ->execute([$idU]);
+
+            // 2º Mudar os DosimeterAssigment associado ao pedido/autorização deste user para 'Por_Associar'
+            $stmtReactivate = $db->prepare("UPDATE DosimeterAssignment 
+                          SET status = 'Por_Associar' 
+                          WHERE idA IN (
+                              SELECT AR.idA 
+                              FROM ApprovedRequest AR
+                              JOIN DosimeterRequest DR ON AR.idR = DR.idR
+                              WHERE DR.idU = ?
+                          )");
+            $stmtReactivate->execute([$idU]);
+
+            $msg = "Utilizador reativado. Associe um novo dosímetro.";
+        }
+
+        $db->commit();
+        
+        $_SESSION['message'] = $msg;
+        $_SESSION['message_type'] = "success";
+
+        // Redirecionamento inteligente
+        if (isset($_POST['source_page']) && $_POST['source_page'] === 'details') {
+            header("Location: user_details.php?idU=" . $idU);
+        } else {
+            header("Location: admin.php?tab=users");
+        }
+        exit();
+    }
 } catch (Exception $e) {
     if ($db->inTransaction()) {
         $db->rollBack();
@@ -207,7 +258,7 @@ try {
     if ($action == 'associar_dosimetro') header("Location: admin.php?tab=associacao");
     elseif ($action == 'trocar_dosimetro') header("Location: admin.php?tab=gestao");
     elseif ($action == 'decide_suspensao') header("Location: admin.php?tab=pedidos");
-    elseif ($action == 'create_user') header("Location: admin.php?tab=users");
+    elseif ($action == 'create_user' || $action === 'toggle_status') header("Location: admin.php?tab=users");
     else header("Location: admin.php");
     exit();
 }

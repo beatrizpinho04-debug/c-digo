@@ -17,18 +17,18 @@ PRAGMA PRIMARY KEY = ON;
 -- 1. UTILIZADORES
 INSERT INTO User (name, surname, birthDate, sex, email, password, phoneN, userType, userStatus, profilePic)
 VALUES
-    ('Ana', 'Silva', '1980-05-12', 'Female', 'admin@mail.com', '$2y$10$w/XkC/Y.uC.uC.uC.uC.uO', '+351910000001', 'Administrador', 1, 'foto/1.png'),
-    ('João', 'Pinho', '1985-02-15', 'Male', 'joao@mail.com', '$2y$10$w/XkC/Y.uC.uC.uC.uC.uO', '+351910000003', 'Físico Médico', 1, 'foto/2.png'),
-    ('Carlos', 'Vieira', '1988-01-10', 'Male', 'carlos@mail.com', '$2y$10$w/XkC/Y.uC.uC.uC.uC.uO', '+351910000005', 'Profissional de Saúde', 1, 'foto/3.png'),
-    ('Inês', 'Rocha', '1992-06-25', 'Female', 'ines@mail.com', '$2y$10$w/XkC/Y.uC.uC.uC.uC.uO', '+351910000006', 'Profissional de Saúde', 1, 'foto/4.png'),
-    ('Paulo', 'Morgado', '1982-03-15', 'Male', 'paulo@mail.com', '$2y$10$w/XkC/Y.uC.uC.uC.uC.uO', '+351910000007', 'Profissional de Saúde', 1, 'foto/5.png'),
-    ('Sofia', 'Almeida', '1995-09-01', 'Female', 'sofia@mail.com', '$2y$10$w/XkC/Y.uC.uC.uC.uC.uO', '+351910000008', 'Profissional de Saúde', 1, 'foto/6.png'),
-    ('Bruno', 'Costa', '1990-12-12', 'Male', 'bruno@mail.com', '$2y$10$w/XkC/Y.uC.uC.uC.uC.uO', '+351910000009', 'Profissional de Saúde', 1, 'foto/7.png'),
-    ('Lara', 'Sousa', '1998-04-04', 'Female', 'lara@mail.com', '$2y$10$w/XkC/Y.uC.uC.uC.uC.uO', '+351910000010', 'Profissional de Saúde', 1, 'foto/8.png'),
-    ('Rui', 'Tavares', '1985-07-07', 'Male', 'rui@mail.com', '$2y$10$w/XkC/Y.uC.uC.uC.uC.uO', '+351910000011', 'Profissional de Saúde', 1, 'foto/9.png'),
-    ('Marta', 'Lima', '1985-05-05', 'Female', 'marta@mail.com', '$2y$10$w/XkC/Y.uC.uC.uC.uC.uO', '+351910000099', 'Profissional de Saúde', 0, 'foto/10.png'),
-    ('Tiago', 'Persistente', '1993-02-02', 'Male', 'tiago@mail.com', '$2y$10$w/XkC/Y.uC.uC.uC.uC.uO', '+351910000022', 'Profissional de Saúde', 1, 'foto/12225881.png'),
-    ('Vera', 'Ciclos', '1989-08-08', 'Female', 'vera@mail.com', '$2y$10$w/XkC/Y.uC.uC.uC.uC.uO', '+351910000033', 'Profissional de Saúde', 1, 'foto/12225881.png');
+    ('Ana', 'Silva', '1980-05-12', 'Female', 'admin@mail.com', '$2y$10$2auDYhZCi32TRIF6iW1HOuj8mYt9glxgREcrK.eJMZwMBQnzzG9/y', '+351910000001', 'Administrador', 1, 'foto/1.png'),
+    ('João', 'Pinho', '1985-02-15', 'Male', 'joao@mail.com', '$2y$10$2auDYhZCi32TRIF6iW1HOuj8mYt9glxgREcrK.eJMZwMBQnzzG9/y', '+351910000003', 'Físico Médico', 1, 'foto/2.png'),
+    ('Carlos', 'Vieira', '1988-01-10', 'Male', 'carlos@mail.com', '$2y$10$2auDYhZCi32TRIF6iW1HOuj8mYt9glxgREcrK.eJMZwMBQnzzG9/y', '+351910000005', 'Profissional de Saúde', 1, 'foto/3.png'),
+    ('Inês', 'Rocha', '1992-06-25', 'Female', 'ines@mail.com', '$2y$10$2auDYhZCi32TRIF6iW1HOuj8mYt9glxgREcrK.eJMZwMBQnzzG9/y', '+351910000006', 'Profissional de Saúde', 1, 'foto/4.png'),
+    ('Paulo', 'Morgado', '1982-03-15', 'Male', 'paulo@mail.com', '$2y$10$2auDYhZCi32TRIF6iW1HOuj8mYt9glxgREcrK.eJMZwMBQnzzG9/y', '+351910000007', 'Profissional de Saúde', 1, 'foto/5.png'),
+    ('Sofia', 'Almeida', '1995-09-01', 'Female', 'sofia@mail.com', '$2y$10$2auDYhZCi32TRIF6iW1HOuj8mYt9glxgREcrK.eJMZwMBQnzzG9/y', '+351910000008', 'Profissional de Saúde', 1, 'foto/6.png'),
+    ('Bruno', 'Costa', '1990-12-12', 'Male', 'bruno@mail.com', '$2y$10$2auDYhZCi32TRIF6iW1HOuj8mYt9glxgREcrK.eJMZwMBQnzzG9/y', '+351910000009', 'Profissional de Saúde', 1, 'foto/7.png'),
+    ('Lara', 'Sousa', '1998-04-04', 'Female', 'lara@mail.com', '$2y$10$2auDYhZCi32TRIF6iW1HOuj8mYt9glxgREcrK.eJMZwMBQnzzG9/y', '+351910000010', 'Profissional de Saúde', 1, 'foto/8.png'),
+    ('Rui', 'Tavares', '1985-07-07', 'Male', 'rui@mail.com', '$2y$10$2auDYhZCi32TRIF6iW1HOuj8mYt9glxgREcrK.eJMZwMBQnzzG9/y', '+351910000011', 'Profissional de Saúde', 1, 'foto/9.png'),
+    ('Marta', 'Lima', '1985-05-05', 'Female', 'marta@mail.com', '$2y$10$2auDYhZCi32TRIF6iW1HOuj8mYt9glxgREcrK.eJMZwMBQnzzG9/y', '+351910000099', 'Profissional de Saúde', 0, 'foto/10.png'),
+    ('Tiago', 'Persistente', '1993-02-02', 'Male', 'tiago@mail.com', '$2y$10$2auDYhZCi32TRIF6iW1HOuj8mYt9glxgREcrK.eJMZwMBQnzzG9/y', '+351910000022', 'Profissional de Saúde', 1, 'foto/12225881.png'),
+    ('Vera', 'Ciclos', '1989-08-08', 'Female', 'vera@mail.com', '$2y$10$2auDYhZCi32TRIF6iW1HOuj8mYt9glxgREcrK.eJMZwMBQnzzG9/y', '+351910000033', 'Profissional de Saúde', 1, 'foto/12225881.png');
 
 INSERT INTO HealthProfessional (idU, profession, department)
 VALUES
@@ -44,155 +44,93 @@ VALUES
     (12, 'Técnica', 'Medicina Nuclear');
 
 -- 2. PEDIDOS E APROVAÇÕES
-INSERT INTO DosimeterRequest (idU, pratica, requestDate, decisionMade)
-VALUES
-    (3, 'Raio-X', DATE('now', '-6 months'), 1);
+INSERT INTO DosimeterRequest (idU, pratica, requestDate, decisionMade) VALUES (3, 'Raio-X', DATETIME('now', '-6 months'), 1); 
+INSERT INTO ApprovedRequest (idR, idP, approvalDate, periodicity, riskCategory, dosimeterType, status) VALUES (1, 2, DATETIME('now', '-6 months', '+2 days'), 'Mensal', 'A', 'Corpo Inteiro', 'Ativo');
 
-INSERT INTO ApprovedRequest (idR, idP, approvalDate, periodicity, riskCategory, dosimeterType, status)
-VALUES
-    (1, 2, DATE('now', '-6 months'), 'Mensal', 'A', 'Corpo Inteiro', 'Ativo');
+INSERT INTO DosimeterRequest (idU, pratica, requestDate, decisionMade) VALUES (4, 'Bloco', DATETIME('now', '-4 months'), 1); 
+INSERT INTO ApprovedRequest (idR, idP, approvalDate, periodicity, riskCategory, dosimeterType, status) VALUES (2, 2, DATETIME('now', '-4 months', '+2 days'), 'Trimestral', 'B', 'Extremidade', 'Ativo');
 
-INSERT INTO DosimeterRequest (idU, pratica, requestDate, decisionMade)
-VALUES
-    (4, 'Bloco', DATE('now', '-4 months'), 1);
+INSERT INTO DosimeterRequest (idU, pratica, requestDate, decisionMade) VALUES (5, 'Hemodinâmica', DATETIME('now', '-2 months'), 1); 
+INSERT INTO ApprovedRequest (idR, idP, approvalDate, periodicity, riskCategory, dosimeterType, status) VALUES (3, 2, DATETIME('now', '-2 months', '+2 days'), 'Mensal', 'A', 'Corpo Inteiro', 'Ativo');
 
-INSERT INTO ApprovedRequest (idR, idP, approvalDate, periodicity, riskCategory, dosimeterType, status)
-VALUES
-    (2, 2, DATE('now', '-4 months'), 'Trimestral', 'B', 'Extremidade', 'Ativo');
+INSERT INTO DosimeterRequest (idU, pratica, requestDate, decisionMade) VALUES (6, 'Dentária', DATETIME('now', '-1 day'), 1); 
+INSERT INTO ApprovedRequest (idR, idP, approvalDate, periodicity, riskCategory, dosimeterType, status) VALUES (4, 2, DATETIME('now', '-1 day', '+2 days'), 'Trimestral', 'B', 'Corpo Inteiro', 'Ativo');
 
-INSERT INTO DosimeterRequest (idU, pratica, requestDate, decisionMade)
-VALUES
-    (5, 'Hemodinâmica', DATE('now', '-2 months'), 1);
+INSERT INTO DosimeterRequest (idU, pratica, requestDate, decisionMade) VALUES (7, 'Nuclear', DATETIME('now'), 1); 
+INSERT INTO ApprovedRequest (idR, idP, approvalDate, periodicity, riskCategory, dosimeterType, status) VALUES (5, 2, DATETIME('now'), 'Mensal', 'A', 'Corpo Inteiro', 'Ativo');
 
-INSERT INTO ApprovedRequest (idR, idP, approvalDate, periodicity, riskCategory, dosimeterType, status)
-VALUES
-    (3, 2, DATE('now', '-2 months'), 'Mensal', 'A', 'Corpo Inteiro', 'Ativo');
+INSERT INTO DosimeterRequest (idU, pratica, requestDate, decisionMade) VALUES (8, 'Investigação', DATETIME('now', '-1 year'), 1); 
+INSERT INTO ApprovedRequest (idR, idP, approvalDate, periodicity, riskCategory, dosimeterType, status) VALUES (6, 2, DATETIME('now', '-1 year', '+2 days'), 'Trimestral', 'A', 'Extremidade', 'Suspenso');
 
-INSERT INTO DosimeterRequest (idU, pratica, requestDate, decisionMade)
-VALUES
-    (6, 'Dentária', DATE('now', '-1 day'), 1);
+INSERT INTO DosimeterRequest (idU, pratica, requestDate, decisionMade) VALUES (9, 'Urgência', DATETIME('now', '-1 year'), 1); 
+INSERT INTO ApprovedRequest (idR, idP, approvalDate, periodicity, riskCategory, dosimeterType, status) VALUES (7, 2, DATETIME('now', '-1 year', '+2 days'), 'Mensal', 'A', 'Corpo Inteiro', 'Ativo');
 
-INSERT INTO ApprovedRequest (idR, idP, approvalDate, periodicity, riskCategory, dosimeterType, status)
-VALUES
-    (4, 2, DATE('now', '-1 day'), 'Trimestral', 'B', 'Corpo Inteiro', 'Ativo');
+INSERT INTO DosimeterRequest (idU, pratica, requestDate, decisionMade) VALUES (10, 'Urgência', DATETIME('now', '-2 years'), 1); 
+INSERT INTO ApprovedRequest (idR, idP, approvalDate, periodicity, riskCategory, dosimeterType, status) VALUES (8, 2, DATETIME('now', '-2 years', '+2 days'), 'Trimestral', 'B', 'Corpo Inteiro', 'Suspenso');
 
-INSERT INTO DosimeterRequest (idU, pratica, requestDate, decisionMade)
-VALUES
-    (7, 'Nuclear', DATE('now'), 1);
+-- Tiago
+INSERT INTO DosimeterRequest (idU, pratica, requestDate, decisionMade) VALUES (11, 'Estágio', DATETIME('now', '-1 year'), 1);
+INSERT INTO RejectedRequest (idR, idP, rejectionDate, comment) VALUES (9, 2, DATETIME('now', '-1 year', '+2 days'), 'Falta certificado.');
+INSERT INTO DosimeterRequest (idU, pratica, requestDate, decisionMade) VALUES (11, 'Estágio II', DATETIME('now', '-10 months'), 1);
+INSERT INTO RejectedRequest (idR, idP, rejectionDate, comment) VALUES (10, 2, DATETIME('now', '-10 months', '+2 days'), 'Prática errada.');
+INSERT INTO DosimeterRequest (idU, pratica, requestDate, decisionMade) VALUES (11, 'Estágio Final', DATETIME('now', '-9 months'), 1); 
+INSERT INTO ApprovedRequest (idR, idP, approvalDate, periodicity, riskCategory, dosimeterType, status) VALUES (11, 2, DATETIME('now', '-9 months'), 'Mensal', 'B', 'Corpo Inteiro', 'Ativo');
 
-INSERT INTO ApprovedRequest (idR, idP, approvalDate, periodicity, riskCategory, dosimeterType, status)
-VALUES
-    (5, 2, DATE('now'), 'Mensal', 'A', 'Corpo Inteiro', 'Ativo');
+-- Vera
+INSERT INTO DosimeterRequest (idU, pratica, requestDate, decisionMade) VALUES (12, 'MN', DATETIME('now', '-2 years'), 1); 
+INSERT INTO ApprovedRequest (idR, idP, approvalDate, periodicity, riskCategory, dosimeterType, status) VALUES (12, 2, DATETIME('now', '-2 years', '+2 days'), 'Mensal', 'A', 'Corpo Inteiro', 'Suspenso');
 
-INSERT INTO DosimeterRequest (idU, pratica, requestDate, decisionMade)
-VALUES
-    (8, 'Investigação', DATE('now', '-1 year'), 1);
 
-INSERT INTO ApprovedRequest (idR, idP, approvalDate, periodicity, riskCategory, dosimeterType, status)
-VALUES
-    (6, 2, DATE('now', '-1 year'), 'Trimestral', 'A', 'Extremidade', 'Suspenso');
+-- =================================================================================
+-- 3. ASSOCIAÇÕES
+-- =================================================================================
 
-INSERT INTO DosimeterRequest (idU, pratica, requestDate, decisionMade)
-VALUES
-    (9, 'Urgência', DATE('now', '-1 year'), 1);
-    
-INSERT INTO ApprovedRequest (idR, idP, approvalDate, periodicity, riskCategory, dosimeterType, status)
-VALUES
-    (7, 2, DATE('now', '-1 year'), 'Mensal', 'A', 'Corpo Inteiro', 'Ativo');
+UPDATE DosimeterAssignment SET dosimeterSerial='M-CARLOS-01', assignmentDate=DATETIME('now', '-15 days'), nextReplacementDate=DATETIME('now', '+15 days'), status='Em_Uso', periodicity='Mensal' WHERE idA=1;
+UPDATE DosimeterAssignment SET dosimeterSerial='T-INES-01', assignmentDate=DATETIME('now', '-75 days'), nextReplacementDate=DATETIME('now', '+15 days'), status='Em_Uso', periodicity='Trimestral' WHERE idA=2;
+UPDATE DosimeterAssignment SET dosimeterSerial='M-PAULO-LATE', assignmentDate=DATETIME('now', '-60 days'), nextReplacementDate=DATETIME('now', '-30 days'), status='Em_Uso', periodicity='Mensal' WHERE idA=3;
+UPDATE DosimeterAssignment SET dosimeterSerial='M-BRUNO-NEW', assignmentDate=DATETIME('now'), nextReplacementDate=DATETIME('now', '+30 days'), status='Em_Uso', periodicity='Mensal' WHERE idA=5;
+UPDATE DosimeterAssignment SET dosimeterSerial=NULL, assignmentDate=NULL, nextReplacementDate=NULL, status='Suspenso', periodicity='Trimestral' WHERE idA=6;
+UPDATE DosimeterAssignment SET dosimeterSerial='M-RUI-05', assignmentDate=DATETIME('now'), nextReplacementDate=DATETIME('now', '+30 days'), status='Em_Uso', periodicity='Mensal' WHERE idA=7;
+UPDATE DosimeterAssignment SET dosimeterSerial=NULL, assignmentDate=NULL, nextReplacementDate=NULL, status='Suspenso', periodicity='Trimestral' WHERE idA=8;
+UPDATE DosimeterAssignment SET dosimeterSerial='M-TIAGO-09', assignmentDate=DATETIME('now', '-20 days'), nextReplacementDate=DATETIME('now', '+10 days'), status='Em_Uso', periodicity='Mensal' WHERE idA=9;
+UPDATE DosimeterAssignment SET dosimeterSerial=NULL, assignmentDate=NULL, nextReplacementDate=NULL, status='Suspenso', periodicity='Mensal' WHERE idA=10;
 
-INSERT INTO DosimeterRequest (idU, pratica, requestDate, decisionMade)
-VALUES
-    (10, 'Urgência', DATE('now', '-2 years'), 1);
 
-INSERT INTO ApprovedRequest (idR, idP, approvalDate, periodicity, riskCategory, dosimeterType, status)
-VALUES
-    (8, 2, DATE('now', '-2 years'), 'Trimestral', 'B', 'Corpo Inteiro', 'Suspenso');
+-- =================================================================================
+-- 4. HISTÓRICO (COM DATETIME)
+-- =================================================================================
 
-INSERT INTO DosimeterRequest (idU, pratica, requestDate, decisionMade)
-VALUES
-    (11, 'Estágio', DATE('now', '-1 year'), 1);
+-- 1. Rui: Trocou hoje.
+INSERT INTO DosimeterAssignmentHistory (idA, dosimeterSerial, assignmentDate, removalDate) 
+VALUES (7, 'M-RUI-REC', DATETIME('now', '-30 days'), DATETIME('now')); 
 
-INSERT INTO RejectedRequest (idR, idP, rejectionDate, comment)
-VALUES
-    (9, 2, DATE('now', '-1 year', '+2 days'), 'Falta certificado.');
+-- 2. Lara: Suspensa hoje.
+INSERT INTO DosimeterAssignmentHistory (idA, dosimeterSerial, assignmentDate, removalDate) 
+VALUES (6, 'T-LARA-REC', DATETIME('now', '-6 months'), DATETIME('now'));
 
-INSERT INTO DosimeterRequest (idU, pratica, requestDate, decisionMade)
-VALUES
-    (11, 'Estágio II', DATE('now', '-10 months'), 1);
-    
-INSERT INTO RejectedRequest (idR, idP, rejectionDate, comment)
-VALUES
-    (10, 2, DATE('now', '-10 months', '+2 days'), 'Prática errada.');
+-- 3. Marta: Suspensa hoje.
+INSERT INTO DosimeterAssignmentHistory (idA, dosimeterSerial, assignmentDate, removalDate) 
+VALUES (8, 'T-MARTA-REC', DATETIME('now', '-1 year'), DATETIME('now'));
 
-INSERT INTO DosimeterRequest (idU, pratica, requestDate, decisionMade)
-VALUES
-    (11, 'Estágio Final', DATE('now', '-9 months'), 1);
+-- Histórico Antigo
+INSERT INTO DosimeterAssignmentHistory (idA, dosimeterSerial, assignmentDate, removalDate) 
+VALUES (7, 'M-RUI-01', DATETIME('now', '-185 days'), DATETIME('now', '-155 days'));
 
-INSERT INTO ApprovedRequest (idR, idP, approvalDate, periodicity, riskCategory, dosimeterType, status)
-VALUES
-    (11, 2, DATE('now', '-9 months'), 'Mensal', 'B', 'Corpo Inteiro', 'Ativo');
+INSERT INTO DosimeterAssignmentHistory (idA, dosimeterSerial, assignmentDate, removalDate) 
+VALUES (9, 'M-TIAGO-01', DATETIME('now', '-10 months'), DATETIME('now', '-9 months'));
 
-INSERT INTO DosimeterRequest (idU, pratica, requestDate, decisionMade)
-VALUES
-    (12, 'MN', DATE('now', '-2 years'), 1);
-
-INSERT INTO ApprovedRequest (idR, idP, approvalDate, periodicity, riskCategory, dosimeterType, status)
-VALUES
-    (12, 2, DATE('now', '-2 years'), 'Mensal', 'A', 'Corpo Inteiro', 'Suspenso');
-
--- 3. ASSOCIAÇÕES DOSÍMETROS 
-UPDATE DosimeterAssignment SET dosimeterSerial='M-CARLOS-01', assignmentDate=DATE('now', '-15 days'), nextReplacementDate=DATE('now', '+45 days'), status='Em_Uso', periodicity='Mensal' WHERE idA=1;
-UPDATE DosimeterAssignment SET dosimeterSerial='T-INES-01', assignmentDate=DATE('now', '-45 days'), nextReplacementDate=DATE('now', '+45 days'), status='Em_Uso', periodicity='Trimestral' WHERE idA=2;
-UPDATE DosimeterAssignment SET dosimeterSerial='M-PAULO-LATE', assignmentDate=DATE('now', '-60 days'), nextReplacementDate=DATE('now', '-30 days'), status='Em_Uso', periodicity='Mensal' WHERE idA=3;
-UPDATE DosimeterAssignment SET dosimeterSerial='M-BRUNO-HOJE', assignmentDate=DATE('now'), nextReplacementDate=DATE('now', '+30 days'), status='Em_Uso', periodicity='Mensal' WHERE idA=5;
-UPDATE DosimeterAssignment SET dosimeterSerial='T-LARA-SUSP', assignmentDate=DATE('now', '-6 months'), nextReplacementDate=DATE('now'), status='Suspenso', periodicity='Trimestral' WHERE idA=6;
-UPDATE DosimeterAssignment SET dosimeterSerial='M-RUI-05', assignmentDate=DATE('now', '-5 days'), nextReplacementDate=DATE('now', '+45 days'), status='Em_Uso', periodicity='Mensal' WHERE idA=7;
-UPDATE DosimeterAssignment SET dosimeterSerial='T-MARTA-LAST', assignmentDate=DATE('now', '-1 year'), nextReplacementDate=DATE('now'), status='Suspenso', periodicity='Trimestral' WHERE idA=8;
-UPDATE DosimeterAssignment SET dosimeterSerial='M-TIAGO-09', assignmentDate=DATE('now', '-10 days'), nextReplacementDate=DATE('now', '+50 days'), status='Em_Uso', periodicity='Mensal' WHERE idA=9;
-UPDATE DosimeterAssignment SET dosimeterSerial='M-VERA-LAST', assignmentDate=DATE('now', '-3 months'), nextReplacementDate=DATE('now'), status='Suspenso', periodicity='Mensal' WHERE idA=10;
-
--- 4. HISTÓRICO 
-INSERT INTO DosimeterAssignmentHistory (idA, dosimeterSerial, insertDate)
-VALUES
-    (7, 'M-RUI-REC', DATE('now'));
-
-INSERT INTO DosimeterAssignmentHistory (idA, dosimeterSerial, insertDate)
-VALUES
-    (6, 'T-LARA-REC', DATE('now'));
-
-INSERT INTO DosimeterAssignmentHistory (idA, dosimeterSerial, insertDate)
-VALUES
-    (8, 'T-MARTA-REC', DATE('now'));
-
-INSERT INTO DosimeterAssignmentHistory (idA, dosimeterSerial, insertDate)
-VALUES
-    (7, 'M-RUI-01', DATE('now', '-155 days'));
-
-INSERT INTO DosimeterAssignmentHistory (idA, dosimeterSerial, insertDate)
-VALUES
-    (9, 'M-TIAGO-01', DATE('now', '-9 months'));
-
-INSERT INTO DosimeterAssignmentHistory (idA, dosimeterSerial, insertDate)
-VALUES
-    (10, 'M-VERA-01', DATE('now', '-24 months'));
+INSERT INTO DosimeterAssignmentHistory (idA, dosimeterSerial, assignmentDate, removalDate) 
+VALUES (10, 'M-VERA-01', DATETIME('now', '-25 months'), DATETIME('now', '-24 months'));
 
 -- 5. HISTÓRICO DE PEDIDOS
-INSERT INTO ChangeRecord (idA, idUser, requestType, message, requestDate, status, idAdmin, decisionDate, finalStatus, adminNote)
-VALUES
-    (10, 12, 'Suspender', 'Licença', DATE('now', '-18 months'), 'Concluído', 1, DATE('now', '-18 months', '+1 day'), 'Suspenso', 'Aprovado conforme regulamento.');
+INSERT INTO ChangeRecord (idA, idUser, requestType, message, requestDate, status, idAdmin, decisionDate, finalStatus, adminNote) VALUES (10, 12, 'Suspender', 'Licença', DATETIME('now', '-18 months'), 'Concluído', 1, DATETIME('now', '-18 months', '+1 day'), 'Suspenso', 'Aprovado conforme regulamento.');
+INSERT INTO ChangeRecord (idA, idUser, requestType, message, requestDate, status, idAdmin, decisionDate, finalStatus, adminNote) VALUES (10, 12, 'Ativar', 'Regresso', DATETIME('now', '-12 months'), 'Concluído', 1, DATETIME('now', '-12 months', '+1 day'), 'Ativo', NULL);
 
-INSERT INTO ChangeRecord (idA, idUser, requestType, message, requestDate, status, idAdmin, decisionDate, finalStatus, adminNote)
-VALUES
-    (10, 12, 'Ativar', 'Regresso', DATE('now', '-12 months'), 'Concluído', 1, DATE('now', '-12 months', '+1 day'), 'Ativo', NULL);
+-- Pedido Rejeitado
+INSERT INTO ChangeRecord (idA, idUser, requestType, message, requestDate, status, idAdmin, decisionDate, finalStatus, adminNote) 
+VALUES (10, 12, 'Suspender', 'Prefiro não usar', DATETIME('now', '-6 months'), 'Rejeitado', 1, DATETIME('now', '-6 months', '+1 day'), 'Ativo', 'Uso obrigatório nesta prática.');
 
-INSERT INTO ChangeRecord (idA, idUser, requestType, message, requestDate, status, idAdmin, decisionDate, finalStatus, adminNote)
-VALUES
-    (10, 12, 'Suspender', 'Prefiro não usar', DATE('now', '-6 months'), 'Rejeitado', 1, DATE('now', '-6 months', '+1 day'), 'Ativo', 'Uso obrigatório nesta prática.');
+INSERT INTO ChangeRecord (idA, idUser, requestType, message, requestDate, status, idAdmin, decisionDate, finalStatus, adminNote) VALUES (10, 12, 'Suspender', 'Doutoramento', DATETIME('now', '-2 months'), 'Concluído', 1, DATETIME('now', '-2 months', '+1 day'), 'Suspenso', 'Autorizado pela direção.');
 
-INSERT INTO ChangeRecord (idA, idUser, requestType, message, requestDate, status, idAdmin, decisionDate, finalStatus, adminNote)
-VALUES
-    (10, 12, 'Suspender', 'Doutoramento', DATE('now', '-2 months'), 'Concluído', 1, DATE('now', '-2 months', '+1 day'), 'Suspenso', 'Autorizado pela direção.');
-
-INSERT INTO ChangeRecord (idA, idUser, requestType, message, requestDate, status)
-VALUES
-    (1, 3, 'Suspender', 'Férias.', DATE('now'), 'Pendente');
+-- Pedido Pendente
+INSERT INTO ChangeRecord (idA, idUser, requestType, message, requestDate, status) VALUES (1, 3, 'Suspender', 'Férias.', DATETIME('now'), 'Pendente');

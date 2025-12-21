@@ -40,9 +40,9 @@ function getDosimeterStats($db) {
         $dataInicioAnalise = date('Y-m-21');
         $dataFimAnalise = date('Y-m-20', strtotime('+1 month'));
         // O próximo mês de abastecimento é Janeiro, por isso calcula todos os dosimetros que são esperados ser trocados
-        $mesAbastecimento = date('F', strtotime('+1 months'));
-        $inicioProxMes = date('Y-m-01', strtotime('+1 months'));
-        $fimProxMes = date('Y-m-t', strtotime('+1 months'));
+        $mesAbastecimento = date('F', strtotime('+1 month'));
+        $inicioProxMes = date('Y-m-01', strtotime('+1 month'));
+        $fimProxMes = date('Y-m-t', strtotime('+1 month'));
     } else {
         //Lógica:
         //Se hoje for 15/12, vão para análise os dosimetros recolhidos desde 21/11 a 20/12
@@ -55,7 +55,7 @@ function getDosimeterStats($db) {
     }
 
     // Contagem de quantos dosímetros vão ser recolhidos, contando com os users inativos ou com autorizações suspensas
-    $sqlAnalise = "SELECT COUNT(*) FROM DosimeterAssignmentHistory WHERE insertDate BETWEEN ? AND ?";
+    $sqlAnalise = "SELECT COUNT(*) FROM DosimeterAssignmentHistory WHERE removalDate BETWEEN ? AND ?";
     $stmt = $db->prepare($sqlAnalise);
     $stmt->execute([$dataInicioAnalise, $dataFimAnalise]);
     $enviadosAnalise = $stmt->fetchColumn();

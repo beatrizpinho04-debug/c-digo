@@ -124,8 +124,8 @@ CREATE TABLE IF NOT EXISTS DosimeterAssignment (
     idDA INTEGER PRIMARY KEY AUTOINCREMENT,
     idA INTEGER NOT NULL,
     dosimeterSerial TEXT,
-    assignmentDate DATE,
-    nextReplacementDate DATE,
+    assignmentDate DATETIME,
+    nextReplacementDate DATETIME,
     periodicity TEXT CHECK(periodicity IN ('Mensal','Trimestral')) NOT NULL,
     status TEXT CHECK(status IN ('Por_Associar','Em_Uso','Suspenso')) DEFAULT 'Por_Associar',
     FOREIGN KEY (idA) REFERENCES ApprovedRequest(idA) ON DELETE CASCADE
@@ -149,18 +149,25 @@ CREATE TABLE IF NOT EXISTS DosimeterAssignmentHistory (
     idH INTEGER PRIMARY KEY AUTOINCREMENT,
     idA INTEGER NOT NULL,
     dosimeterSerial TEXT NOT NULL,
-    insertDate DATETIME NOT NULL,
+    assignmentDate DATETIME NOT NULL,
+    removalDate DATETIME NOT NULL,
     FOREIGN KEY (idA) REFERENCES ApprovedRequest(idA) ON DELETE CASCADE
 );
 
 --------------------------------------------------------------------------------
--- TRIGGER: Guardar o histórico de cada dosimetro associado a um utilizador
+-- TRIGGER: Guardar o histórico quando há troca de dosímetros
 --------------------------------------------------------------------------------
 CREATE TRIGGER IF NOT EXISTS AutoLogHistory
 AFTER UPDATE ON DosimeterAssignment
 FOR EACH ROW
-WHEN NEW.status = 'Em_Uso' AND (OLD.status != 'Em_Uso' OR OLD.dosimeterSerial != NEW.dosimeterSerial)
+WHEN OLD.dosimeterSerial IS NOT NULL 
+     AND (NEW.dosimeterSerial != OLD.dosimeterSerial OR NEW.dosimeterSerial IS NULL)
 BEGIN
-    INSERT INTO DosimeterAssignmentHistory (idA, dosimeterSerial, insertDate)
-    VALUES (NEW.idA, NEW.dosimeterSerial, NEW.assignmentDate);
+    INSERT INTO DosimeterAssignmentHistory (idA, dosimeterSerial, assignmentDate, removalDate)
+    VALUES (
+        NEW.idA, 
+        OLD.dosimeterSerial, 
+        OLD.assignmentDate, 
+        DATETIME('now')
+    );
 END;
