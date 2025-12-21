@@ -3,9 +3,9 @@ PRAGMA PRIMARY KEY = ON;
 .headers ON
 .mode columns
 
----------------------------------------------------
+---------------
 -- 1. USER
----------------------------------------------------
+---------------
 CREATE TABLE IF NOT EXISTS User (
     idU INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
@@ -20,9 +20,9 @@ CREATE TABLE IF NOT EXISTS User (
     profilePic TEXT DEFAULT 'foto/12225881.png'
 );
 
----------------------------------------------------
+------------------------------
 -- 2. HEALTH PROFESSIONAL
----------------------------------------------------
+------------------------------
 CREATE TABLE IF NOT EXISTS HealthProfessional (
     idHP INTEGER PRIMARY KEY AUTOINCREMENT,
     idU INTEGER UNIQUE NOT NULL,
@@ -31,9 +31,9 @@ CREATE TABLE IF NOT EXISTS HealthProfessional (
     FOREIGN KEY (idU) REFERENCES User(idU) ON DELETE CASCADE
 );
 
----------------------------------------------------
+----------------------------
 -- 3. DOSIMETER REQUEST
----------------------------------------------------
+----------------------------
 CREATE TABLE IF NOT EXISTS DosimeterRequest (
     idR INTEGER PRIMARY KEY AUTOINCREMENT,
     idU INTEGER NOT NULL,
@@ -42,9 +42,9 @@ CREATE TABLE IF NOT EXISTS DosimeterRequest (
     decisionMade BOOLEAN DEFAULT 0,
     FOREIGN KEY (idU) REFERENCES User(idU) ON DELETE CASCADE
 );
----------------------------------------------------
+---------------------------
 -- 4. APPROVED REQUEST
----------------------------------------------------
+---------------------------
 CREATE TABLE IF NOT EXISTS ApprovedRequest (
     idA INTEGER PRIMARY KEY AUTOINCREMENT,
     idR INTEGER NOT NULL,
@@ -58,9 +58,9 @@ CREATE TABLE IF NOT EXISTS ApprovedRequest (
     FOREIGN KEY (idP) REFERENCES User(idU) ON DELETE CASCADE
 );
 
----------------------------------------------------
--- TRIGGER: marcar pedido como aprovado
----------------------------------------------------
+----------------------------------------------------------
+-- TRIGGER: Passar o pedido aprovado para "Concluido"
+----------------------------------------------------------
 CREATE TRIGGER IF NOT EXISTS MarkRequestAsApproved
 AFTER INSERT ON ApprovedRequest
 FOR EACH ROW
@@ -70,9 +70,9 @@ BEGIN
     WHERE idR = NEW.idR;
 END;
 
----------------------------------------------------
+---------------------------
 -- 5. REJECTED REQUEST
----------------------------------------------------
+---------------------------
 CREATE TABLE IF NOT EXISTS RejectedRequest (
     idRej INTEGER PRIMARY KEY AUTOINCREMENT,
     idR INTEGER NOT NULL,
@@ -83,9 +83,9 @@ CREATE TABLE IF NOT EXISTS RejectedRequest (
     FOREIGN KEY (idP) REFERENCES User(idU)
 );
 
----------------------------------------------------
--- TRIGGER: marcar pedido como rejeitado
----------------------------------------------------
+-----------------------------------------------------------
+-- TRIGGER: Passar o pedido rejeitado para "Concluido"
+-----------------------------------------------------------
 CREATE TRIGGER IF NOT EXISTS MarkRequestAsRejected
 AFTER INSERT ON RejectedRequest
 FOR EACH ROW
@@ -95,9 +95,9 @@ BEGIN
     WHERE idR = NEW.idR;
 END;
 
----------------------------------------------------
+------------------------
 -- 6. CHANGE RECORD
----------------------------------------------------
+------------------------
 CREATE TABLE IF NOT EXISTS ChangeRecord (
     idCR INTEGER PRIMARY KEY AUTOINCREMENT,
     idA INTEGER NOT NULL,
@@ -117,9 +117,9 @@ CREATE TABLE IF NOT EXISTS ChangeRecord (
     FOREIGN KEY (idAdmin) REFERENCES User(idU)
 );
 
----------------------------------------------------
+-------------------------------
 -- 7. DOSIMETER ASSIGNMENT
----------------------------------------------------
+-------------------------------
 CREATE TABLE IF NOT EXISTS DosimeterAssignment (
     idDA INTEGER PRIMARY KEY AUTOINCREMENT,
     idA INTEGER NOT NULL,
@@ -131,9 +131,9 @@ CREATE TABLE IF NOT EXISTS DosimeterAssignment (
     FOREIGN KEY (idA) REFERENCES ApprovedRequest(idA) ON DELETE CASCADE
 );
 
----------------------------------------------------
+-------------------------------------------------
 -- TRIGGER: criar assignment automaticamente
----------------------------------------------------
+-------------------------------------------------
 CREATE TRIGGER IF NOT EXISTS CreateAssignmentAfterApprove
 AFTER INSERT ON ApprovedRequest
 FOR EACH ROW
@@ -142,9 +142,9 @@ BEGIN
     VALUES (NEW.idA, NEW.periodicity, 'Por_Associar');
 END;
 
----------------------------------------------------
+-----------------------------
 -- 8. ASSIGNMENT HISTORY
----------------------------------------------------
+-----------------------------
 CREATE TABLE IF NOT EXISTS DosimeterAssignmentHistory (
     idH INTEGER PRIMARY KEY AUTOINCREMENT,
     idA INTEGER NOT NULL,
@@ -153,9 +153,9 @@ CREATE TABLE IF NOT EXISTS DosimeterAssignmentHistory (
     FOREIGN KEY (idA) REFERENCES ApprovedRequest(idA) ON DELETE CASCADE
 );
 
----------------------------------------------------
--- TRIGGER: Guardar o histórico de cada associação a dosimetro
----------------------------------------------------
+--------------------------------------------------------------------------------
+-- TRIGGER: Guardar o histórico de cada dosimetro associado a um utilizador
+--------------------------------------------------------------------------------
 CREATE TRIGGER IF NOT EXISTS AutoLogHistory
 AFTER UPDATE ON DosimeterAssignment
 FOR EACH ROW

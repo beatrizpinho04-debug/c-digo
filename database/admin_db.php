@@ -8,7 +8,9 @@ function getPendingAssociations($db, $search = '') {
             JOIN ApprovedRequest AR ON DA.idA = AR.idA
             JOIN DosimeterRequest DR ON AR.idR = DR.idR
             JOIN User U ON DR.idU = U.idU
-            WHERE DA.status = 'Por_Associar'";
+            WHERE DA.status = 'Por_Associar'
+              AND U.userStatus = 1
+              AND AR.status = 'Ativo'";
 
     $params = [];
     if (!empty($search)) {
@@ -33,38 +35,47 @@ function getDosimeterStats($db) {
     $diaAtual = date('d');
  
     if ($diaAtual > 20) {
+        //Lógica: 
+        //Se hoje for 21/12, vão para análise os dosimetros recolhidos desde 21/12 a 20/01
         $dataInicioAnalise = date('Y-m-21');
         $dataFimAnalise = date('Y-m-20', strtotime('+1 month'));
-        $mesAbastecimento = date('F', strtotime('+2 months'));
-        $inicioProxMes = date('Y-m-01', strtotime('+2 months'));
-        $fimProxMes = date('Y-m-t', strtotime('+2 months'));
+        // O próximo mês de abastecimento é Janeiro, por isso calcula todos os dosimetros que são esperados ser trocados
+        $mesAbastecimento = date('F', strtotime('+1 months'));
+        $inicioProxMes = date('Y-m-01', strtotime('+1 months'));
+        $fimProxMes = date('Y-m-t', strtotime('+1 months'));
     } else {
+        //Lógica:
+        //Se hoje for 15/12, vão para análise os dosimetros recolhidos desde 21/11 a 20/12
         $dataInicioAnalise = date('Y-m-21', strtotime('-1 month'));
         $dataFimAnalise = date('Y-m-20');
+        // O próximo mês de abastecimento continua a ser Janeiro, por isso calcula todos os dosimetros que são esperados ser trocados
         $mesAbastecimento = date('F', strtotime('+1 month'));
         $inicioProxMes = date('Y-m-01', strtotime('+1 month'));
         $fimProxMes = date('Y-m-t', strtotime('+1 month'));
     }
 
+    // Contagem de quantos dosímetros vão ser recolhidos, contando com os users inativos ou com autorizações suspensas
     $sqlAnalise = "SELECT COUNT(*) FROM DosimeterAssignmentHistory WHERE insertDate BETWEEN ? AND ?";
     $stmt = $db->prepare($sqlAnalise);
     $stmt->execute([$dataInicioAnalise, $dataFimAnalise]);
     $enviadosAnalise = $stmt->fetchColumn();
 
+    // Contagem de quantos dosímetros vão necessários pedir, não contando com os users inativos ou com autorizações suspensas
     $sqlPedir = "SELECT COUNT(*) 
                  FROM DosimeterAssignment DA
                  JOIN ApprovedRequest AR ON DA.idA = AR.idA
                  JOIN DosimeterRequest DR ON AR.idR = DR.idR
                  JOIN User U ON DR.idU = U.idU
                  WHERE DA.status = 'Em_Uso' 
-                   AND U.userStatus = 1
+                   AND U.userStatus = 1       
+                   AND AR.status = 'Ativo'    
                    AND DA.nextReplacementDate BETWEEN ? AND ?";
     $stmt2 = $db->prepare($sqlPedir);
     $stmt2->execute([$inicioProxMes, $fimProxMes]);
     $aPedir = $stmt2->fetchColumn();
 
   
-    $mesesPT = ['January'=>'Janeiro','February'=>'Fevereiro','March'=>'Março','April'=>'Abril','May'=>'Maio','June'=>'Junho','July'=>'Julho','August'=>'Agosto','September'=>'Setembro','October'=>'Outubro','November'=>'Novembro','December'=>'Dezembro'];
+    $mesesPT = ['January'=>'janeiro','February'=>'fevereiro','March'=>'março','April'=>'abril','May'=>'maio','June'=>'junho','July'=>'julho','August'=>'agosto','September'=>'setembro','October'=>'outubro','November'=>'novembro','December'=>'dezembro'];
     $mesNome = isset($mesesPT[$mesAbastecimento]) ? $mesesPT[$mesAbastecimento] : $mesAbastecimento;
 
     return [
@@ -75,14 +86,16 @@ function getDosimeterStats($db) {
     ];
 }
 
-// 2. Gestão de Dosimetros: Lista de só pessoas com pedidos/aprovações Ativas (com filtro de pesquisa)
+// 2. Gestão de Dosimetros: Lista de só pessoas com pedidos/aprovações ativas (com filtro de pesquisa)
 function getActiveDosimeters($db, $search = '') {
     $sql = "SELECT DA.idDA, DA.dosimeterSerial, DA.assignmentDate, DA.nextReplacementDate, U.name, U.surname, U.email, AR.dosimeterType, DR.pratica
             FROM DosimeterAssignment DA
             JOIN ApprovedRequest AR ON DA.idA = AR.idA
             JOIN DosimeterRequest DR ON AR.idR = DR.idR
             JOIN User U ON DR.idU = U.idU
-            WHERE DA.status = 'Em_Uso'";
+            WHERE DA.status = 'Em_Uso'
+              AND U.userStatus = 1 
+              AND AR.status = 'Ativo'";
     
     $params = [];
     if (!empty($search)) {
@@ -103,7 +116,8 @@ function getPendingChangeRequests($db, $search = '') {
     $sql = "SELECT CR.*, U.name, U.surname, U.email 
             FROM ChangeRecord CR
             JOIN User U ON CR.idUser = U.idU
-            WHERE CR.status = 'Pendente'";
+            WHERE CR.status = 'Pendente'
+              AND U.userStatus = 1";
 
     $params = [];
     if (!empty($search)) {
