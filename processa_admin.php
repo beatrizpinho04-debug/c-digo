@@ -111,7 +111,7 @@ try {
             throw new Exception("Pedido não encontrado (ChangeRecord idCR={$idCR}).");
         }
 
-        $finalStatus = ($decisao === 'aprovado') ? 'Concluído' : 'Rejeitado';
+        $finalStatus = ($decisao === 'aprovado') ? 'Concluido' : 'Rejeitado';
         $final = ($decisao === 'aprovado') ? ($req['requestType'] === 'Suspender' ? 'Suspenso' : 'Ativo') : null;
         $stmtUpd = $db->prepare("UPDATE ChangeRecord SET status = ?, idAdmin = ?, decisionDate = ?, finalStatus = ?, adminNote = ? WHERE idCR = ?");
         $stmtUpd->execute([$finalStatus, $adminId, $now, $final, $adminNote, $idCR]);

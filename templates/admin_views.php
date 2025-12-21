@@ -4,6 +4,7 @@ function renderAdminTabs($currentTab) {
     <div class="admin-tabs">
         <a href="admin.php?tab=associacao" class="tab-link <?php echo $currentTab === 'associacao' ? 'active' : ''; ?>">Associação de Dosímetros</a>
         <a href="admin.php?tab=gestao" class="tab-link <?php echo $currentTab === 'gestao' ? 'active' : ''; ?>">Gestão de Dosímetros</a>
+        <a href="admin.php?tab=historico" class="tab-link <?php echo $currentTab === 'historico' ? 'active' : ''; ?>">Histórico de Dosímetros</a>
         <a href="admin.php?tab=pedidos" class="tab-link <?php echo $currentTab === 'pedidos' ? 'active' : ''; ?>">Pedidos de Suspensão/Ativação</a>
         <a href="admin.php?tab=users" class="tab-link <?php echo $currentTab === 'users' ? 'active' : ''; ?>">Utilizadores</a>
     </div>
@@ -193,6 +194,76 @@ function renderSwapModal($idDA, $name) {
                 </div>
             </form>
         </div>
+    </div>
+    <?php
+}
+
+// 3. Histórico de Dosímetros
+function renderHistoryTab($historyData, $searchTerm) {
+    ?>
+    <div class="card">
+        <div class="mb1 header-flex">
+            <div>
+                <h2 class="titulo-separador">Histórico Global de Dosímetros</h2>
+                <p class="subtítulo">Lista completa de utilizações atuais e passadas.</p>
+            </div>
+            <form action="admin.php" method="GET" class="search-form">
+                <input type="hidden" name="tab" value="historico">
+                <input type="text" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Nome, Serial, Email..." class="profile-input input-search">
+                <button type="submit" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+                    </svg>
+                </button>
+            </form>
+        </div>
+
+        <?php if (empty($historyData)): ?>
+            <?php if (!empty($searchTerm)): ?>
+                <p class="text-center" style="padding: 2rem; color: var(--muted);">
+                    Nenhum resultado para "<strong><?php echo htmlspecialchars($searchTerm); ?></strong>".
+                </p>
+            <?php else: ?>
+                <p class="text-center" style="padding: 2rem; color: var(--muted);">Ainda não existe histórico.</p>
+            <?php endif; ?>
+        <?php else: ?>
+            <div class="table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Nº Série</th>
+                            <th>Profissional</th>
+                            <th>Email</th>
+                            <th>Início</th>
+                            <th>Fim</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($historyData as $row): 
+                            $isAtivo = ($row['estado'] === 'Ativo');
+                        ?>
+                            <tr class="<?php echo $isAtivo ? 'row-highlight' : ''; ?>">
+                                <td><?php echo htmlspecialchars($row['dosimeterSerial']); ?></td>
+                                
+                                <td><span class="nome-tab"><?php echo htmlspecialchars($row['name'] . ' ' . $row['surname']); ?></span></td>
+                                
+                                <td><?php echo htmlspecialchars($row['email']); ?></td>
+                                
+                                <td><?php echo date('d/m/Y', strtotime($row['assignmentDate'])); ?></td>
+                                
+                                <td>
+                                    <?php if ($isAtivo): ?>
+                                        <span class="role-badge alert-success">Em Uso</span>
+                                    <?php else: ?>
+                                        <?php echo date('d/m/Y', strtotime($row['removalDate'])); ?>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php endif; ?>
     </div>
     <?php
 }

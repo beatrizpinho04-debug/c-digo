@@ -57,7 +57,12 @@ header_set($title);
                     renderSwapModal($_GET['idDA'], isset($_GET['name']) ? $_GET['name'] : '');
                 }
             }
-            // 3. Pedidos de Suspensão/Ativação
+            // 3. Histórico de Dosímetros
+            elseif ($tab === 'historico') {
+                $history = getGlobalDosimeterHistory($db, $search);
+                renderHistoryTab($history, $search);
+            }
+            // 4. Pedidos de Suspensão/Ativação
             elseif ($tab === 'pedidos') {
                 $reqs = getPendingChangeRequests($db, $search);
                 renderRequestsTab($reqs, $search);

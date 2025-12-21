@@ -111,7 +111,46 @@ function getActiveDosimeters($db, $search = '') {
     return $stmt->fetchAll();
 }
 
-// 3. Pedidos de Suspensão/Ativação
+// 3. Histórico de dosimetros 
+function getGlobalDosimeterHistory($db, $search = '') {
+    $sql = "SELECT DAH.dosimeterSerial, DAH.assignmentDate, DAH.removalDate, 
+                   U.name, U.surname, U.email, 'Histórico' as estado
+            FROM DosimeterAssignmentHistory DAH
+            JOIN ApprovedRequest AR ON DAH.idA = AR.idA
+            JOIN DosimeterRequest DR ON AR.idR = DR.idR
+            JOIN User U ON DR.idU = U.idU
+            WHERE 1=1";
+
+    $params = [];
+    if (!empty($search)) {
+        $sql .= " AND (U.name LIKE ? OR U.surname LIKE ? OR (U.name || ' ' || U.surname) LIKE ? OR U.email LIKE ? OR DAH.dosimeterSerial LIKE ?)";
+        $term = "%$search%";
+        $params = array_merge($params, [$term, $term, $term, $term, $term]);
+    }
+
+    $sql .= " UNION ALL ";
+
+    $sql .= "SELECT DA.dosimeterSerial, DA.assignmentDate, NULL as removalDate, 
+                    U.name, U.surname, U.email, 'Ativo' as estado
+             FROM DosimeterAssignment DA
+             JOIN ApprovedRequest AR ON DA.idA = AR.idA
+             JOIN DosimeterRequest DR ON AR.idR = DR.idR
+             JOIN User U ON DR.idU = U.idU
+             WHERE DA.status = 'Em_Uso'";
+
+    if (!empty($search)) {
+        $sql .= " AND (U.name LIKE ? OR U.surname LIKE ? OR (U.name || ' ' || U.surname) LIKE ? OR U.email LIKE ? OR DA.dosimeterSerial LIKE ?)";
+        $params = array_merge($params, [$term, $term, $term, $term, $term]);
+    }
+
+    $sql .= "ORDER BY DAH.removalDate DESC NULLS FIRST";
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute($params);
+    return $stmt->fetchAll();
+}
+
+// 4. Pedidos de Suspensão/Ativação
 function getPendingChangeRequests($db, $search = '') {
     $sql = "SELECT CR.*, U.name, U.surname, U.email 
             FROM ChangeRecord CR
@@ -137,7 +176,7 @@ function getPendingChangeRequests($db, $search = '') {
     return $stmt->fetchAll();
 }
 
-// 4. Utilizadores: Listar todos os users (com filtro de pesquisa)
+// 5. Utilizadores: Listar todos os users (com filtro de pesquisa)
 function getAllUsers($db, $search = '') {
     $sql = "SELECT U.*, HP.profession, HP.department 
             FROM User U
@@ -158,7 +197,7 @@ function getAllUsers($db, $search = '') {
     return $stmt->fetchAll();
 }
 
-// 4. Utilizadores: Detalhes de cada user
+// 6. Utilizadores: Detalhes de cada user
 function getUserFullDetails($db, $idU) {
     $stmt = $db->prepare("SELECT * FROM User WHERE idU = ?");
     $stmt->execute([$idU]);
