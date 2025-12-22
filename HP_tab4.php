@@ -21,7 +21,7 @@ $stmt->execute(['id' => $idUsuario]);
 $alteracoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<div class="card mb2">
+<div class="cardHP mb1_5">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
         <h2 class="nome" style="margin: 0;">Histórico de Suspensões e Ativações</h2>
         <span class="badge-gray role-badge"><?php echo count($alteracoes); ?> Registos</span>
@@ -48,7 +48,7 @@ $alteracoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     }
                 ?>
                 
-                <div class="request-card <?php echo $classeBorda; ?>">
+                <div class="request-cardHP <?php echo $classeBorda; ?>">
                     
                     <div class="req-header">
                         <div class="req-title">

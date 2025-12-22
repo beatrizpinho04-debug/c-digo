@@ -39,8 +39,8 @@ if ($ultimo) {
 
 <?php if ($estadoDash === 'Novo' || $estadoDash === 'Rejeitado'): ?>
     
-    <div class="card mb2">
-        <h2 class="nome mb1">O Meu Perfil Profissional</h2>
+    <div class="cardHP mb1_5">
+        <h2 class="nome mb05">O Meu Perfil Profissional</h2>
         <div class="dashboard-grid">
             <div class="dash-info-box">
                 <span class="dash-label">Serviço / Departamento</span>
@@ -59,15 +59,15 @@ if ($ultimo) {
         </div>
     </div>
 
-    <div class="card mb2" style="text-align: center; padding: 3rem; background-color: #f8fafc; border: 2px dashed #cbd5e1; margin-bottom: 2rem;">
-        <h2 class="nome mb1">Solicitar uso de Dosímetro</h2>
-        <p class="text-muted mb2">Necessita de monitorização radiológica para exercer as suas funções?</p>
+    <div class="cardHP mb1_5" style="text-align: center; padding: 3rem; background-color: #f8fafc; border: 2px dashed #cbd5e1; margin-bottom: 2rem;">
+        <h2 class="nome mb05">Solicitar uso de Dosímetro</h2>
+        <p class="text-muted mb1_5">Necessita de monitorização radiológica para exercer as suas funções?</p>
         <button class="btn btn-primary" onclick="abrirModal()">+ Preencher Pedido</button>
     </div>
 
     <?php if ($estadoDash === 'Rejeitado'): ?>
-        <div class="card mb2" style="border-left: 5px solid #ef4444;">
-            <h2 class="nome mb1" style="color: #991b1b;">Último Pedido Rejeitado</h2>
+        <div class="cardHP mb1_5" style="border-left: 5px solid #ef4444;">
+            <h2 class="nome mb05" style="color: #991b1b;">Último Pedido Rejeitado</h2>
             <div class="dashboard-grid">
                 <div class="dash-info-box">
                     <span class="dash-label">Prática</span>
@@ -87,8 +87,8 @@ if ($ultimo) {
 
 
 <?php if ($estadoDash === 'Pendente'): ?>
-    <div class="card mb2">
-        <h2 class="nome mb1">Pedido em Análise</h2>
+    <div class="cardHP mb1_5">
+        <h2 class="nome mb05">Pedido em Análise</h2>
         <div class="alert-container alert-info" style="margin-bottom: 1.5rem; background-color: #eff6ff; color: #1e40af; padding: 1rem; border-radius: 6px; border: 1px solid #dbeafe;">
             O seu pedido foi enviado e encontra-se a aguardar aprovação.
         </div>
@@ -112,7 +112,7 @@ if ($ultimo) {
 
 
 <?php if ($estadoDash === 'Aprovado'): ?>
-    <div class="card mb2">
+    <div class="cardHP mb1_5">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
             <div>
                 <h2 class="nome" style="margin: 0;">O Meu Pedido Atual</h2>

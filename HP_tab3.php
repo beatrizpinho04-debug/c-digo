@@ -63,8 +63,8 @@ $historico = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <?php if ($estadoPedido === 'Ativo'): ?>
-    <div class="card mb2" style="background: linear-gradient(to right, #eff6ff, #ffffff); border: 1px solid #bfdbfe;">
-        <h2 class="nome mb1" style="color: #1e40af;">Dosímetro em Uso</h2>
+    <div class="cardHP mb1_5" style="background: linear-gradient(to right, #eff6ff, #ffffff); border: 1px solid #bfdbfe;">
+        <h2 class="nome mb05" style="color: #1e40af;">Dosímetro em Uso</h2>
         
         <?php if ($serialAtual && $serialAtual !== '---'): ?>
             <div class="status-grid">
@@ -97,7 +97,7 @@ $historico = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <?php endif; ?>
 
 
-<div class="card">
+<div class="cardHP">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
         <h2 class="nome" style="margin: 0;">Histórico de Monitorização</h2>
         <span class="badge-gray role-badge"><?php echo count($historico); ?> Registos</span>

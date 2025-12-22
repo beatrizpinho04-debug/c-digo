@@ -179,21 +179,9 @@ label, .profile-label { font-size: 14px; font-weight: 500; color: var(--foregrou
   font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; 
   font-weight: 600; display: inline-block;
 }
-<<<<<<< Updated upstream
-=======
-.badge-green { 
-    background-color: #dcfce7; 
-    color: #166534;           
-}
-.badge-gray { 
-    background-color: #f3f4f6; 
-    color: #374151;          
-}
-.badge-yellow { 
-    background-color: #fef9c3;
-    color: #854d0e;           
-}
->>>>>>> Stashed changes
+.badge-green { background-color: #dcfce7; color: #166534;}
+.badge-gray { background-color: #f3f4f6; color: #374151;}
+.badge-yellow {background-color: #fef9c3;color: #854d0e;}
 .etiqueta { margin-top: 0.25rem; }
 
 
@@ -370,27 +358,13 @@ label, .profile-label { font-size: 14px; font-weight: 500; color: var(--foregrou
     display: block;
 }
 
-HP_geral{
-/* =================================================================
-   1. ESTILOS GLOBAIS E UTILITÁRIOS
-   (Usados em todas as Tabs)
-   ================================================================= */
+.HP_geral{}
 
-/* Layout Base */
-.page-wrapper {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
 
-.main-container {
-    padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-    width: 100%;
-}
 
-.card {
+/*MARIA: Em geral depois organiza os teus styles como est,a em cima, ou seja botões no sitios dos botões, texto no sitio do texto etc...*/
+/*MARIA: Tive de mudar o nome para cardHP porque o card já insiste,a gora vê em cima se da para aproveitar ou se precisas mesmo de criar uma classe nova*/
+.cardHP {
     background: white;
     border-radius: 8px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
@@ -398,13 +372,11 @@ HP_geral{
     border: 1px solid #e5e7eb;
 }
 
-/* Espaçamentos Utilitários */
-.mb1 { margin-bottom: 0.5rem; }
-.mb2 { margin-bottom: 1.5rem; }
+/*MARIA: Arranja isto porque esta cor já esta defenida em cima no :root, esta cor é --muted: #6b7280, e sei que ja há texto com esta cor então vê se nas classes em cima não dá para aproveitar. Andei a procurar e supostamente esta classe não esta a ser usada em nada*/
 .text-muted { color: #6b7280; }
 
-/* Botões (Base) */
-.btn {
+/*MARIA:Estas classes já estão todas definidas em cimas. Se em cima não tiver nenhuma classe como queres o botão fique, tenta aproveitar o que podes e definidas uma nova so o que falta, não cries tudo de novo nem dê so mesmo nome porque se não da erro*/
+/* .btn {
     display: inline-block;
     padding: 0.5rem 1rem;
     font-size: 0.875rem;
@@ -427,12 +399,13 @@ HP_geral{
     border-color: #d1d5db;
     color: #374151;
 }
-.btn-cancel:hover { background-color: #f3f4f6; }
+.btn-cancel:hover { background-color: #f3f4f6; } */
 
 
-/* =================================================================
-   2. NAVEGAÇÃO POR ABAS (TABS)
-   ================================================================= */
+/*MARIA: Este tab-nav é praticamnete igual ao admin-tabs, só muda a border-bottom, por isso aproveitas o admin-tabs e só acrecentas isso.
+para aproveitar basicamnete fazes isto::
+.admin-tabs, .tab-nav{display: flex; gap: 1rem; margin-bottom: 2rem; overflow-x: auto; padding-bottom: 2px;}
+.tab-nav {border-bottom: 2px solid #e5e7eb;}*/
 .tab-nav {
     display: flex;
     gap: 1rem;
@@ -441,7 +414,8 @@ HP_geral{
     overflow-x: auto; /* Scroll em telemóveis */
 }
 
-.tab-link {
+/*MARIA: Mais uma vez isto tudo em comentário já esta definido em cima*/
+/* .tab-link {
     text-decoration: none;
     color: #6b7280;
     padding: 0.75rem 1rem;
@@ -451,16 +425,10 @@ HP_geral{
     margin-bottom: -2px;
     white-space: nowrap;
     transition: color 0.2s;
-}
-
-.tab-link:hover { color: #1f2937; border-bottom-color: #d1d5db; }
-.tab-link.active { color: #2563eb; border-bottom-color: #2563eb; }
-
-
-/* =================================================================
-   3. TABELAS
-   ================================================================= */
-.table-container {
+} */
+/* .tab-link:hover { color: #1f2937; border-bottom-color: #d1d5db; }
+.tab-link.active { color: #2563eb; border-bottom-color: #2563eb; } */
+/* .table-container {
     width: 100%;
     overflow-x: auto;
 }
@@ -486,16 +454,12 @@ HP_geral{
     border-bottom: 1px solid #e5e7eb;
     vertical-align: middle;
     color: #374151;
-}
-
+} */
+/* .admin-table tbody tr:last-child td { border-bottom: none; } */
 .admin-table tbody tr:hover { background-color: #f9fafb; }
-.admin-table tbody tr:last-child td { border-bottom: none; }
 
-
-/* =================================================================
-   4. BADGES / ETIQUETAS
-   ================================================================= */
-.role-badge {
+/*MARIA: Tudo que está em comentário já está definido em cima*/
+/* .role-badge {
     padding: 4px 10px;
     border-radius: 6px;
     font-size: 0.75rem;
@@ -503,21 +467,16 @@ HP_geral{
     display: inline-block;
     white-space: nowrap;
     text-align: center;
-}
+} */
 
-.badge-green  { background-color: #dcfce7; color: #166534; }
-.badge-blue   { background-color: #dbeafe; color: #1e40af; }
-.badge-red    { background-color: #fee2e2; color: #991b1b; }
-.badge-gray   { background-color: #f3f4f6; color: #374151; }
-.badge-yellow { background-color: #fef9c3; color: #854d0e; }
-}
+/* .badge-green  { background-color: #dcfce7; color: #166534; } */
+/* .badge-blue   { background-color: #dbeafe; color: #1e40af; } */
+/* .badge-red    { background-color: #fee2e2; color: #991b1b; } */
+/* .badge-gray   { background-color: #f3f4f6; color: #374151; } */
+/* .badge-yellow { background-color: #fef9c3; color: #854d0e; } */
 
-tab1{
-/* =================================================================
-   ESTILOS ESPECÍFICOS TAB 1 (DASHBOARD)
-   ================================================================= */
 
-/* 1. Grelha de Informação */
+.tab1{}
 .dashboard-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -589,9 +548,9 @@ tab1{
     padding-bottom: 0.5rem;
     border-bottom: 2px solid #f3f4f6;
 }
-}
 
-tab2{
+
+.tab2{}
 /* =================================================================
    6. TAB 2 ESPECÍFICO: LISTA DE PEDIDOS (TIMELINE)
    ================================================================= */
@@ -671,6 +630,7 @@ tab2{
     padding-left: 3.5rem; /* Alinha o texto com o título (salta o ícone) */
 }
 
+/*MARIA: Isto é responsive*/
 /* Em telemóvel, removemos a indentação para ganhar espaço */
 @media (max-width: 600px) {
     .req-body { padding-left: 0; }
@@ -716,21 +676,16 @@ tab2{
     grid-column: 1 / -1;
     margin-top: 0.5rem;
 }
-}
 
-tab3{
-/* =================================================================
-   7. TAB 3 ESPECÍFICO: HISTÓRICO DE DOSÍMETROS
-   ================================================================= */
 
-  /* --- Cartão de Destaque (Dosímetro em Uso) --- */
-  /* Substitui o estilo inline que tinhas no PHP */
-  .highlight-card {
+.tab3{ }
+
+.highlight-card {
       background: linear-gradient(to right, #eff6ff, #ffffff); /* Gradiente Azul Suave */
       border: 1px solid #bfdbfe;
       position: relative;
       overflow: hidden; /* Para a risca azul não sair fora */
-  }
+}
 
   /* Risca azul decorativa à esquerda para dar destaque */
   .highlight-card::before {
@@ -777,7 +732,7 @@ tab3{
   }
 
   /* Estilo para a Data de Previsão na tabela */
-  .prediction-date {
+.prediction-date {
       font-size: 0.85rem;
       color: #ea580c;
       background-color: #fff7ed;
@@ -785,14 +740,10 @@ tab3{
       border-radius: 4px;
       display: inline-block;
       border: 1px solid #ffedd5;
-  }
-
 }
 
-tab4{
-/* =================================================================
-   9. TAB 4 ESPECÍFICO: ALTERAÇÕES (JUSTIFICAÇÕES E RESPOSTAS)
-   ================================================================= */
+
+.tab4{}
 
 /* Caixa da Justificação do Utilizador */
 .user-justification {
@@ -858,5 +809,4 @@ tab4{
 .admin-note-text {
     color: #14532d;
     font-size: 0.9rem;
-}
 }

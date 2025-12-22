@@ -66,7 +66,7 @@ header_set($title);
 
     <main class="main-container">
         
-        <h1 class="titulo mb2">Área do Profissional de Saúde</h1>
+        <h1 class="titulo mb1_5">Área do Profissional de Saúde</h1>
 
         <div class="tab-nav">
             <a href="?tab=dashboard" class="tab-link <?php echo $currentTab == 'dashboard' ? 'active' : ''; ?>">Página Inicial</a>
