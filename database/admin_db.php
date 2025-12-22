@@ -113,15 +113,16 @@ function getActiveDosimeters($db, $search = '') {
 
 // 3. Histórico de dosimetros 
 function getGlobalDosimeterHistory($db, $search = '') {
-    $sql = "SELECT DAH.dosimeterSerial, DAH.assignmentDate, DAH.removalDate, 
-                   U.name, U.surname, U.email, 'Histórico' as estado
-            FROM DosimeterAssignmentHistory DAH
-            JOIN ApprovedRequest AR ON DAH.idA = AR.idA
-            JOIN DosimeterRequest DR ON AR.idR = DR.idR
-            JOIN User U ON DR.idU = U.idU
-            WHERE 1=1";
-
     $params = [];
+    $sql = "SELECT * FROM (
+                SELECT DAH.dosimeterSerial, DAH.assignmentDate, DAH.removalDate, 
+                       U.name, U.surname, U.email, 'Histórico' as estado
+                FROM DosimeterAssignmentHistory DAH
+                JOIN ApprovedRequest AR ON DAH.idA = AR.idA
+                JOIN DosimeterRequest DR ON AR.idR = DR.idR
+                JOIN User U ON DR.idU = U.idU
+                WHERE 1=1";
+
     if (!empty($search)) {
         $sql .= " AND (U.name LIKE ? OR U.surname LIKE ? OR (U.name || ' ' || U.surname) LIKE ? OR U.email LIKE ? OR DAH.dosimeterSerial LIKE ?)";
         $term = "%$search%";
@@ -143,7 +144,8 @@ function getGlobalDosimeterHistory($db, $search = '') {
         $params = array_merge($params, [$term, $term, $term, $term, $term]);
     }
 
-    $sql .= "ORDER BY DAH.removalDate DESC NULLS FIRST";
+    $sql .= ") AS HIST
+             ORDER BY (HIST.removalDate IS NULL) DESC, HIST.removalDate DESC";
 
     $stmt = $db->prepare($sql);
     $stmt->execute($params);

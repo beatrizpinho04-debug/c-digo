@@ -48,6 +48,10 @@ try {
         WHERE idDA = ?");
         $stmtUpd->execute([$serial, $dataHoje, $next, $idDA]);
 
+        // D. Registar histórico
+        $stmtHist = $db->prepare("INSERT INTO DosimeterAssignmentHistory (idA, dosimeterSerial, assignmentDate, removalDate) VALUES (?, ?, ?, NULL)");
+        $stmtHist->execute([$info['idA'], $serial, $dataHoje]);
+
         $db->commit();
         $_SESSION['message'] = "Dosímetro associado com sucesso!";
         $_SESSION['message_type'] = "success";
@@ -64,7 +68,7 @@ try {
         $db->beginTransaction();
 
         // Buscar info atual
-        $stmt = $db->prepare(" SELECT DA.idA, AR.periodicity 
+        $stmt = $db->prepare(" SELECT DA.idA, DA.dosimeterSerial, AR.periodicity 
         FROM DosimeterAssignment DA 
         JOIN ApprovedRequest AR ON DA.idA = AR.idA 
         WHERE DA.idDA = ?");
@@ -86,6 +90,12 @@ try {
         nextReplacementDate = ?
         WHERE idDA = ?");
         $stmtUpd->execute([$newSerial, $dataHoje, $newNext, $idDA]);
+
+        // Registar histórico: fechar o anterior e inserir o novo
+        $db->prepare("UPDATE DosimeterAssignmentHistory SET removalDate = ? WHERE idA = ? AND removalDate IS NULL")
+           ->execute([$dataHoje, $current['idA']]);
+        $db->prepare("INSERT INTO DosimeterAssignmentHistory (idA, dosimeterSerial, assignmentDate, removalDate) VALUES (?, ?, ?, NULL)")
+           ->execute([$current['idA'], $newSerial, $dataHoje]);
 
         $db->commit();
         $_SESSION['message'] = "Troca registada com sucesso!";
@@ -234,6 +244,7 @@ try {
 
         $db->commit();
         
+        $msg = $novoEstado ? "Utilizador reativado com sucesso." : "Utilizador desativado com sucesso.";
         $_SESSION['message'] = $msg;
         $_SESSION['message_type'] = "success";
 
