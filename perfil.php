@@ -58,7 +58,7 @@ $title = "Perfil";
 <body>
     <div class="page-wrapper">
         <?php nav_set(); ?>
-        <main class="main-container" style="max-width: 45rem">
+        <main class="main-container profile-limit">
             <div class="profile-header-flex mb1_5">
                 <div class="user-area">
                     <a href="index.php" class="btn voltar" title="Voltar">
@@ -81,7 +81,7 @@ $title = "Perfil";
             <div class="card1">
                 <div class="card1-header">
                     <h1 class="card1-title">Perfil do Utilizador</h1>
-                    <p class="subtítulo"><?php echo $isEditing ? "Edite os seus dados" : "Dados pessoais"; ?></p>
+                    <p class="subtitulo"><?php echo $isEditing ? "Edite os seus dados" : "Dados pessoais"; ?></p>
                 </div>
                 <div class="card1-content">
                     <div class="foto-section-gray">

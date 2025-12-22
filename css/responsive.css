@@ -23,6 +23,9 @@
     .g2 {
         grid-column: span 2;
     }
+    .hp-fields-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* --- Tablets e Ecrãs Médios (≤ 768px) --- */
@@ -45,7 +48,7 @@
         display: none !important;
     }
 
-    /* Escondemos o subtítulo do site para poupar espaço */
+    /* Escondemos o subtitulo do site para poupar espaço */
     .logo-text p {
         display: none !important;
     }
@@ -92,7 +95,7 @@
 
   /* Tipografia reduzida */
   .titulo, .card1-title { font-size: 1.4rem; }
-  .subtítulo { font-size: 0.9rem; }
+  .subtitulo { font-size: 0.9rem; }
   .entrar { font-size: 1.25rem; }
 
   /* Inputs e Botões Gerais */

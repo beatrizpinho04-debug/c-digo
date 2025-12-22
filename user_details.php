@@ -53,7 +53,6 @@ header_set($title);
             <div class="card">
                 <?php 
                 if ($subtab === 'info') {
-                    // Passamos o user que já temos
                     renderUserInfoTab($user);
                 } 
                 elseif ($subtab === 'pedidos') {

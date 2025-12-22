@@ -16,9 +16,9 @@ function renderAssociationTable($pendingData, $searchTerm) {
     ?>
     <div class="card">
         <div class="mb1 header-flex">
-            <div>
+            <div class="header-flex-left">
                 <h2 class="titulo-separador">Associação de Dosímetros</h2>
-                <p class="subtítulo">Dosímetros ainda por associar</p>
+                <p class="subtitulo">Dosímetros ainda por associar</p>
             </div>
             <form action="admin.php" method="GET" class="search-form">
                 <input type="hidden" name="tab" value="associacao">
@@ -33,11 +33,11 @@ function renderAssociationTable($pendingData, $searchTerm) {
 
         <?php if (empty($pendingData)): ?>
             <?php if (!empty($searchTerm)): ?>
-                <p class="text-center" style="padding: 2rem; color: var(--muted);">
+                <p class="text-center msg-nav">
                     Nenhum resultado encontrado para "<strong><?php echo htmlspecialchars($searchTerm); ?></strong>".
                 </p>
             <?php else: ?>
-                <div class="alert-container alert-success">✅ Tudo em dia! Não existem associações pendentes.</div>
+                <p class="text-center msg-nav">Tudo em dia! Não existem associações pendentes.</p>
             <?php endif; ?>
         <?php else: ?>
             <div class="table-container">
@@ -83,7 +83,7 @@ function renderAssociateForm($idDA, $userName) {
     <div class="modal-overlay-php">
         <div class="modal-box-php">
             <h3 class="titulo">Associar Dosímetro</h3>
-            <p class="subtítulo mb1">Insira os dados para <?php echo htmlspecialchars($userName); ?></p>
+            <p class="subtitulo mb1">Insira os dados para <?php echo htmlspecialchars($userName); ?></p>
 
             <form action="processa_admin.php" method="POST">
                 <input type="hidden" name="action" value="associar_dosimetro">
@@ -129,11 +129,11 @@ function renderManagementTab($stats, $activeDosimeters, $searchTerm) {
         </div>
         <?php if (empty($activeDosimeters)): ?>
             <?php if (!empty($searchTerm)): ?>
-                <p class="text-center" style="padding: 2rem; color: var(--muted);">
+                <p class="text-center msg-nav">
                     Nenhum resultado encontrado para "<strong><?php echo htmlspecialchars($searchTerm); ?></strong>".
                 </p>
             <?php else: ?>
-                <p class="text-center" style="padding: 2rem; color: var(--muted);">Não existem dosímetros ativos no momento.</p>
+                <p class="text-center msg-nav">Não existem dosímetros ativos no momento.</p>
             <?php endif; ?>
         <?php else: ?>
         <div class="table-container">
@@ -180,7 +180,7 @@ function renderSwapModal($idDA, $name) {
     <div class="modal-overlay">
         <div class="modal-box">
             <h3 class="titulo">Trocar Dosímetro</h3>
-            <p class="subtítulo mb1">Profissional: <?php echo htmlspecialchars($name); ?></p>
+            <p class="subtitulo mb1">Profissional: <?php echo htmlspecialchars($name); ?></p>
             <form action="processa_admin.php" method="POST">
                 <input type="hidden" name="action" value="trocar_dosimetro">
                 <input type="hidden" name="idDA" value="<?php echo $idDA; ?>">
@@ -203,9 +203,9 @@ function renderHistoryTab($historyData, $searchTerm) {
     ?>
     <div class="card">
         <div class="mb1 header-flex">
-            <div>
+            <div class="header-flex-left">
                 <h2 class="titulo-separador">Histórico Global de Dosímetros</h2>
-                <p class="subtítulo">Lista completa de utilizações atuais e passadas.</p>
+                <p class="subtitulo">Lista completa de utilizações atuais e passadas.</p>
             </div>
             <form action="admin.php" method="GET" class="search-form">
                 <input type="hidden" name="tab" value="historico">
@@ -220,11 +220,11 @@ function renderHistoryTab($historyData, $searchTerm) {
 
         <?php if (empty($historyData)): ?>
             <?php if (!empty($searchTerm)): ?>
-                <p class="text-center" style="padding: 2rem; color: var(--muted);">
+                <p class="text-center msg-nav">
                     Nenhum resultado para "<strong><?php echo htmlspecialchars($searchTerm); ?></strong>".
                 </p>
             <?php else: ?>
-                <p class="text-center" style="padding: 2rem; color: var(--muted);">Ainda não existe histórico.</p>
+                <p class="text-center msg-nav">Ainda não existe histórico.</p>
             <?php endif; ?>
         <?php else: ?>
             <div class="table-container">
@@ -287,11 +287,11 @@ function renderRequestsTab($requests, $searchTerm) {
 
         <?php if (empty($requests)): ?>
             <?php if (!empty($searchTerm)): ?>
-                <p class="text-center" style="padding: 2rem; color: var(--muted);">
+                <p class="text-center msg-nav">
                     Nenhum resultado encontrado para "<strong><?php echo htmlspecialchars($searchTerm); ?></strong>".
                 </p>
             <?php else: ?>
-                <p class="subtítulo">Não existem pedidos pendentes.</p>
+                <p class="subtitulo">Não existem pedidos pendentes.</p>
             <?php endif; ?>
         <?php else: ?>
             <div class="table-container">
@@ -317,7 +317,7 @@ function renderRequestsTab($requests, $searchTerm) {
                                     </span>
                                 </td>
                                 <td><?php echo date('d/m/Y', strtotime($req['requestDate'])); ?></td>
-                                <td class="subtítulo"><?php echo htmlspecialchars($req['message']); ?></td>
+                                <td class="subtitulo"><?php echo htmlspecialchars($req['message']); ?></td>
                                 <td class="txt-right">
                                     <a href="admin.php?tab=pedidos&decidir=<?php echo $req['idCR']; ?>&user=<?php echo urlencode($req['name'].' '.$req['surname']); ?>&type=<?php echo $req['requestType']; ?>" 
                                     class="btn btn-primary">Decidir</a>
@@ -338,7 +338,7 @@ function renderDecisionModal($idCR, $userName, $requestType) {
     <div class="modal-overlay-php">
         <div class="modal-box-php">
             <h3 class="titulo mb1">Decidir Pedido</h3>
-            <p class="subtítulo mb1">
+            <p class="subtitulo mb1">
                 O utilizador <b><?php echo htmlspecialchars($userName); ?></b> pediu para: 
                 <span class="role-badge <?php echo $requestType == 'Suspender' ? 'badge-red' : 'badge-green'; ?>">
                     <?php echo htmlspecialchars($requestType); ?>
@@ -350,7 +350,7 @@ function renderDecisionModal($idCR, $userName, $requestType) {
                 <input type="hidden" name="idCR" value="<?php echo htmlspecialchars($idCR); ?>">
 
                 <div class="form-group mb1_5">
-                    <label class="profile-label">Nota do Administrador (Justificação)</label>
+                    <label class="profile-label">Nota do Administrador (Opcional)</label>
                     <textarea name="adminNote" class="profile-input" rows="3"  placeholder="Escreva o motivo da decisão..."></textarea>
                 </div>
 
@@ -372,7 +372,7 @@ function renderUsersTab($users, $searchTerm) {
     ?>
     <div class="card mb2">
         <div class="mb1 header-flex">
-            <a href="admin.php?tab=users&action=create" class="btn btn-primary" style="text-decoration:none;">+ Novo Utilizador</a>
+            <a href="admin.php?tab=users&action=create" class="btn btn-primary">+ Novo Utilizador</a>
             <form action="admin.php" method="GET" class="search-form">
                 <input type="hidden" name="tab" value="users">
                 <input type="text" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Nome, Email..." class="profile-input input-search">
@@ -385,11 +385,11 @@ function renderUsersTab($users, $searchTerm) {
         </div>
         <?php if (empty($users)): ?>
             <?php if (!empty($searchTerm)): ?>
-                <p class="text-center" style="padding: 2rem; color: var(--muted);">
+                <p class="text-center msg-nav">
                     Nenhum resultado encontrado para "<strong><?php echo htmlspecialchars($searchTerm); ?></strong>".
                 </p>
             <?php else: ?>
-                <p class="subtítulo" style="padding: 1rem;">Não existem utilizadores registados.</p>
+                <p class="subtitulo msg-nav">Não existem utilizadores registados.</p>
             <?php endif; ?>
         <?php else: ?>
 
@@ -436,7 +436,7 @@ function renderUsersTab($users, $searchTerm) {
 function renderCreateUserModal() {
     ?>
     <div class="modal-overlay-php">
-        <div class="modal-box-php" style="max-width: 600px;">
+        <div class="new-user">
             <h3 class="titulo mb1">Novo Utilizador</h3>
             <form action="processa_admin.php" method="POST">
                 <input type="hidden" name="action" value="create_user">
@@ -450,7 +450,7 @@ function renderCreateUserModal() {
                         <label class="profile-label">Apelido</label>
                         <input type="text" name="surname" class="profile-input" required>
                     </div>
-                    <div class="g2" style="grid-column: span 2;">
+                    <div class="g2">
                         <label class="profile-label">Email</label>
                         <input type="email" name="email" class="profile-input" required>
                     </div>
@@ -475,7 +475,7 @@ function renderCreateUserModal() {
                         </select>
                     </div>
 
-                    <div class="g2" style="grid-column: span 2;">
+                    <div class="g2">
                         <label class="profile-label">Tipo de Utilizador</label>
                         
                         <div class="type-selector-wrapper">
@@ -490,15 +490,14 @@ function renderCreateUserModal() {
                             <label for="type_hp">Profissional de Saúde</label>
 
                             <div class="hp-only-fields">
-                                <p class="hp-note"><strong>Dados Profissionais:</strong> (Obrigatórios)</p>
-                                <div class="profile-form-grid" style="grid-template-columns: 1fr 1fr; gap:1rem;">
+                                <div class="hp-fields-grid">
                                     <div>
                                         <label class="profile-label">Profissão</label>
-                                        <input type="text" name="profession" class="profile-input" placeholder="Ex: Enfermeiro">
+                                        <input type="text" name="profession" class="profile-input" required placeholder="Ex: Enfermeiro">
                                     </div>
                                     <div>
                                         <label class="profile-label">Departamento</label>
-                                        <input type="text" name="department" class="profile-input" placeholder="Ex: Urgência">
+                                        <input type="text" name="department" class="profile-input" required placeholder="Ex: Urgência">
                                     </div>
                                 </div>
                             </div>

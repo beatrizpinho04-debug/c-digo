@@ -212,8 +212,6 @@ try {
                                              JOIN DosimeterRequest DR ON AR.idR = DR.idR
                                              WHERE DR.idU = ?)");
             $stmtReclaim->execute([$idU]);
-            $msg = "Utilizador desativado e dosímetros recolhidos.";
-
         } else {
             // Ativar
             // 1º Ativar pedidos aprovados associados a este user
@@ -232,8 +230,6 @@ try {
                               WHERE DR.idU = ?
                           )");
             $stmtReactivate->execute([$idU]);
-
-            $msg = "Utilizador reativado. Associe um novo dosímetro.";
         }
 
         $db->commit();

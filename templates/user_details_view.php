@@ -6,19 +6,19 @@ function renderUserHeaderCard($user) {
     $prof = isset($user['profession']) ? $user['profession'] : $user['userType'];
     ?>
     <div class="card mb2">
-        <div class="header-flex" style="justify-content: flex-start; gap: 2rem;">
+        <div class="header-flex">
             <div class="foto-circle-large">
                 <img src="<?php echo htmlspecialchars($user['profilePic']); ?>" alt="Foto">
             </div>
             
-            <div style="flex: 1;">
-                <div style="display:flex; align-items:center; gap:1rem; margin-bottom:0.5rem;">
-                    <h2 class="titulo" style="margin:0;"><?php echo htmlspecialchars($user['name'].' '.$user['surname']); ?></h2>
+            <div class="user-details-info">
+                <div class="user-title-row">
+                    <h2 class="titulo"><?php echo htmlspecialchars($user['name'].' '.$user['surname']); ?></h2>
                     <span class="role-badge <?php echo $isActive?'alert-success':'alert-error'; ?>">
                         <?php echo $isActive?'Ativo':'Inativo'; ?>
                     </span>
                 </div>
-                <p class="subtítulo"><?php echo htmlspecialchars($prof); ?> | <?php echo htmlspecialchars($user['email']); ?></p>
+                <p class="subtitulo"><?php echo htmlspecialchars($prof); ?> | <?php echo htmlspecialchars($user['email']); ?></p>
             </div>
 
             <form action="processa_admin.php" method="POST">
@@ -59,7 +59,7 @@ function renderUserInfoTab($user) {
     $sexoPT = isset($traducao[$user['sex']]) ? $traducao[$user['sex']] : $user['sex'];
     ?>
     <h3 class="titulo-separador mb1">Dados Pessoais</h3>
-    <div class="profile-form-grid" style="grid-template-columns: 1fr 1fr;">
+    <div class="profile-form-grid">
         <div><label class="profile-label">Nome Completo</label><input disabled value="<?php echo htmlspecialchars($user['name'].' '.$user['surname']); ?>" class="profile-input"></div>
         <div><label class="profile-label">Email</label><input disabled value="<?php echo htmlspecialchars($user['email']); ?>" class="profile-input"></div>
         <div><label class="profile-label">Telemóvel</label><input disabled value="<?php echo htmlspecialchars($user['phoneN']); ?>" class="profile-input"></div>
@@ -165,7 +165,7 @@ function renderUserRequestsTab($requests) {
     <?php
 }
 
-// 5. CONTEÚDO: Dosímetros
+// 5. Histórico de Dosímetros do user
 function renderUserDosimetersTab($history) {
     if (empty($history)) { echo "<p class='text-center com-cinza'>Sem histórico de dosímetros.</p>"; return; }
     ?>
@@ -185,8 +185,12 @@ function renderUserDosimetersTab($history) {
                 <tr class="<?php echo $active ? 'row-highlight' : ''; ?>">
                     <td><?php echo htmlspecialchars($h['dosimeterSerial']); ?></td>
                     <td><?php echo date('d/m/Y', strtotime($h['assignmentDate'])); ?></td>
-                    <td><?php echo $active ? '<span style="color:var(--green);">--</span>' : date('d/m/Y', strtotime($h['removalDate'])); ?></td>
-                    <td><?php echo $active?'Em Uso':'Recolhido'; ?></td>
+                    <td><?php echo $active ? '---' : date('d/m/Y', strtotime($h['removalDate'])); ?></td>
+                    <td>
+                        <span class="role-badge <?php echo $active ? 'alert-success' : 'badge-gray'; ?>">
+                            <?php echo $active ? 'Em Uso' : 'Recolhido'; ?>
+                        </span>
+                    </td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -195,7 +199,7 @@ function renderUserDosimetersTab($history) {
     <?php
 }
 
-// 6. CONTEÚDO: Suspensões
+// 6. Histórico de Suspensões e Ativações do user
 function renderUserSuspensionsTab($changes) {
     if (empty($changes)) { echo "<p class='text-center com-cinza'>Sem histórico de alterações.</p>"; return; }
     ?>
@@ -251,7 +255,7 @@ function renderUserSuspensionsTab($changes) {
                         <?php echo ($c['decisionDate']) ? date('d/m/Y', strtotime($c['decisionDate'])) : '--'; ?>
                     </td>
 
-                    <td class="subtítulo">
+                    <td class="subtitulo">
                         <?php echo htmlspecialchars($c['adminNote'] ? $c['adminNote'] : '--'); ?>
                     </td>
                 </tr>

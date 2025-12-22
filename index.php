@@ -44,7 +44,7 @@ $title = "Sistema de Gestão de Dosimetros";
                     <img src="css/icon.svg" width="64" height="64">
                     <!-- Título e Subtítulo -->
                     <h1 class="titulo mb05">Gestão de Dosímetros</h1>
-                    <p class="subtítulo">Sistema de Gestão para Instituições de Saúde</p>
+                    <p class="subtitulo">Sistema de Gestão para Instituições de Saúde</p>
                 </div>
                 <div class="card">
                     <h2 class="entrar text-center mb1_5">Entrar</h2>
