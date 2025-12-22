@@ -1,124 +1,116 @@
 <?php
 session_start();
-require_once("templates/header.php");
-require_once("templates/nav.php");
-require_once("templates/footer.php");
 
-//Verifica se existe sessão ativa
-if (!isset($_SESSION['idU'])) {
-    $_SESSION['login_error'] = "Acesso negado. Por favor faça login.";
-    header("Location: index.php");
+
+require_once "database/connection.php"; 
+$pdo = getDatabaseConnection(); 
+
+// ====================================================================
+// 1. LÓGICA DE FORMULÁRIO (Novo Pedido)
+// ====================================================================
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'novo_pedido') {
+    if (!isset($_SESSION['idU'])) die("Erro: Sessão não iniciada.");
+    
+    $idUsuario = $_SESSION['idU'];
+    $pratica = isset($_POST['pratica']) ? trim($_POST['pratica']) : '';
+    
+    if (!empty($pratica)) {
+        try {
+            $sqlInsert = "INSERT INTO DosimeterRequest (idU, pratica, requestDate, decisionMade) 
+                          VALUES (:id, :pratica, DATETIME('now'), 0)";
+            $stmt = $pdo->prepare($sqlInsert);
+            $stmt->execute(['id' => $idUsuario, 'pratica' => $pratica]);
+            
+            // Redireciona para a mesma página
+            header("Location: ?tab=dashboard");
+            exit();
+        } catch (PDOException $e) {
+            die("Erro ao gravar: " . $e->getMessage());
+        }
+    }
+}
+
+// ====================================================================
+// 2. INCLUDES GERAIS
+// ====================================================================
+require_once "templates/header.php";
+require_once "templates/nav.php";
+
+// SEGURANÇA
+if (!isset($_SESSION['idU']) || $_SESSION['userType'] !== "Profissional de Saúde") {
+    header("Location: index.php"); 
     exit();
 }
-//Verifica se é Profissional de Saúde
-if ($_SESSION['userType'] !== "Profissional de Saúde") {
-    header("Location: index.php");
-    exit();
-}
 
+$idUsuario = $_SESSION['idU'];
 $title = "Profissional de Saúde";
+$currentTab = isset($_GET['tab']) ? $_GET['tab'] : 'dashboard';
 
+// Função Helper de Cores
+function obterClasseEstado($estado) {
+    switch (strtolower(trim($estado))) {
+        case 'ativo': return 'badge-green';
+        case 'em uso': case 'aprovado': return 'badge-blue';
+        case 'rejeitado': return 'badge-red';
+        case 'pendente': return 'badge-yellow';
+        default: return 'badge-gray';
+    }
+}
 
+header_set($title); 
 ?>
-<?php header_set($title); ?>
 
 <body>
 <div class="page-wrapper">
-
     <?php nav_set(); ?>
 
     <main class="main-container">
-
+        
         <h1 class="titulo mb2">Área do Profissional de Saúde</h1>
 
-        <div class="card mb2">
-            <h2 class="nome mb1">O Meu Pedido Atual</h2>
-            
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-                <div class="info-grid" style="flex: 1;">
-                    <div><span class="text-muted">Serviço:</span> <strong>Radiologia</strong></div>
-                    <div><span class="text-muted">Função:</span><strong>Técnico</strong></div>
-                    <div><span class="text-muted">Estado:</span> <span class="badge-green role-badge">Ativo</span></div>
-                </div>
-
-                <div>
-                    <button class="btn btn-cancel" style="border-color: var(--red); color: var(--red);">
-                        Pedir Suspensão
-                    </button>
-                </div>
-            </div>
-            
-            <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
-                <span class="text-muted" style="font-size: 0.9rem;"> <strong>Observações</strong>: Trabalho com equipamentos de imagem</span>
-            </div>
+        <div class="tab-nav">
+            <a href="?tab=dashboard" class="tab-link <?php echo $currentTab == 'dashboard' ? 'active' : ''; ?>">Página Inicial</a>
+            <a href="?tab=pedidos" class="tab-link <?php echo $currentTab == 'pedidos' ? 'active' : ''; ?>">Todos os Pedidos</a>
+            <a href="?tab=historico" class="tab-link <?php echo $currentTab == 'historico' ? 'active' : ''; ?>">Histórico de Dosímetros</a>
+            <a href="?tab=alteracoes" class="tab-link <?php echo $currentTab == 'alteracoes' ? 'active' : ''; ?>">Alterações no Pedido</a>
         </div>
 
-
-        <div class="health-page">
-            
-            <div class="card">
-                <h2 class="nome mb1">Dosímetros Atribuídos</h2>
-                
-                <div class="table-container">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>Código</th>
-                                <th>Período</th>
-                                <th>Estado</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>DOS-001</strong></td>
-                                <td>Desde 20/03/2025</td>
-                                <td><span class="badge-blue role-badge">Em Uso</span></td>
-                            </tr>
-                            <tr>
-                                <td>DOS-145</td>
-                                <td>Set 2024 - Mar 2025</td>
-                                <td><span class="badge-gray role-badge;">Devolvido</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="card">
-                <h2 class="nome mb1">Histórico de Pedidos</h2>
-                
-                <div class="table-container">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>Data</th>
-                                <th>Estado</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>12/03/2025</td>
-                                <td><span class="badge-green role-badge">Aprovado</span></td>
-                            </tr>
-                            <tr>
-                                <td>10/09/2024</td>
-                                <td><span class="badge-red role-badge">Rejeitado</span></td>
-                            </tr>
-                            <tr>
-                                <td>01/01/2024</td>
-                                <td><span class="badge-purple role-badge">Concluído</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-        </div>
+        <?php
+        // INCLUDES DAS TABS
+        switch ($currentTab) {
+            case 'pedidos':
+                require_once "HP_tab2.php"; 
+                break;
+            case 'historico':
+                require_once "HP_tab3.php"; 
+                break;
+            case 'alteracoes':
+                require_once "HP_tab4.php"; 
+                break;
+            case 'dashboard':
+            default:
+                require_once "HP_tab1.php"; 
+                break;
+        }
+        ?>
 
     </main>
-
-    <?php renderFooter(); ?>
-
+    <?php require_once("templates/footer.php"); ?>
 </div>
+
+<script>
+    function abrirModal() {
+        var m = document.getElementById('modalPedido');
+        if(m) m.style.display = 'flex';
+    }
+    function fecharModal() {
+        var m = document.getElementById('modalPedido');
+        if(m) m.style.display = 'none';
+    }
+    window.onclick = function(event) {
+        var modal = document.getElementById('modalPedido');
+        if (event.target == modal) modal.style.display = "none";
+    }
+</script>
 </body>
 </html>

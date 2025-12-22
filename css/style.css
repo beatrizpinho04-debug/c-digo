@@ -179,6 +179,21 @@ label, .profile-label { font-size: 14px; font-weight: 500; color: var(--foregrou
   font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; 
   font-weight: 600; display: inline-block;
 }
+<<<<<<< Updated upstream
+=======
+.badge-green { 
+    background-color: #dcfce7; 
+    color: #166534;           
+}
+.badge-gray { 
+    background-color: #f3f4f6; 
+    color: #374151;          
+}
+.badge-yellow { 
+    background-color: #fef9c3;
+    color: #854d0e;           
+}
+>>>>>>> Stashed changes
 .etiqueta { margin-top: 0.25rem; }
 
 
@@ -355,52 +370,493 @@ label, .profile-label { font-size: 14px; font-weight: 500; color: var(--foregrou
     display: block;
 }
 
+HP_geral{
+/* =================================================================
+   1. ESTILOS GLOBAIS E UTILITÁRIOS
+   (Usados em todas as Tabs)
+   ================================================================= */
 
-
-
-
-
-
-/*------PROFISSIONAL DE SAÙDE---------*/
-
-.health-page {
-  display: grid;
-  gap: 1.5rem;
+/* Layout Base */
+.page-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
-@media (min-width: 768px) {
-  .health-page {
-    grid-template-columns: 2fr 1fr;
+.main-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    padding: 1.5rem;
+    border: 1px solid #e5e7eb;
+}
+
+/* Espaçamentos Utilitários */
+.mb1 { margin-bottom: 0.5rem; }
+.mb2 { margin-bottom: 1.5rem; }
+.text-muted { color: #6b7280; }
+
+/* Botões (Base) */
+.btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background-color: #2563eb;
+    color: white;
+}
+.btn-primary:hover { background-color: #1d4ed8; }
+
+.btn-cancel {
+    background-color: white;
+    border-color: #d1d5db;
+    color: #374151;
+}
+.btn-cancel:hover { background-color: #f3f4f6; }
+
+
+/* =================================================================
+   2. NAVEGAÇÃO POR ABAS (TABS)
+   ================================================================= */
+.tab-nav {
+    display: flex;
+    gap: 1rem;
+    border-bottom: 2px solid #e5e7eb;
+    margin-bottom: 2rem;
+    overflow-x: auto; /* Scroll em telemóveis */
+}
+
+.tab-link {
+    text-decoration: none;
+    color: #6b7280;
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    white-space: nowrap;
+    transition: color 0.2s;
+}
+
+.tab-link:hover { color: #1f2937; border-bottom-color: #d1d5db; }
+.tab-link.active { color: #2563eb; border-bottom-color: #2563eb; }
+
+
+/* =================================================================
+   3. TABELAS
+   ================================================================= */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+.admin-table th {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    color: #6b7280;
+    background-color: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.admin-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    vertical-align: middle;
+    color: #374151;
+}
+
+.admin-table tbody tr:hover { background-color: #f9fafb; }
+.admin-table tbody tr:last-child td { border-bottom: none; }
+
+
+/* =================================================================
+   4. BADGES / ETIQUETAS
+   ================================================================= */
+.role-badge {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-block;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.badge-green  { background-color: #dcfce7; color: #166534; }
+.badge-blue   { background-color: #dbeafe; color: #1e40af; }
+.badge-red    { background-color: #fee2e2; color: #991b1b; }
+.badge-gray   { background-color: #f3f4f6; color: #374151; }
+.badge-yellow { background-color: #fef9c3; color: #854d0e; }
+}
+
+tab1{
+/* =================================================================
+   ESTILOS ESPECÍFICOS TAB 1 (DASHBOARD)
+   ================================================================= */
+
+/* 1. Grelha de Informação */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem; 
+    margin-top: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+/* 2. Caixas Individuais */
+.dash-info-box {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1.75rem; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dash-info-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border-color: #cbd5e1;
+}
+
+/* 3. Título Pequeno (Label) - AQUI É QUE SEPARA AS LINHAS */
+.dash-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #64748b;
+    font-weight: 700;
+    margin-bottom: 3rem; /* Aumentei de 0.5rem para 1rem (muito mais espaço em baixo) */
+    display: block; /* Garante que ocupa a linha toda */
+}
+
+/* 4. Valor Grande (Info) */
+.dash-value {
+    font-size: 1.1rem;
+    color: #1e293b;
+    line-height: 1.6; /* Aumentei a altura da linha para o texto respirar melhor */
+}
+
+/* 5. Caixa de Detalhes Técnicos (Onde tinhas a barra verde) */
+.tech-details-box {
+    background-color: #f0fdf4; /* Fundo verde muito claro */
+    border: 1px solid #bbf7d0;
+    border-left: 5px solid #166534; /* Lateral verde escura */
+    border-radius: 6px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 2rem;
+    color: #166534;
+}
+
+.tech-title {
+    font-weight: 700;
+    margin-right: 0.5rem;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+}
+
+/* Ajuste para o título da secção de baixo */
+.section-title {
+    font-size: 1.25rem;
+    color: #1f2937;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #f3f4f6;
+}
+}
+
+tab2{
+/* =================================================================
+   6. TAB 2 ESPECÍFICO: LISTA DE PEDIDOS (TIMELINE)
+   ================================================================= */
+
+/* Contentor da Lista */
+.timeline-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem; /* Espaço entre cartões */
+}
+
+/* O Cartão do Pedido */
+.request-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1.25rem;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden; /* Para a borda lateral ficar certinha */
+}
+
+/* Efeito ao passar o rato (Sobe ligeiramente) */
+.request-card:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    border-color: #d1d5db;
+}
+
+/* --- Cores das Bordas Laterais (Indicador de Estado) --- */
+.border-blue   { border-left: 5px solid #3b82f6; } /* Aprovado */
+.border-red    { border-left: 5px solid #ef4444; } /* Rejeitado */
+.border-yellow { border-left: 5px solid #eab308; } /* Pendente */
+
+/* Cores de fundo subtis para os cabeçalhos (Opcional, mas fica bonito) */
+.bg-blue-light   { background-color: #eff6ff; }
+.bg-red-light    { background-color: #fef2f2; }
+.bg-yellow-light { background-color: #fefce8; }
+
+
+/* --- Cabeçalho do Cartão (Ícone + Título + Badge) --- */
+.req-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.req-title {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+/* O círculo à volta do ícone (Emoji) */
+.req-icon {
+    font-size: 1.25rem;
+    background-color: #f3f4f6;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%; /* Faz o círculo */
+    flex-shrink: 0; /* Impede que encolha */
+}
+
+/* Texto do título (Data) */
+.req-title strong {
+    font-size: 1rem;
+    color: #1f2937;
+    display: block;
+}
+
+/* --- Corpo e Detalhes --- */
+.req-body {
+    padding-left: 3.5rem; /* Alinha o texto com o título (salta o ícone) */
+}
+
+/* Em telemóvel, removemos a indentação para ganhar espaço */
+@media (max-width: 600px) {
+    .req-body { padding-left: 0; }
+}
+
+.divider {
+    height: 1px;
+    background-color: #f3f4f6;
+    margin: 1rem 0;
+}
+
+/* Grelha de Detalhes (Quem aprovou, Datas, etc.) */
+.details-grid {
+    display: grid;
+    /* Cria colunas automáticas de no mínimo 200px */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+/* Item individual (Label + Valor) */
+.d-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.d-item label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #6b7280;
+    font-weight: 600;
+    margin-bottom: 4px;
+    letter-spacing: 0.02em;
+}
+
+.d-item span {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #374151;
+}
+
+/* Classe especial para ocupar a largura toda (ex: Motivo Rejeição) */
+.d-item.full-width {
+    grid-column: 1 / -1;
+    margin-top: 0.5rem;
+}
+}
+
+tab3{
+/* =================================================================
+   7. TAB 3 ESPECÍFICO: HISTÓRICO DE DOSÍMETROS
+   ================================================================= */
+
+  /* --- Cartão de Destaque (Dosímetro em Uso) --- */
+  /* Substitui o estilo inline que tinhas no PHP */
+  .highlight-card {
+      background: linear-gradient(to right, #eff6ff, #ffffff); /* Gradiente Azul Suave */
+      border: 1px solid #bfdbfe;
+      position: relative;
+      overflow: hidden; /* Para a risca azul não sair fora */
   }
+
+  /* Risca azul decorativa à esquerda para dar destaque */
+  .highlight-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 5px;
+      background-color: #3b82f6; /* Azul forte */
+  }
+
+  .highlight-title {
+      color: #1e40af; /* Azul escuro */
+      margin-bottom: 1rem;
+  }
+
+  /* Ajuste das caixas de info quando estão dentro do destaque */
+  .highlight-card .info-box {
+      background-color: #ffffff;     /* Fundo branco puro para contrastar */
+      border-color: #dbeafe;         /* Borda azul muito clara */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  }
+
+  /* Cores específicas para texto de alerta (Data de Troca) */
+  .text-alert {
+      color: #ea580c; /* Laranja escuro */
+      font-weight: 700;
+  }
+  .label-alert {
+      color: #c2410c;
+  }
+
+  /* --- Tabela de Histórico --- */
+
+  /* Estilo para o Número de Série (aspeto técnico) */
+  .serial-mono {
+      font-family: 'Courier New', Courier, monospace; /* Fonte tipo máquina de escrever */
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: #374151;
+      background-color: #f3f4f6;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+  }
+
+  /* Estilo para a Data de Previsão na tabela */
+  .prediction-date {
+      font-size: 0.85rem;
+      color: #ea580c;
+      background-color: #fff7ed;
+      padding: 2px 6px;
+      border-radius: 4px;
+      display: inline-block;
+      border: 1px solid #ffedd5;
+  }
+
 }
 
-/* -------HP – Listas e Grelhas------ */
-.health-page {
-  display: grid; gap: 1.5rem;
-  align-items: start; /* Impede que estiquem */
+tab4{
+/* =================================================================
+   9. TAB 4 ESPECÍFICO: ALTERAÇÕES (JUSTIFICAÇÕES E RESPOSTAS)
+   ================================================================= */
+
+/* Caixa da Justificação do Utilizador */
+.user-justification {
+    background-color: #f9fafb; /* Cinza muito claro */
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 0.85rem;
+    margin-top: 0.5rem;
+    color: #4b5563;
+    font-size: 0.95rem;
+    font-style: italic; /* Para parecer uma "fala" ou citação */
+    position: relative;
 }
 
-@media (min-width: 900px) {
-  .health-page { grid-template-columns: 2fr 1fr; }
+/* Pequeno triângulo (seta) em cima da caixa cinza (opcional, fica bonito) */
+.user-justification::before {
+    content: '';
+    position: absolute;
+    top: -6px; left: 1rem;
+    width: 10px; height: 10px;
+    background-color: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+    border-left: 1px solid #e5e7eb;
+    transform: rotate(45deg);
 }
 
-.list-item {
-  display: grid;
-  grid-template-columns: 1fr auto auto; /* Texto | Badge | Link */
-  gap: 1rem;
-  align-items: center;
-  padding: 1rem 0; /* Mais ar */
-  border-bottom: 1px solid var(--border);
-  font-size: 0.875rem;
-  transition: background-color 0.2s;
+/* Caixa da Resposta Administrativa */
+.admin-response-box {
+    background-color: #f0fdf4; /* Verde muito suave */
+    border: 1px solid #bbf7d0; /* Borda verde clara */
+    border-radius: 6px;
+    padding: 1rem;
+    margin-top: 1.25rem;
 }
 
-/* Efeito Hover igual às tabelas do Admin */
-.list-item:hover {
-  background-color: var(--bg-body);
-  padding-left: 0.5rem; /* Pequeno movimento para feedback visual */
-  padding-right: 0.5rem;
-  border-radius: 4px;
+/* Título "RESPOSTA DA ADMINISTRAÇÃO" */
+.admin-response-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #166534; /* Verde escuro */
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #bbf7d0; /* Linha separadora */
 }
 
-.list-item:last-child { border-bottom: none; }
+/* Nota Específica do Admin */
+.admin-note-area {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px dashed #86efac; /* Linha tracejada */
+}
+
+.admin-note-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #15803d;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.admin-note-text {
+    color: #14532d;
+    font-size: 0.9rem;
+}
+}
