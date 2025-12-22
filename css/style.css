@@ -115,6 +115,8 @@ label, .profile-label { font-size: 14px; font-weight: 500; color: var(--foregrou
 .btn-save-profile:hover { background-color: var(--green2); }
 .btn-no { background-color: var(--rejeitar); color: var(--white);}
 .btn-no:hover { background-color: var(--badge-red);}
+.btn-ver {display: inline-flex; align-items: center; justify-content: center; color: var(--muted); background: transparent;}
+.btn-ver:hover {background: var(--primary);color: var(--white);}
 .action-buttons { display: flex; gap: 0.5rem; }
 .profile-actions {
   display: flex; gap: 0.75rem; justify-content: flex-end;
@@ -352,16 +354,7 @@ label, .profile-label { font-size: 14px; font-weight: 500; color: var(--foregrou
 #type_hp:checked ~ .hp-only-fields {
     display: block;
 }
-.btn-ver {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--muted); 
-    background: transparent;
-}
 
-
-.btn-ver:hover {background: var(--primary);color: var(--white);}
 
 
 

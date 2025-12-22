@@ -36,12 +36,10 @@ header_set($title);
             <?php renderAdminTabs($tab); ?>
 
             <?php 
-            // 1. Mostrar sempre o conteúdo da aba
+            // 1. Associação de Dosímetros
             if ($tab === 'associacao') {
                 $pendingList = getPendingAssociations($db, $search);
-                renderAssociationTable($pendingList, $search); // Desenha a tabela no fundo
-
-                // 2. Se houver pedido de associação, desenha a "janela" por cima
+                renderAssociationTable($pendingList, $search);
                 if (isset($_GET['associar'])) {
                     $userToAssociate = isset($_GET['user']) ? $_GET['user'] : 'Utilizador';
                     renderAssociateForm($_GET['associar'], $userToAssociate);

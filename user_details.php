@@ -1,49 +1,29 @@
 <?php
 session_start();
 require_once "database/connection.php";
-require_once "database/admin_db.php";
+require_once "database/user_details_db.php";
 require_once "templates/header.php";
 require_once "templates/nav.php";
 require_once "templates/footer.php";
-// Carregamos a nova view específica para esta página
-require_once "templates/user_details_view.php"; 
+require_once "templates/user_details_view.php";
 
-// 1. Segurança: Apenas Administrador
 if (!isset($_SESSION['idU']) || $_SESSION['userType'] !== "Administrador") {
-    header("Location: index.php");
-    exit();
+    header("Location: index.php"); exit();
 }
 
-// 2. Validar ID
-if (!isset($_GET['idU'])) {
-    header("Location: admin.php?tab=users");
-    exit();
-}
-
+$idU = isset($_GET['idU']) ? $_GET['idU'] : 0;
 $db = getDatabaseConnection();
-$idU = $_GET['idU'];
-$subtab = isset($_GET['subtab']) ? $_GET['subtab'] : 'info';
-
-// 3. Buscar Dados
 $user = getUserFullDetails($db, $idU);
 
 if (!$user) {
-    echo "<div class='page-wrapper'><main class='main-container'><p>Utilizador não encontrado.</p><a href='admin.php?tab=users' class='btn btn-primary'>Voltar</a></main></div>";
+    echo "<div class='page-wrapper'><main class='main-container'><p>Utilizador não encontrado.</p></main></div>";
     exit();
 }
 
-// 4. Buscar Dados da Aba
-$tabData = [];
-if ($subtab === 'pedidos') {
-    $tabData = getUserRequests($db, $idU);
-} elseif ($subtab === 'dosimetros') {
-    $tabData = getUserDosimeterHistory($db, $idU);
-} elseif ($subtab === 'suspensoes') {
-    $tabData = getUserChanges($db, $idU);
-}
+// Define a aba ativa (default: info)
+$subtab = isset($_GET['subtab']) ? $_GET['subtab'] : 'info';
 
-// 5. Renderizar
-$title = "Informações de " . $user['name'];
+$title = "Detalhes: " . $user['name']. " " . $user['surname'];
 header_set($title);
 ?>
 <body>
@@ -61,10 +41,36 @@ header_set($title);
                     </a>
                 </div>
             </div>
+            
             <?php 
-            // Chama a função que está no novo ficheiro de template
-            renderUserDetailsPage($user, $subtab, $tabData); 
+            // 1. Renderizar Cabeçalho do User
+            renderUserHeaderCard($user);
+
+            // 2. Renderizar Abas de Navegação
+            renderUserTabs($idU, $subtab);
             ?>
+
+            <div class="card">
+                <?php 
+                if ($subtab === 'info') {
+                    // Passamos o user que já temos
+                    renderUserInfoTab($user);
+                } 
+                elseif ($subtab === 'pedidos') {
+                    $requests = getUserRequests($db, $idU);
+                    renderUserRequestsTab($requests);
+                } 
+                elseif ($subtab === 'dosimetros') {
+                    $history = getUserDosimeterHistory($db, $idU);
+                    renderUserDosimetersTab($history);
+                } 
+                elseif ($subtab === 'suspensoes') {
+                    $changes = getUserChanges($db, $idU);
+                    renderUserSuspensionsTab($changes);
+                }
+                ?>
+            </div>
+
         </main>
 
         <?php renderFooter(); ?>
