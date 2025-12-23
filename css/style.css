@@ -242,6 +242,7 @@ label, .profile-label { font-size: 14px; font-weight: 500; color: var(--foregrou
 .admin-table td {padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); color: var(--text-main);}
 .admin-table tr:last-child td { border-bottom: none; }
 .admin-table tr:hover { background-color: var(--input-bg); }
+.admin-table td.cell-date-late {color: var(--rejeitar); font-weight: 700;}
 
 
 /*----Alertas----*/

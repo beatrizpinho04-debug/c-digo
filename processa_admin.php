@@ -2,7 +2,6 @@
 session_start();
 require_once 'database/connection.php';
 
-// Segurança: Apenas Administradores
 if (!isset($_SESSION['idU']) || $_SESSION['userType'] !== "Administrador") {
     header("Location: index.php");
     exit();
@@ -133,7 +132,7 @@ try {
         exit();
     }
 
-    // 4. Criar Utilizador
+    // 5. Criar Utilizador
     elseif ($action === 'create_user') {
         $email = trim($_POST['email']);
         $phone = trim($_POST['phoneN']);

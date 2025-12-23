@@ -1,4 +1,5 @@
 <?php
+//Abas
 function renderAdminTabs($currentTab) {
     ?>
     <div class="admin-tabs">
@@ -22,7 +23,7 @@ function renderAssociationTable($pendingData, $searchTerm) {
             </div>
             <form action="admin.php" method="GET" class="search-form">
                 <input type="hidden" name="tab" value="associacao">
-                <input type="text" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Nome, Email, Prática..." class="profile-input input-search">
+                <input type="text" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Pesquisar..." class="profile-input input-search">
                 <button type="submit" class="btn btn-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
@@ -45,7 +46,6 @@ function renderAssociationTable($pendingData, $searchTerm) {
                     <thead>
                         <tr>
                             <th>Profissional</th>
-                            <th>Email</th>
                             <th>Prática</th>
                             <th>Tipo de dosímetro</th>
                             <th>Periocidade</th>
@@ -56,8 +56,10 @@ function renderAssociationTable($pendingData, $searchTerm) {
                     <tbody>
                         <?php foreach ($pendingData as $row): ?>
                             <tr>
-                                <td><span class="nome-tab"><?php echo htmlspecialchars($row['name'] . ' ' . $row['surname']); ?></span></td>
-                                <td><?php echo htmlspecialchars($row['email']); ?></td>
+                                <td>
+                                    <span class="nome-tab"><?php echo htmlspecialchars($row['name'] . ' ' . $row['surname']); ?></span><br>
+                                    <?php echo htmlspecialchars($row['email']); ?>
+                                </td>
                                 <td><?php echo htmlspecialchars($row['pratica']); ?></td>
                                 <td><?php echo htmlspecialchars($row['dosimeterType']); ?></td>
                                 <td><?php echo htmlspecialchars($row['periodicity']); ?></td>
@@ -76,7 +78,6 @@ function renderAssociationTable($pendingData, $searchTerm) {
     </div>
     <?php
 }
-
 //1. Associação de Dosímetros: Modal para associar um dosimetro a um user
 function renderAssociateForm($idDA, $userName) {
     ?>
@@ -119,7 +120,7 @@ function renderManagementTab($stats, $activeDosimeters, $searchTerm) {
             <h2 class="titulo-separador">Dosímetros Ativos</h2>
             <form action="admin.php" method="GET" class="search-form">
                 <input type="hidden" name="tab" value="gestao">
-                <input type="text" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Nome, Email, Serial..." class="profile-input input-search">
+                <input type="text" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Pesquisar..." class="profile-input input-search">
                 <button type="submit" class="btn btn-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
@@ -141,7 +142,6 @@ function renderManagementTab($stats, $activeDosimeters, $searchTerm) {
                 <thead>
                     <tr>
                         <th>Profissional</th>
-                        <th>Email</th>
                         <th>Prática</th>
                         <th>Dosímetro</th>
                         <th>Associado em</th>
@@ -155,8 +155,10 @@ function renderManagementTab($stats, $activeDosimeters, $searchTerm) {
                         $dateClass = $isLate ? 'cell-date-late' : '';
                     ?>
                         <tr>
-                            <td><span class="nome-tab"><?php echo htmlspecialchars($row['name'] . ' ' . $row['surname']); ?></span></td>
-                            <td><?php echo htmlspecialchars($row['email']); ?></td>
+                            <td>
+                                <span class="nome-tab"><?php echo htmlspecialchars($row['name'] . ' ' . $row['surname']); ?></span><br>
+                                <?php echo htmlspecialchars($row['email']); ?>
+                            </td>
                             <td><?php echo htmlspecialchars($row['pratica']); ?></td>
                             <td><?php echo htmlspecialchars($row['dosimeterSerial']); ?></td>
                             <td><?php echo date('d/m/Y', strtotime($row['assignmentDate'])); ?></td>
@@ -173,7 +175,6 @@ function renderManagementTab($stats, $activeDosimeters, $searchTerm) {
     </div>
     <?php
 }
-
 // 2. Gestão de Dosímetros: Modal para trocar o dosimetro a um user
 function renderSwapModal($idDA, $name) {
     ?>
@@ -209,7 +210,7 @@ function renderHistoryTab($historyData, $searchTerm) {
             </div>
             <form action="admin.php" method="GET" class="search-form">
                 <input type="hidden" name="tab" value="historico">
-                <input type="text" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Nome, Serial, Email..." class="profile-input input-search">
+                <input type="text" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Pesquisar..." class="profile-input input-search">
                 <button type="submit" class="btn btn-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
@@ -233,7 +234,6 @@ function renderHistoryTab($historyData, $searchTerm) {
                         <tr>
                             <th>Nº Série</th>
                             <th>Profissional</th>
-                            <th>Email</th>
                             <th>Início</th>
                             <th>Fim</th>
                         </tr>
@@ -244,13 +244,11 @@ function renderHistoryTab($historyData, $searchTerm) {
                         ?>
                             <tr class="<?php echo $isAtivo ? 'row-highlight' : ''; ?>">
                                 <td><?php echo htmlspecialchars($row['dosimeterSerial']); ?></td>
-                                
-                                <td><span class="nome-tab"><?php echo htmlspecialchars($row['name'] . ' ' . $row['surname']); ?></span></td>
-                                
-                                <td><?php echo htmlspecialchars($row['email']); ?></td>
-                                
+                                <td>
+                                    <span class="nome-tab"><?php echo htmlspecialchars($row['name'] . ' ' . $row['surname']); ?></span><br>
+                                    <?php echo htmlspecialchars($row['email']); ?>
+                                </td>
                                 <td><?php echo date('d/m/Y', strtotime($row['assignmentDate'])); ?></td>
-                                
                                 <td>
                                     <?php if ($isAtivo): ?>
                                         <span class="role-badge alert-success">Em Uso</span>
@@ -276,7 +274,7 @@ function renderRequestsTab($requests, $searchTerm) {
             <h2 class="titulo-separador mb1">Pedidos Pendentes</h2>
             <form action="admin.php" method="GET" class="search-form">
                 <input type="hidden" name="tab" value="pedidos">
-                <input type="text" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Nome, Email..." class="profile-input input-search">
+                <input type="text" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Pesquisar..." class="profile-input input-search">
                 <button type="submit" class="btn btn-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
@@ -298,8 +296,7 @@ function renderRequestsTab($requests, $searchTerm) {
                 <table class="admin-table">
                     <thead>
                         <tr>
-                            <th>Utilizador</th>
-                            <th>Email</th>
+                            <th>Profissional</th>
                             <th>Tipo</th>
                             <th>Data</th>
                             <th>Justificação</th>
@@ -309,8 +306,10 @@ function renderRequestsTab($requests, $searchTerm) {
                     <tbody>
                         <?php foreach ($requests as $req): ?>
                             <tr>
-                                <td><span class="nome-tab"><?php echo htmlspecialchars($req['name'].' '.$req['surname']); ?></span></td>
-                                <td><?php echo htmlspecialchars($req['email']); ?></td>
+                                <td>
+                                    <span class="nome-tab"><?php echo htmlspecialchars($req['name'].' '.$req['surname']); ?></span><br>
+                                    <?php echo htmlspecialchars($req['email']); ?>
+                                </td>
                                 <td>
                                     <span class="role-badge <?php echo $req['requestType'] == 'Suspender' ? 'badge-red' : 'badge-green'; ?>">
                                         <?php echo htmlspecialchars($req['requestType']); ?>
@@ -331,7 +330,6 @@ function renderRequestsTab($requests, $searchTerm) {
     </div>
     <?php
 }
-
 // 4. Pedidos de Suspensão/Ativação: Modal para Suspender/Ativar um pedido
 function renderDecisionModal($idCR, $userName, $requestType) {
     ?>
@@ -375,7 +373,7 @@ function renderUsersTab($users, $searchTerm) {
             <a href="admin.php?tab=users&action=create" class="btn btn-primary">+ Novo Utilizador</a>
             <form action="admin.php" method="GET" class="search-form">
                 <input type="hidden" name="tab" value="users">
-                <input type="text" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Nome, Email..." class="profile-input input-search">
+                <input type="text" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Pesquisar..." class="profile-input input-search">
                 <button type="submit" class="btn btn-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
@@ -397,11 +395,10 @@ function renderUsersTab($users, $searchTerm) {
             <table class="admin-table">
                 <thead>
                     <tr>
-                        <th>Nome</th>
-                        <th>Profissão / Tipo</th>
-                        <th>Email</th>
+                        <th>Profissional</th>
+                        <th>Profissão</th>
                         <th>Estado</th>
-                        <th class="txt-right">Ver</th>
+                        <th class="txt-right">+ Info</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -411,9 +408,11 @@ function renderUsersTab($users, $searchTerm) {
                         $badgeStyle = $u['userStatus'] ? 'alert-success' : 'alert-error';
                     ?>
                         <tr>
-                            <td><span class="nome-tab"><?php echo htmlspecialchars($u['name'].' '.$u['surname']); ?></span></td>
+                            <td>
+                                <span class="nome-tab"><?php echo htmlspecialchars($u['name'].' '.$u['surname']); ?></span><br>
+                                <?php echo htmlspecialchars($u['email']); ?>
+                            </td>
                             <td><?php echo htmlspecialchars($prof); ?></td>
-                            <td><?php echo htmlspecialchars($u['email']); ?></td>
                             <td><span class="role-badge <?php echo $badgeStyle; ?>"><?php echo $activeText; ?></span></td>
                             <td class="txt-right">
                                 <a href="user_details.php?idU=<?php echo $u['idU']; ?>" class="btn btn-ver">
@@ -431,7 +430,6 @@ function renderUsersTab($users, $searchTerm) {
     </div>
     <?php
 }
-
 //5. Utilizadores: Modal para criar um user
 function renderCreateUserModal() {
     ?>
@@ -515,4 +513,5 @@ function renderCreateUserModal() {
     </div>
     <?php
 }
+
 ?> 

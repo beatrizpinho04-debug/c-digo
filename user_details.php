@@ -20,8 +20,8 @@ if (!$user) {
     exit();
 }
 
-// Define a aba ativa (default: info)
 $subtab = isset($_GET['subtab']) ? $_GET['subtab'] : 'info';
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
 $title = "Detalhes: " . $user['name']. " " . $user['surname'];
 header_set($title);
@@ -60,12 +60,12 @@ header_set($title);
                     renderUserRequestsTab($requests);
                 } 
                 elseif ($subtab === 'dosimetros') {
-                    $history = getUserDosimeterHistory($db, $idU);
-                    renderUserDosimetersTab($history);
+                    $history = getUserDosimeterHistory($db, $idU, $search);
+                    renderUserDosimetersTab($history, $idU, $search);
                 } 
                 elseif ($subtab === 'suspensoes') {
-                    $changes = getUserChanges($db, $idU);
-                    renderUserSuspensionsTab($changes);
+                    $changes = getUserChanges($db, $idU, $search);
+                    renderUserSuspensionsTab($changes, $idU, $search);
                 }
                 ?>
             </div>
