@@ -81,8 +81,8 @@ function renderAssociationTable($pendingData, $searchTerm) {
 //1. Associação de Dosímetros: Modal para associar um dosimetro a um user
 function renderAssociateForm($idDA, $userName) {
     ?>
-    <div class="modal-overlay-php">
-        <div class="modal-box-php">
+    <div class="modal-overlay">
+        <div class="modal-box">
             <h3 class="titulo">Associar Dosímetro</h3>
             <p class="subtitulo mb1">Insira os dados para <?php echo htmlspecialchars($userName); ?></p>
 
@@ -117,7 +117,7 @@ function renderManagementTab($stats, $activeDosimeters, $searchTerm) {
 
     <div class="card">
         <div class="mb1 header-flex">
-            <h2 class="titulo-separador">Dosímetros Ativos</h2>
+            <h2 class="titulo-separador header-flex-left">Dosímetros Ativos</h2>
             <form action="admin.php" method="GET" class="search-form">
                 <input type="hidden" name="tab" value="gestao">
                 <input type="text" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Pesquisar..." class="profile-input input-search">
@@ -271,7 +271,7 @@ function renderRequestsTab($requests, $searchTerm) {
     ?>
     <div class="card">
         <div class="mb1 header-flex">
-            <h2 class="titulo-separador mb1">Pedidos Pendentes</h2>
+            <h2 class="titulo-separador mb1 header-flex-left">Pedidos Pendentes</h2>
             <form action="admin.php" method="GET" class="search-form">
                 <input type="hidden" name="tab" value="pedidos">
                 <input type="text" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Pesquisar..." class="profile-input input-search">
@@ -333,8 +333,8 @@ function renderRequestsTab($requests, $searchTerm) {
 // 4. Pedidos de Suspensão/Ativação: Modal para Suspender/Ativar um pedido
 function renderDecisionModal($idCR, $userName, $requestType) {
     ?>
-    <div class="modal-overlay-php">
-        <div class="modal-box-php">
+    <div class="modal-overlay">
+        <div class="modal-box">
             <h3 class="titulo mb1">Decidir Pedido</h3>
             <p class="subtitulo mb1">
                 O utilizador <b><?php echo htmlspecialchars($userName); ?></b> pediu para: 
@@ -433,7 +433,7 @@ function renderUsersTab($users, $searchTerm) {
 //5. Utilizadores: Modal para criar um user
 function renderCreateUserModal() {
     ?>
-    <div class="modal-overlay-php">
+    <div class="modal-overlay">
         <div class="new-user">
             <h3 class="titulo mb1">Novo Utilizador</h3>
             <form action="processa_admin.php" method="POST">

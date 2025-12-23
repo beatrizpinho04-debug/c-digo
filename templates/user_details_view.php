@@ -42,9 +42,9 @@ function renderUserTabs($idU, $currentTab) {
     ?>
     <div class="admin-tabs mb2">
         <a href="user_details.php?idU=<?php echo $idU; ?>&subtab=info" class="tab-link <?php echo $currentTab == 'info' ? 'active' : ''; ?>">Informações</a>
-        <a href="user_details.php?idU=<?php echo $idU; ?>&subtab=pedidos" class="tab-link <?php echo $currentTab == 'pedidos' ? 'active' : ''; ?>">Pedidos</a>
-        <a href="user_details.php?idU=<?php echo $idU; ?>&subtab=dosimetros" class="tab-link <?php echo $currentTab == 'dosimetros' ? 'active' : ''; ?>">Histórico Dosímetros</a>
-        <a href="user_details.php?idU=<?php echo $idU; ?>&subtab=suspensoes" class="tab-link <?php echo $currentTab == 'suspensoes' ? 'active' : ''; ?>">Histórico Suspensões/Ativações</a>
+        <a href="user_details.php?idU=<?php echo $idU; ?>&subtab=pedidos" class="tab-link <?php echo $currentTab == 'pedidos' ? 'active' : ''; ?>">Histórico de Pedidos</a>
+        <a href="user_details.php?idU=<?php echo $idU; ?>&subtab=dosimetros" class="tab-link <?php echo $currentTab == 'dosimetros' ? 'active' : ''; ?>">Histórico de Dosímetros</a>
+        <a href="user_details.php?idU=<?php echo $idU; ?>&subtab=suspensoes" class="tab-link <?php echo $currentTab == 'suspensoes' ? 'active' : ''; ?>">Histórico de Suspensões/Ativações</a>
     </div>
     <?php
 }
@@ -80,7 +80,7 @@ function renderUserInfoTab($user) {
 function renderUserRequestsTab($requests) {
     if (empty($requests)) { echo "<p class='text-center com-cinza'>Sem pedidos registados.</p>"; return; }
     ?>
-    <h3 class="titulo-separador mb1">Histórico de Pedidos</h3>
+    <h3 class="titulo-separador mb1">Lista de Pedidos</h3>
     <div class="table-container">
         <table class="admin-table">
             <thead>
@@ -169,7 +169,7 @@ function renderUserRequestsTab($requests) {
 function renderUserDosimetersTab($history, $idU, $searchTerm) {
     ?>
     <div class="mb1 header-flex">
-        <h3 class="titulo-separador">Histórico de Equipamentos</h3>
+        <h3 class="titulo-separador header-flex-left">Dosímetros Usados/Em Uso</h3>
         <form action="user_details.php" method="GET" class="search-form">
             <input type="hidden" name="idU" value="<?php echo $idU; ?>">
             <input type="hidden" name="subtab" value="dosimetros">
@@ -223,7 +223,7 @@ function renderUserDosimetersTab($history, $idU, $searchTerm) {
 function renderUserSuspensionsTab($changes, $idU, $searchTerm) {
     ?>
     <div class="mb1 header-flex">
-        <h3 class="titulo-separador">Registo de Alterações de Estado</h3>
+        <h3 class="titulo-separador header-flex-left">Registo de Alterações de Estado</h3>
         <form action="user_details.php" method="GET" class="search-form">
             <input type="hidden" name="idU" value="<?php echo $idU; ?>">
             <input type="hidden" name="subtab" value="suspensoes">
