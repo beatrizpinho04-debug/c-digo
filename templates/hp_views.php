@@ -22,7 +22,7 @@ function renderHPTabs($currentTab) {
     <?php
 }
 
-// 2. Renderizar Dashboard (COM O NOVO DESIGN)
+// 2. Renderizar Dashboard (COM OS BOTÕES PARA O MODAL)
 function renderDashboard($hp, $last) {
     $stDash = 'Novo';
     if ($last) {
@@ -74,20 +74,23 @@ function renderDashboard($hp, $last) {
 
     <?php if ($stDash === 'Aprovado'): ?>
         
-        <div class="page-header-row">
+        <?php if ($stDash === 'Aprovado'): ?>
+        
+        <div class="page-header-row mb1">
             <h2 class="titulo" style="margin:0;">O Meu Pedido Atual</h2>
+
             <?php if ($last['stAp'] === 'Ativo'): ?>
-                <form action="processa_hp.php" method="POST" style="margin:0;">
-                    <input type="hidden" name="action" value="suspender_pedido">
-                    <button class="btn btn-cancel" style="color:var(--red); border-color:var(--red-light2);">Pedir Suspensão</button>
-                </form>
+                <a href="HP.php?tab=dashboard&modal=suspender" class="btn btn-cancel" style="color:var(--red); border-color:var(--red-light2);">
+                    Pedir Suspensão
+                </a>
+
             <?php elseif ($last['stAp'] === 'Suspenso'): ?>
-                <form action="processa_hp.php" method="POST" style="margin:0;">
-                    <input type="hidden" name="action" value="ativar_pedido">
-                    <button class="btn btn-primary">Pedir Ativação</button>
-                </form>
+                <a href="HP.php?tab=dashboard&modal=ativar" class="btn btn-primary">
+                    Pedir Ativação
+                </a>
             <?php endif; ?>
         </div>
+        <?php endif; ?>
 
         <div class="summary-card">
             <div class="summary-header">
@@ -204,7 +207,7 @@ function renderHistoryTab($hist, $top) {
                     <?php foreach ($hist as $h): ?>
                     <tr>
                         <td><?php echo htmlspecialchars($h['dosimeterSerial']??'A aguardar...'); ?></td>
-                        <td><?php echo !empty($item['dI']) ? date('d/m/Y', strtotime($item['dI'])) : '-'; ?></td>
+                        <td><?php echo !empty($h['dI']) ? date('d/m/Y', strtotime($h['dI'])) : '-'; ?></td>
                         <td><?php echo $h['dF_real'] ? date('d/m/Y', strtotime($h['dF_real'])) : ($h['dF_prev'] ? "<span class='com-laranja'>".date('d/m/Y', strtotime($h['dF_prev']))."</span>" : "-"); ?></td>
                         <td><span class="<?php echo getStatusClass($h['st']=='Em_Uso'?'Em Uso':$h['st']); ?> role-badge"><?php echo htmlspecialchars($h['st']=='Em_Uso'?'Em Uso':$h['st']); ?></span></td>
                     </tr>
@@ -243,7 +246,7 @@ function renderChangesTab($alt) {
     <?php
 }
 
-// 6. Modal (Sem Scripts)
+// 6. Modal Novo Pedido
 function renderRequestModal($profModal, $depModal, $isOpen) {
     if (!$isOpen) return;
     ?>
@@ -262,6 +265,57 @@ function renderRequestModal($profModal, $depModal, $isOpen) {
                 <div class="modal-actions">
                     <a href="HP.php?tab=dashboard" class="btn btn-cancel">Cancelar</a>
                     <button type="submit" class="btn btn-save-profile">Confirmar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <?php
+}
+
+// 7. NOVO MODAL: Suspender/Ativar (Estilo Admin)
+function renderSuspensionModal($type) {
+    // Texto dinâmico consoante o tipo
+    if ($type === 'suspender') {
+        $titulo = "Suspender Monitorização";
+        $subtitulo = "Indique o motivo para suspender o uso do dosímetro.";
+        $actionValue = "suspender_pedido";
+        $btnClass = "btn-no"; // Vermelho
+        $btnText = "Confirmar Suspensão";
+    } else {
+        $titulo = "Reativar Monitorização";
+        $subtitulo = "Indique o motivo para retomar a monitorização.";
+        $actionValue = "ativar_pedido";
+        $btnClass = "btn-save-profile"; // Verde/Azul
+        $btnText = "Confirmar Ativação";
+    }
+    ?>
+    <div class="modal-overlay">
+        <div class="modal-box">
+            <h3 class="titulo mb1"><?php echo $titulo; ?></h3>
+            <p class="subtitulo mb1"><?php echo $subtitulo; ?></p>
+
+            <form action="processa_hp.php" method="POST">
+                <input type="hidden" name="action" value="<?php echo $actionValue; ?>">
+
+                <div class="form-group mb1_5">
+                    <label class="profile-label">Justificação (Obrigatório)</label>
+                    <textarea 
+                        name="motivo" 
+                        class="profile-input" 
+                        rows="3" 
+                        required 
+                        placeholder="Escreva aqui a justificação..."
+                        autofocus
+                    ></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <a href="HP.php?tab=dashboard" class="btn btn-cancel">Cancelar</a>
+                    <div>
+                        <button type="submit" class="btn <?php echo $btnClass; ?>">
+                            <?php echo $btnText; ?>
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>

@@ -15,7 +15,12 @@ if (!isset($_SESSION['idU']) || $_SESSION['userType'] !== "Profissional de Saúd
 $db = getDatabaseConnection();
 $title = "Profissional de Saúde";
 $tab = isset($_GET['tab']) ? $_GET['tab'] : 'dashboard';
-$modalAberto = (isset($_GET['modal']) && $_GET['modal'] === 'abrir');
+
+// --- CORREÇÃO IMPORTANTE AQUI ---
+// Captura qual modal deve ser aberto ('abrir', 'suspender' ou 'ativar')
+$modalType = isset($_GET['modal']) ? $_GET['modal'] : null;
+// --------------------------------
+
 $idUsuario = $_SESSION['idU'];
 
 header_set($title);
@@ -42,9 +47,17 @@ header_set($title);
                 
                 renderDashboard($hp, $last);
                 
+                // Modal de Novo Pedido (verifica se ?modal=abrir)
                 $profModal = $hp['profession'] ?? 'N/D';
                 $depModal = $hp['department'] ?? 'N/D';
-                renderRequestModal($profModal, $depModal, $modalAberto);
+                renderRequestModal($profModal, $depModal, ($modalType === 'abrir'));
+
+                // --- Modal de Suspensão/Ativação ---
+                // Verifica se o URL tem ?modal=suspender ou ?modal=ativar
+                if ($modalType === 'suspender' || $modalType === 'ativar') {
+                    renderSuspensionModal($modalType);
+                }
+                // -----------------------------------------
             } 
             elseif ($tab === 'pedidos') {
                 $pedidos = getAllRequests($db, $idUsuario);
