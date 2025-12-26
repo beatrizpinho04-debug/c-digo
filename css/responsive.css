@@ -1,22 +1,10 @@
-/* -------------------------------------------------------------------------
-   RESPONSIVE.CSS
-   Ajustes de layout para diferentes tamanhos de ecrã.
-   -------------------------------------------------------------------------
-*/
-
-/* --- Animações --- */
-@keyframes aparecer {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
 @keyframes slideDown {
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- Desktop e Tablets Grandes (≥ 640px) --- */
-@media (min-width: 640px) {
+/* ---Monitores e Tablets Grandes--- */
+@media (min-width: 769px) {
     .profile-form-grid {
         grid-template-columns: 1fr 1fr;
     }
@@ -24,101 +12,110 @@
         grid-column: span 2;
     }
     .hp-fields-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
+    }
+    .input-search {
+        max-width: 250px;
     }
 }
 
-/* --- Tablets e Ecrãs Médios (≤ 768px) --- */
+/* --- Tablets e Monitores Médios --- */
 @media (max-width: 768px) {
     .main-container, .header-container {
-        padding: 0 1rem;
+        padding: 1rem;
     }
-
-    .container {
-        max-width: 90%;
+    .header-flex {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
     }
-
-    /* Tipografia Ajustada */
-    .titulo, .card1-title { font-size: 1.6rem; }
-    .entrar { font-size: 1.35rem; }
-
-    /* --- LIMPEZA DO CABEÇALHO (CRUCIAL) --- */
-    /* Escondemos o nome e cargo AQUI (768px) para evitar que o layout parta em tablets */
-    .user-info {
+    .header-flex-left {
+        width: 100%;
+    }
+    .search-form {
+        width: 100%;
+        display: flex;
+        gap: 0.5rem;
+    }
+    .input-search {
+        flex: 1;
+        width: auto;
+    }
+    .table-container {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        display: block;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+    .admin-table th, .admin-table td {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+        white-space: nowrap;
+    }
+    .user-info, .logo-text p {
         display: none !important;
     }
-
-    /* Escondemos o subtitulo do site para poupar espaço */
-    .logo-text p {
-        display: none !important;
-    }
-
-    /* Ajustar o título principal para não ser gigante */
     .logo-text h1 {
-        font-size: 1.25rem; /* ~20px */
+        font-size: 1.25rem;
+    }
+    .admin-tabs {
+        justify-content: flex-start;
+        padding-bottom: 0.5rem;
     }
 }
 
-/* --- Telemóveis (≤ 480px) --- */
+/* --- Telemóveis --- */
 @media (max-width: 480px) {
-
-  /* --- HEADER MAIS COMPACTO --- */
-  .header-container { padding: 0 0.5rem; }
-  .user-area { gap: 0.5rem; } 
-  
-  /* Título ainda mais pequeno no telemóvel */
-  .logo-text h1 { font-size: 1rem; }
-  
-  /* Foto mais pequena para garantir que cabe tudo */
-  .profile-pic { width: 36px; height: 36px; } 
-
-  /* Botões do header lado a lado */
-  .header1 .action-buttons {
-      flex-direction: row; 
-      width: auto;
-  }
-  .header1 .btn { width: auto; padding: 8px; } 
-
-  /* --- RESTO DO DESIGN --- */
-  .main-container { padding: 1rem 0.5rem; }
-  .container { max-width: 95%; gap: 1rem; padding: 0; }
-  
-  .card, .card1, .card1-content, .card1-header {
-      padding: 1rem; 
-  }
-  
-  .foto-section-gray {
-      flex-direction: column;
-      text-align: center;
-      gap: 0.75rem;
-  }
-
-  /* Tipografia reduzida */
-  .titulo, .card1-title { font-size: 1.4rem; }
-  .subtitulo { font-size: 0.9rem; }
-  .entrar { font-size: 1.25rem; }
-
-  /* Inputs e Botões Gerais */
-  input[type="text"], input[type="email"], input[type="password"], 
-  select, .profile-input, .btn {
-      padding: 0.6rem 0.8rem;
-      font-size: 14px;
-  }
-
-  /* Botões de ação (ex: perfil) empilhados */
-  .action-buttons, .profile-actions {
-      flex-direction: column;
-      width: 100%;
-  }
-  
-  /* Exceção: manter os botões do header em linha (reforço) */
-  .header1 .action-buttons { flex-direction: row !important; }
-
-  .btn { width: 100%; }
-  /* Exceção botões header */
-  .header1 .btn { width: auto; }
-
-  .footer { font-size: 0.8rem; margin-top: 0.5rem; margin-bottom: 1rem; }
-  
-  .table-container { overflow-x: auto; display: block; }
+    .titulo, .card1-title { font-size: 1.5rem; }
+    .subtitulo { font-size: 0.9rem; }
+    .stat-number { font-size: 2rem; }
+    .header-container { padding: 0 0.5rem; }
+    .logo-text h1 { font-size: 1.1rem; }
+    .user-name { display: none; }
+    .profile-pic { width: 32px; height: 32px; }
+    .header1 .btn { padding: 6px; }
+    .header1 .btn svg { width: 18px; height: 18px; }
+    .profile-form-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem;
+    }
+    .g2 {
+        grid-column: span 1 !important;
+    }
+    .modal-box, .modal-box-php, .new-user {
+        width: 95%;
+        padding: 1.25rem;
+        margin: 1rem auto;
+    }
+    .modal-actions {
+        flex-direction: column-reverse;
+        gap: 0.75rem;
+    }
+    .modal-actions .btn, .modal-actions a {
+        width: 100%;
+        text-align: center;
+    }
+    .foto-circle-large {
+        width: 3.5rem;
+        height: 3.5rem;
+        font-size: 1rem;
+    }
+    .user-details-info {
+        text-align: center;
+        width: 100%;
+    }
+    .user-title-row {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .header-flex form {
+        width: 100%;
+    }
+    .header-flex form .btn {
+        width: 100%;
+    }
+    .footer { font-size: 0.75rem; padding: 1rem; }
 }

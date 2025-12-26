@@ -1,7 +1,49 @@
 <?php
 require_once 'connection.php';
 
-// 1. ASSOCIAÇÃO: Pedidos aprovados sem dosímetro
+//Lógica para pesquisar datas
+function prepareDateSearch($search) {
+    if (empty($search)) return "%$search%";
+
+    $dateString = mb_strtolower($search, 'UTF-8');
+    $meses = [
+        'janeiro' => ' 01 ', 'fevereiro' => ' 02 ', 'março' => ' 03 ', 'marco' => ' 03 ',
+        'abril' => ' 04 ', 'maio' => ' 05 ', 'junho' => ' 06 ', 'julho' => ' 07 ',
+        'agosto' => ' 08 ', 'setembro' => ' 09 ', 'outubro' => ' 10 ', 'novembro' => ' 11 ', 'dezembro' => ' 12 ',
+        'jan' => ' 01 ', 'fev' => ' 02 ', 'mar' => ' 03 ', 'abr' => ' 04 ', 'mai' => ' 05 ', 'jun' => ' 06 ',
+        'jul' => ' 07 ', 'ago' => ' 08 ', 'set' => ' 09 ', 'out' => ' 10 ', 'nov' => ' 11 ', 'dez' => ' 12 '
+    ];
+    foreach ($meses as $nome => $num) {
+        $dateString = str_replace($nome, $num, $dateString);
+    }
+    $onlyNumbers = preg_replace('/[^0-9]/', ' ', $dateString);
+    $parts = array_values(array_filter(explode(' ', $onlyNumbers)));
+    $count = count($parts);
+
+    if ($count == 3) {
+        if ($parts[0] > 31) {
+            $ano = $parts[0]; 
+            $mes = str_pad($parts[1], 2, '0', STR_PAD_LEFT); 
+            $dia = str_pad($parts[2], 2, '0', STR_PAD_LEFT);
+            return "{$ano}-{$mes}-{$dia}%";
+        } else {
+            $dia = str_pad($parts[0], 2, '0', STR_PAD_LEFT); 
+            $mes = str_pad($parts[1], 2, '0', STR_PAD_LEFT); 
+            $ano = $parts[2];
+            return "{$ano}-{$mes}-{$dia}%";
+        }
+    } elseif ($count == 2) {
+        $dia = str_pad($parts[0], 2, '0', STR_PAD_LEFT); 
+        $mes = str_pad($parts[1], 2, '0', STR_PAD_LEFT);
+        return "%-{$mes}-{$dia}%";
+    } elseif ($count == 1) {
+        return "%" . $parts[0] . "%";
+    }
+    
+    return "%$search%";
+}
+
+// 1. Associação de Dosímetros: Pedidos aprovados e ativos sem dosímetro
 function getPendingAssociations($db, $search = '') {
     $sql = "SELECT DA.idDA, U.name, U.surname, U.email, AR.dosimeterType, AR.periodicity, AR.riskCategory, DR.pratica
             FROM DosimeterAssignment DA
@@ -14,15 +56,15 @@ function getPendingAssociations($db, $search = '') {
 
     $params = [];
     if (!empty($search)) {
+        $term = "%$search%";
         $sql .= " AND (
                     U.name LIKE ? OR 
                     U.surname LIKE ? OR 
                     (U.name || ' ' || U.surname) LIKE ? OR 
-                    U.email LIKE ? OR 
-                    DR.pratica LIKE ?
+                    U.email LIKE ? OR
+                    AR.dosimeterType LIKE ?
                   )";
-        $term = "%$search%";
-        $params = [$term, $term, $term, $term, $term];
+        array_push($params, $term, $term, $term, $term, $term);
     }
 
     $stmt = $db->prepare($sql);
@@ -85,7 +127,6 @@ function getDosimeterStats($db) {
         'mes_abastecimento' => $mesNome
     ];
 }
-
 // 2. Gestão de Dosimetros: Lista de só pessoas com pedidos/aprovações ativas (com filtro de pesquisa)
 function getActiveDosimeters($db, $search = '') {
     $sql = "SELECT DA.idDA, DA.dosimeterSerial, DA.assignmentDate, DA.nextReplacementDate, U.name, U.surname, U.email, AR.dosimeterType, DR.pratica
@@ -99,9 +140,19 @@ function getActiveDosimeters($db, $search = '') {
     
     $params = [];
     if (!empty($search)) {
-        $sql .= " AND (U.name LIKE ? OR U.surname LIKE ? OR (U.name || ' ' || U.surname) LIKE ? OR U.email LIKE ? OR DA.dosimeterSerial LIKE ?)";
         $term = "%$search%";
-        $params = [$term, $term, $term, $term, $term];
+        $dateTerm = prepareDateSearch($search);
+
+        $sql .= " AND (
+            U.name LIKE ? OR 
+            U.surname LIKE ? OR 
+            (U.name || ' ' || U.surname) LIKE ? OR 
+            U.email LIKE ? OR 
+            DA.dosimeterSerial LIKE ? OR
+            DA.assignmentDate LIKE ? OR        
+            DA.nextReplacementDate LIKE ?      
+        )";
+        array_push($params, $term, $term, $term, $term, $term, $dateTerm, $dateTerm);
     }
     
     $sql .= " ORDER BY DA.nextReplacementDate ASC";
@@ -113,6 +164,10 @@ function getActiveDosimeters($db, $search = '') {
 
 // 3. Histórico de dosimetros 
 function getGlobalDosimeterHistory($db, $search = '') {
+    $term = "%$search%";
+    $dateTerm = prepareDateSearch($search);
+    $estadoSearch = (stripos($search, 'Uso') !== false) ? '%Ativo%' : $term;
+
     $sql = "SELECT DAH.dosimeterSerial, DAH.assignmentDate, DAH.removalDate, 
                    U.name, U.surname, U.email, 'Histórico' as estado
             FROM DosimeterAssignmentHistory DAH
@@ -123,9 +178,18 @@ function getGlobalDosimeterHistory($db, $search = '') {
 
     $params = [];
     if (!empty($search)) {
-        $sql .= " AND (U.name LIKE ? OR U.surname LIKE ? OR (U.name || ' ' || U.surname) LIKE ? OR U.email LIKE ? OR DAH.dosimeterSerial LIKE ?)";
+        $sql .= " AND (
+                    U.name LIKE ? OR 
+                    U.surname LIKE ? OR 
+                    (U.name || ' ' || U.surname) LIKE ? OR 
+                    U.email LIKE ? OR 
+                    DAH.dosimeterSerial LIKE ? OR
+                    DAH.assignmentDate LIKE ? OR
+                    DAH.removalDate LIKE ? OR
+                    'Histórico' LIKE ?
+                )";
         $term = "%$search%";
-        $params = array_merge($params, [$term, $term, $term, $term, $term]);
+        $params = array_merge($params, [$term, $term, $term, $term, $term, $dateTerm, $dateTerm, $estadoSearch]);
     }
 
     $sql .= " UNION ALL ";
@@ -139,8 +203,16 @@ function getGlobalDosimeterHistory($db, $search = '') {
              WHERE DA.status = 'Em_Uso'";
 
     if (!empty($search)) {
-        $sql .= " AND (U.name LIKE ? OR U.surname LIKE ? OR (U.name || ' ' || U.surname) LIKE ? OR U.email LIKE ? OR DA.dosimeterSerial LIKE ?)";
-        $params = array_merge($params, [$term, $term, $term, $term, $term]);
+        $sql .= " AND (
+                    U.name LIKE ? OR 
+                    U.surname LIKE ? OR 
+                    (U.name || ' ' || U.surname) LIKE ? OR 
+                    U.email LIKE ? OR 
+                    DA.dosimeterSerial LIKE ? OR
+                    DA.assignmentDate LIKE ? OR
+                    'Ativo' LIKE ?
+                )";
+        $params = array_merge($params, [$term, $term, $term, $term, $term, $dateTerm, $estadoSearch]);
     }
 
     $sql .= "ORDER BY DAH.removalDate DESC NULLS FIRST";
@@ -160,14 +232,18 @@ function getPendingChangeRequests($db, $search = '') {
 
     $params = [];
     if (!empty($search)) {
-        $sql .= " AND (
-                    U.name LIKE ? OR 
-                    U.surname LIKE ? OR 
-                    (U.name || ' ' || U.surname) LIKE ? OR 
-                    U.email LIKE ?
-                  )";
         $term = "%$search%";
-        $params = [$term, $term, $term, $term];
+        $dateTerm = prepareDateSearch($search);
+
+        $sql .= " AND (
+            U.name LIKE ? OR 
+            U.surname LIKE ? OR 
+            (U.name || ' ' || U.surname) LIKE ? OR 
+            U.email LIKE ? OR 
+            CR.requestType LIKE ? OR
+            CR.requestDate LIKE ?
+        )";
+        array_push($params, $term, $term, $term, $term, $term, $dateTerm);
     }
 
     $sql .= " ORDER BY CR.requestDate ASC";
@@ -185,9 +261,21 @@ function getAllUsers($db, $search = '') {
             
     $params = [];
     if (!empty($search)) {
-        $sql .= " AND (U.name LIKE ? OR U.surname LIKE ? OR (U.name || ' ' || U.surname) LIKE ? OR U.email LIKE ? OR HP.profession LIKE ?)";
         $term = "%$search%";
-        $params = [$term, $term, $term, $term, $term];
+        $statusSearch = -1;
+        if (stripos($search, 'Ativo') !== false && stripos($search, 'Inativo') === false) $statusSearch = 1;
+        if (stripos($search, 'Inativo') !== false) $statusSearch = 0;
+
+        $sql .= " AND (
+            U.name LIKE ? OR 
+            U.surname LIKE ? OR 
+            (U.name || ' ' || U.surname) LIKE ? OR 
+            U.email LIKE ? OR 
+            U.userType LIKE ? OR
+            HP.profession LIKE ? OR
+            U.userStatus = ?
+        )";
+        array_push($params, $term, $term, $term, $term, $term, $term, $statusSearch);
     }
     
     $sql .= " ORDER BY U.name ASC";
@@ -196,8 +284,7 @@ function getAllUsers($db, $search = '') {
     $stmt->execute($params);
     return $stmt->fetchAll();
 }
-
-// 6. Utilizadores: Detalhes de cada user
+// 5. Utilizadores: Detalhes de cada user
 function getUserFullDetails($db, $idU) {
     $stmt = $db->prepare("SELECT * FROM User WHERE idU = ?");
     $stmt->execute([$idU]);

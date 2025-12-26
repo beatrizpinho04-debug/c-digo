@@ -42,9 +42,9 @@ function renderUserTabs($idU, $currentTab) {
     ?>
     <div class="admin-tabs mb2">
         <a href="user_details.php?idU=<?php echo $idU; ?>&subtab=info" class="tab-link <?php echo $currentTab == 'info' ? 'active' : ''; ?>">Informações</a>
-        <a href="user_details.php?idU=<?php echo $idU; ?>&subtab=pedidos" class="tab-link <?php echo $currentTab == 'pedidos' ? 'active' : ''; ?>">Pedidos</a>
-        <a href="user_details.php?idU=<?php echo $idU; ?>&subtab=dosimetros" class="tab-link <?php echo $currentTab == 'dosimetros' ? 'active' : ''; ?>">Histórico Dosímetros</a>
-        <a href="user_details.php?idU=<?php echo $idU; ?>&subtab=suspensoes" class="tab-link <?php echo $currentTab == 'suspensoes' ? 'active' : ''; ?>">Histórico Suspensões/Ativações</a>
+        <a href="user_details.php?idU=<?php echo $idU; ?>&subtab=pedidos" class="tab-link <?php echo $currentTab == 'pedidos' ? 'active' : ''; ?>">Histórico de Pedidos</a>
+        <a href="user_details.php?idU=<?php echo $idU; ?>&subtab=dosimetros" class="tab-link <?php echo $currentTab == 'dosimetros' ? 'active' : ''; ?>">Histórico de Dosímetros</a>
+        <a href="user_details.php?idU=<?php echo $idU; ?>&subtab=suspensoes" class="tab-link <?php echo $currentTab == 'suspensoes' ? 'active' : ''; ?>">Histórico de Suspensões/Ativações</a>
     </div>
     <?php
 }
@@ -80,7 +80,7 @@ function renderUserInfoTab($user) {
 function renderUserRequestsTab($requests) {
     if (empty($requests)) { echo "<p class='text-center com-cinza'>Sem pedidos registados.</p>"; return; }
     ?>
-    <h3 class="titulo-separador mb1">Histórico de Pedidos</h3>
+    <h3 class="titulo-separador mb1">Lista de Pedidos</h3>
     <div class="table-container">
         <table class="admin-table">
             <thead>
@@ -166,15 +166,34 @@ function renderUserRequestsTab($requests) {
 }
 
 // 5. Histórico de Dosímetros do user
-function renderUserDosimetersTab($history) {
-    if (empty($history)) { echo "<p class='text-center com-cinza'>Sem histórico de dosímetros.</p>"; return; }
+function renderUserDosimetersTab($history, $idU, $searchTerm) {
     ?>
-    <h3 class="titulo-separador mb1">Histórico de Equipamentos</h3>
+    <div class="mb1 header-flex">
+        <h3 class="titulo-separador header-flex-left">Dosímetros Usados/Em Uso</h3>
+        <form action="user_details.php" method="GET" class="search-form">
+            <input type="hidden" name="idU" value="<?php echo $idU; ?>">
+            <input type="hidden" name="subtab" value="dosimetros">
+            <input type="text" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Pesquisar..." class="profile-input input-search">
+            <button type="submit" class="btn btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+                </svg>
+            </button>
+        </form>
+    </div>
+
+    <?php if (empty($history)): ?>
+        <?php if (!empty($searchTerm)): ?>
+             <p class="text-center msg-nav">Sem resultados para "<strong><?php echo htmlspecialchars($searchTerm); ?></strong>".</p>
+        <?php else: ?>
+            <p class="text-center com-cinza">Sem histórico de dosímetros.</p>
+        <?php endif; ?>
+    <?php else: ?>
     <div class="table-container">
         <table class="admin-table">
             <thead>
                 <tr>
-                    <th>Nº  Série</th>
+                    <th>Nº Série</th>
                     <th>Início</th>
                     <th>Fim</th>
                     <th>Estado</th>
@@ -196,14 +215,34 @@ function renderUserDosimetersTab($history) {
             </tbody>
         </table>
     </div>
+    <?php endif; ?>
     <?php
 }
 
 // 6. Histórico de Suspensões e Ativações do user
-function renderUserSuspensionsTab($changes) {
-    if (empty($changes)) { echo "<p class='text-center com-cinza'>Sem histórico de alterações.</p>"; return; }
+function renderUserSuspensionsTab($changes, $idU, $searchTerm) {
     ?>
-    <h3 class="titulo-separador mb1">Registo de Alterações de Estado</h3>
+    <div class="mb1 header-flex">
+        <h3 class="titulo-separador header-flex-left">Registo de Alterações de Estado</h3>
+        <form action="user_details.php" method="GET" class="search-form">
+            <input type="hidden" name="idU" value="<?php echo $idU; ?>">
+            <input type="hidden" name="subtab" value="suspensoes">
+            <input type="text" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Pesquisar..." class="profile-input input-search">
+            <button type="submit" class="btn btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+                </svg>
+            </button>
+        </form>
+    </div>
+
+    <?php if (empty($changes)): ?>
+        <?php if (!empty($searchTerm)): ?>
+             <p class="text-center msg-nav">Sem resultados para "<strong><?php echo htmlspecialchars($searchTerm); ?></strong>".</p>
+        <?php else: ?>
+            <p class="text-center com-cinza">Sem histórico de alterações.</p>
+        <?php endif; ?>
+    <?php else: ?>
     <div class="table-container">
         <table class="admin-table">
             <thead>
@@ -263,6 +302,7 @@ function renderUserSuspensionsTab($changes) {
             </tbody>
         </table>
     </div>
+    <?php endif; ?>
     <?php
 }
 ?>

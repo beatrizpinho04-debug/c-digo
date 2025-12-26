@@ -18,11 +18,10 @@ if (isset($_SESSION['idU'])) {
     }
 }
 
-//Mensagens de erro (vindas do LogIn.php)
 $error = '';
 if (isset($_SESSION['login_error'])) {
     $error = $_SESSION['login_error'];
-    unset($_SESSION['login_error']); // Para não aparecer sempre
+    unset($_SESSION['login_error']);
 }
 
 //Nome da página
