@@ -48,7 +48,7 @@ function getMyCurrentRequest($db, $idU) {
 function getPhysicistActiveDosimeters($db, $idU) {
     $stmt = $db->prepare("SELECT DA.dosimeterSerial, DA.assignmentDate, DA.nextReplacementDate 
                           FROM DosimeterAssignment DA
-                          JOIN ApprovedRequest AR ON DA.idA = AR.idR 
+                          JOIN ApprovedRequest AR ON DA.idA = AR.idA 
                           JOIN DosimeterRequest DR ON AR.idR = DR.idR
                           WHERE DR.idU = ? AND DA.status = 'Em_Uso'");
     $stmt->execute([$idU]);
@@ -62,7 +62,7 @@ function getPhysicistDosimeterHistory($db, $idU) {
                             DA.assignmentDate as dateIn, 
                             DA.nextReplacementDate as dateOut 
                           FROM DosimeterAssignment DA
-                          JOIN ApprovedRequest AR ON DA.idA = AR.idR 
+                          JOIN ApprovedRequest AR ON DA.idA = AR.idA 
                           JOIN DosimeterRequest DR ON AR.idR = DR.idR
                           WHERE DR.idU = ?
                           ORDER BY DA.assignmentDate DESC");

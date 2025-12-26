@@ -23,7 +23,7 @@ function renderPendingRequestsTable($pedidos) { ?>
                         <tr>
                             <td><?= htmlspecialchars($p['name'] . ' ' . $p['surname']); ?></td>
                             <td><?= htmlspecialchars($p['department']); ?></td>
-                            <td><?= htmlspecialchars($p['practice']); ?></td>
+                            <td><?= htmlspecialchars($p['pratica']); ?></td>
                             <td class="txt-right">
                                 <a href="physicist.php?tab=gestao&id_avaliar=<?= $p['idR']; ?>" class="btn badge-purple">Avaliar</a>
                             </td>
@@ -365,6 +365,56 @@ function renderGlobalHistoryTable($historyData, $searchTerm) { ?>
                                 <?php else: ?>
                                     <?= date('d/m/Y', strtotime($row['removalDate'])); ?>
                                 <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+<?php }
+/**
+ * TAB: Profissionais Ativos - Listagem com Pesquisa
+ */
+function renderPhysicianUserList($profissionais, $searchTerm) { ?>
+    <div class="card">
+        <div class="mb1 header-flex">
+            <div class="header-flex-left">
+                <h2 class="titulo-separador">Profissionais de Saúde Ativos</h2>
+                <p class="subtitulo">Lista de utilizadores autorizados no sistema.</p>
+            </div>
+            <form action="physicist.php" method="GET" class="search-form">
+                <input type="hidden" name="tab" value="profissionais">
+                <input type="text" name="search" value="<?= htmlspecialchars($searchTerm); ?>" 
+                       placeholder="Nome ou Email..." class="profile-input input-search">
+                <button type="submit" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+                    </svg>
+                </button>
+            </form>
+        </div>
+
+        <div class="table-container">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th class="txt-right">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (empty($profissionais)): ?>
+                        <tr><td colspan="3" class="text-center msg-nav">Nenhum profissional encontrado.</td></tr>
+                    <?php else: foreach ($profissionais as $p): ?>
+                        <tr>
+                            <td><span class="nome-tab"><?= htmlspecialchars($p['name'] . ' ' . $p['surname']); ?></span></td>
+                            <td><?= htmlspecialchars($p['email']); ?></td>
+                            <td class="txt-right">
+                                <a href="physicist.php?tab=profissionais&id_detalhe=<?= $p['idU']; ?>" class="btn btn-ver btn-sm">
+                                    Ver Detalhes
+                                </a>
                             </td>
                         </tr>
                     <?php endforeach; endif; ?>
