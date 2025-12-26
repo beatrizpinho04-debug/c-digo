@@ -22,7 +22,7 @@ function renderHPTabs($currentTab) {
     <?php
 }
 
-// 2. Renderizar Dashboard (COM OS BOTÕES PARA O MODAL)
+// 2. Renderizar Dashboard
 function renderDashboard($hp, $last) {
     $stDash = 'Novo';
     if ($last) {
@@ -42,18 +42,23 @@ function renderDashboard($hp, $last) {
                 <div><label class="profile-label">Função</label><input type="text" class="profile-input" value="<?php echo htmlspecialchars($hp['profession']??'N/D'); ?>" readonly disabled></div>
             </div>
         </div>
-        <div class="card mb2 text-center" style="padding:3rem; border:2px dashed var(--border);">
+        
+        <div class="card mb2 text-center card-dashed">
             <h2 class="titulo mb1">Solicitar uso de Dosímetro</h2>
             <a href="HP.php?tab=dashboard&modal=abrir" class="btn btn-primary">+ Preencher Pedido</a>
         </div>
+
         <?php if ($stDash === 'Rejeitado'): ?>
-            <div class="card mb2" style="border-left:5px solid var(--red);">
-                <h2 class="titulo-separador mb1" style="color:var(--red);">Último Pedido Rejeitado</h2>
+            <div class="card mb2 card-rejected">
+                <h2 class="titulo-separador mb1 text-red">Último Pedido Rejeitado</h2>
                 <div class="hp-fields-grid">
-                    <div><label class="profile-label">Prática</label><div class="stat-number" style="font-size:1.5rem;"><?php echo htmlspecialchars($last['pratica']); ?></div></div>
-                    <div style="background:var(--red-light); padding:1rem; border-radius:6px;">
-                        <label class="profile-label" style="color:var(--red);">Motivo</label>
-                        <div style="color:var(--red); font-weight:600;"><?php echo htmlspecialchars($last['motRej']); ?></div>
+                    <div>
+                        <label class="profile-label">Prática</label>
+                        <div class="stat-number"><?php echo htmlspecialchars($last['pratica']); ?></div>
+                    </div>
+                    <div class="rejected-box">
+                        <label class="profile-label text-red">Motivo</label>
+                        <div class="text-red font-bold"><?php echo htmlspecialchars($last['motRej']); ?></div>
                     </div>
                 </div>
             </div>
@@ -65,22 +70,20 @@ function renderDashboard($hp, $last) {
             <h2 class="titulo-separador mb1">Pedido em Análise</h2>
             <div class="alert-container alert-info mb2">O seu pedido encontra-se a aguardar aprovação.</div>
             <div class="hp-fields-grid">
-                <div style="grid-column: 1/-1;"><label class="profile-label">Prática Declarada</label><div class="stat-number"><?php echo htmlspecialchars($last['pratica']); ?></div></div>
+                <div><label class="profile-label">Prática Declarada</label><div class="stat-number"><?php echo htmlspecialchars($last['pratica']); ?></div></div>
                 <div><label class="profile-label">Data Envio</label><div class="nome"><?php echo isset($last['requestDate']) ? date('d/m/Y', strtotime($last['requestDate'])) : '-'; ?></div></div>
-                <div style="display:flex; align-items:center;"><span class="badge-yellow role-badge" style="font-size:1rem; padding:0.5rem 1rem;">Pendente</span></div>
+                <div><span class="badge-yellow role-badge">Pendente</span></div>
             </div>
         </div>
     <?php endif; ?>
 
     <?php if ($stDash === 'Aprovado'): ?>
         
-        <?php if ($stDash === 'Aprovado'): ?>
-        
         <div class="page-header-row mb1">
-            <h2 class="titulo" style="margin:0;">O Meu Pedido Atual</h2>
+            <h2 class="titulo">O Meu Pedido Atual</h2>
 
             <?php if ($last['stAp'] === 'Ativo'): ?>
-                <a href="HP.php?tab=dashboard&modal=suspender" class="btn btn-cancel" style="color:var(--red); border-color:var(--red-light2);">
+                <a href="HP.php?tab=dashboard&modal=suspender" class="btn btn-cancel">
                     Pedir Suspensão
                 </a>
 
@@ -90,7 +93,6 @@ function renderDashboard($hp, $last) {
                 </a>
             <?php endif; ?>
         </div>
-        <?php endif; ?>
 
         <div class="summary-card">
             <div class="summary-header">
@@ -99,7 +101,7 @@ function renderDashboard($hp, $last) {
                     <span class="summary-value"><?php echo htmlspecialchars($last['pratica']); ?></span>
                 </div>
                 <div>
-                    <span class="<?php echo getStatusClass($last['stAp']); ?> role-badge" style="font-size: 0.9rem; padding: 6px 12px;">
+                    <span class="<?php echo getStatusClass($last['stAp']); ?> role-badge">
                         <?php echo htmlspecialchars($last['stAp']); ?>
                     </span>
                 </div>
@@ -108,11 +110,11 @@ function renderDashboard($hp, $last) {
             <div class="summary-body">
                 <div>
                     <span class="profile-label">Aprovado Por</span>
-                    <div class="nome" style="font-size:1rem;"><?php echo htmlspecialchars($last['name'].' '.$last['surname']); ?></div>
+                    <div class="nome"><?php echo htmlspecialchars($last['name'].' '.$last['surname']); ?></div>
                 </div>
                 <div>
                     <span class="profile-label">Data de Aprovação</span>
-                    <div class="nome" style="font-size:1rem; font-weight:500;"><?php echo date('d/m/Y', strtotime($last['approvalDate'])); ?></div>
+                    <div class="nome"><?php echo date('d/m/Y', strtotime($last['approvalDate'])); ?></div>
                 </div>
             </div>
 
@@ -133,7 +135,7 @@ function renderDashboard($hp, $last) {
                             <?php if($last['dosimeterSerial']): ?>
                                 <strong class="serial-mono"><?php echo htmlspecialchars($last['dosimeterSerial']); ?></strong>
                             <?php else: ?>
-                                <span class="text-muted" style="font-style:italic;">Por Associar</span>
+                                <span class="text-muted">Por Associar</span>
                             <?php endif; ?>
                         </td>
                         <td><?php echo $last['assignmentDate']?date('d/m/Y',strtotime($last['assignmentDate'])):'-'; ?></td>
@@ -169,7 +171,7 @@ function renderOrdersList($pedidos) {
                         <td><?php echo htmlspecialchars($p['pratica']); ?></td>
                         <td><span class="<?php echo $cls; ?> role-badge"><?php echo $est; ?></span></td>
                         <td>
-                            <?php if ($est==='Rejeitado'): ?> <span style="color:var(--red);">Motivo: <?php echo htmlspecialchars($p['motRej']); ?></span>
+                            <?php if ($est==='Rejeitado'): ?> <span class="text-red">Motivo: <?php echo htmlspecialchars($p['motRej']); ?></span>
                             <?php elseif ($est==='Aprovado'): ?> <span class="com-cinza">Por: <?php echo htmlspecialchars($p['name'].' '.$p['surname']); ?></span>
                             <?php else: ?> - <?php endif; ?>
                         </td>
@@ -234,7 +236,7 @@ function renderChangesTab($alt) {
                         <td><strong><?php echo htmlspecialchars($a['requestType']); ?></strong></td>
                         <td>
                             <div class="com-cinza">"<?php echo htmlspecialchars($a['message']); ?>"</div>
-                            <?php if($a['adminNote']): ?><div class="com-verde" style="font-size:0.8rem;">Resp: <?php echo htmlspecialchars($a['adminNote']); ?></div><?php endif; ?>
+                            <?php if($a['adminNote']): ?><div class="com-verde">Resp: <?php echo htmlspecialchars($a['adminNote']); ?></div><?php endif; ?>
                         </td>
                         <td><span class="<?php echo getStatusClass($a['status']); ?> role-badge"><?php echo $a['status']; ?></span></td>
                     </tr>
@@ -272,20 +274,19 @@ function renderRequestModal($profModal, $depModal, $isOpen) {
     <?php
 }
 
-// 7. NOVO MODAL: Suspender/Ativar (Estilo Admin)
+// 7. Modal Suspender/Ativar
 function renderSuspensionModal($type) {
-    // Texto dinâmico consoante o tipo
     if ($type === 'suspender') {
         $titulo = "Suspender Monitorização";
         $subtitulo = "Indique o motivo para suspender o uso do dosímetro.";
         $actionValue = "suspender_pedido";
-        $btnClass = "btn-no"; // Vermelho
+        $btnClass = "btn-no"; 
         $btnText = "Confirmar Suspensão";
     } else {
         $titulo = "Reativar Monitorização";
         $subtitulo = "Indique o motivo para retomar a monitorização.";
         $actionValue = "ativar_pedido";
-        $btnClass = "btn-save-profile"; // Verde/Azul
+        $btnClass = "btn-save-profile"; 
         $btnText = "Confirmar Ativação";
     }
     ?>
@@ -312,7 +313,7 @@ function renderSuspensionModal($type) {
                 <div class="modal-actions">
                     <a href="HP.php?tab=dashboard" class="btn btn-cancel">Cancelar</a>
                     <div>
-                        <button type="submit" class="btn <?php echo $btnClass; ?>">
+                        <button type="submit" class="<?php echo 'btn ' . $btnClass; ?>">
                             <?php echo $btnText; ?>
                         </button>
                     </div>
