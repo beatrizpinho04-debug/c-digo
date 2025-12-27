@@ -10,8 +10,9 @@ function getHPProfile($db, $idUser) {
 
 // Obter último pedido (para a Dashboard)
 function getLastRequest($db, $idUser) {
+    // ADICIONEI "u.email" NA LINHA ABAIXO
     $sql = "SELECT dr.pratica, dr.decisionMade, ar.status as stAp, ar.approvalDate, 
-            u.name, u.surname, rr.comment as motRej, 
+            u.name, u.surname, u.email, rr.comment as motRej, 
             da.dosimeterSerial, da.assignmentDate, da.nextReplacementDate, da.status as stDos,
             ar.riskCategory, ar.dosimeterType, ar.periodicity
             FROM DosimeterRequest dr
@@ -41,34 +42,61 @@ function getAllRequests($db, $idUser) {
 
 // Obter histórico de dosímetros
 function getDosimeterHistory($db, $idUser) {
-    $sql = "SELECT da.dosimeterSerial, da.assignmentDate as dI, da.nextReplacementDate as dF_prev, NULL as dF_real, da.status as st, 1 as ord
-            FROM DosimeterAssignment da 
-            JOIN ApprovedRequest ar ON da.idA = ar.idA 
-            JOIN DosimeterRequest dr ON ar.idR = dr.idR  
-            WHERE dr.idU = :id                           
-            
-            UNION ALL
-            
-            SELECT dah.dosimeterSerial, dah.assignmentDate as dI, NULL as dF_prev, dah.removalDate as dF_real, 'Devolvido' as st, 2 as ord
-            FROM DosimeterAssignmentHistory dah 
-            JOIN ApprovedRequest ar ON dah.idA = ar.idA 
-            JOIN DosimeterRequest dr ON ar.idR = dr.idR  
-            WHERE dr.idU = :id                           
-            
-            ORDER BY ord ASC, dI DESC";
-            
+    $sql = "SELECT 
+                dr.requestDate,
+                dr.pratica,
+                dr.decisionMade,
+                ar.approvalDate,
+                rr.comment AS motRej,
+                -- Dados do Físico
+                u.name AS fisico_name,
+                u.email AS fisico_email,
+                -- Estado calculado
+                CASE 
+                    WHEN dr.decisionMade = 0 THEN 'Pendente'
+                    WHEN ar.idA IS NOT NULL THEN 'Aprovado' 
+                    ELSE 'Rejeitado' 
+                END as estado_final,
+                -- Estado Ativo/Suspenso (para pedidos aprovados)
+                ar.status AS status_ativo
+            FROM DosimeterRequest dr
+            LEFT JOIN ApprovedRequest ar ON dr.idR = ar.idR
+            LEFT JOIN RejectedRequest rr ON dr.idR = rr.idR
+            LEFT JOIN User u ON (ar.idP = u.idU OR rr.idP = u.idU)
+            WHERE dr.idU = :idU
+            ORDER BY dr.requestDate DESC";
+
     $stmt = $db->prepare($sql);
-    $stmt->execute(['id' => $idUser]);
+    $stmt->execute(['idU' => $idUser]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 // Obter histórico de alterações
 function getChangeHistory($db, $idUser) {
-    $sql = "SELECT cr.*, u.name, u.surname FROM ChangeRecord cr 
-            LEFT JOIN User u ON cr.idAdmin = u.idU 
-            WHERE cr.idUser = :id ORDER BY cr.requestDate DESC";
+    $sql = "SELECT 
+                cr.requestDate,
+                cr.requestType,
+                cr.message,
+                cr.adminNote,
+                cr.status
+            FROM ChangeRecord cr
+            WHERE cr.idUser = :idU
+            ORDER BY cr.requestDate DESC";
+
     $stmt = $db->prepare($sql);
-    $stmt->execute(['id' => $idUser]);
+    $stmt->execute(['idU' => $idUser]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function checkPendingChange($db, $idUser) {
+    $sql = "SELECT COUNT(*) 
+            FROM ChangeRecord 
+            WHERE idUser = ? AND LOWER(TRIM(status)) = 'pendente'";
+    
+    $stmt = $db->prepare($sql);
+    $stmt->execute([$idUser]);
+    
+    // fetchColumn() devolve o número exato (0 ou mais)
+    return $stmt->fetchColumn() > 0;
 }
 ?>

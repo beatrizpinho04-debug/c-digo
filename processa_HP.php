@@ -44,13 +44,41 @@ try {
         exit();
     }
 
-    // ----------------------------------------------------------------
+ // ----------------------------------------------------------------
     // CASO 2: SUSPENDER / ATIVAR
     // ----------------------------------------------------------------
+        elseif ($action === 'suspender_pedido' || $action === 'ativar_pedido') {
+            require_once "database/hp_db.php"; 
+            
+            if (checkPendingChange($pdo, $idUsuario)) {
+                $_SESSION['message'] = "Erro: Já tem um pedido pendente. Aguarde a decisão.";
+                $_SESSION['message_type'] = "error";
+                header("Location: HP.php?tab=dashboard");
+                exit();
+            }
+            $tipo = ($action === 'suspender_pedido') ? 'Suspender' : 'Ativar';
+
     elseif ($action === 'suspender_pedido' || $action === 'ativar_pedido') {
         
         $tipo = ($action === 'suspender_pedido') ? 'Suspender' : 'Ativar';
-        $msg = 'Solicitação de ' . strtolower($tipo) . ' efetuada pelo utilizador.';
+        
+        // 1. Validar a Justificação (Obrigatório)
+        // O trim remove espaços em branco antes e depois.
+        $motivo = isset($_POST['motivo']) ? trim($_POST['motivo']) : '';
+
+        // SE ESTIVER VAZIO -> DÁ ERRO E PÁRA
+        if (empty($motivo)) {
+            $_SESSION['message'] = "Erro: A justificação é obrigatória. Por favor escreva o motivo.";
+            $_SESSION['message_type'] = "error";
+            
+            // Redireciona de volta para o modal correto (suspender ou ativar) para a pessoa tentar de novo
+            $modalParam = ($action === 'suspender_pedido') ? 'suspender' : 'ativar';
+            header("Location: HP.php?tab=dashboard&modal=" . $modalParam);
+            exit(); // O exit garante que o código pára aqui e não grava nada na BD
+        }
+
+        // Se passou daqui, é porque escreveu alguma coisa.
+        $msg = $motivo; 
         
         // --- PASSO 1: Obter o idA (ID da Atribuição/Aprovação) atual do utilizador ---
         // Precisamos saber QUAL dosímetro/pedido estamos a suspender.
