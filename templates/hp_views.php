@@ -22,6 +22,7 @@ function renderHPTabs($currentTab) {
 }
 
 // 2. Dashboard
+// 2. Renderizar Dashboard (LIMPO: Sem ícones, apenas texto e classes)
 function renderDashboard($hp, $last, $temPedidoPendente) {
     $stDash = 'Novo';
     if ($last) {
@@ -48,16 +49,16 @@ function renderDashboard($hp, $last, $temPedidoPendente) {
         </div>
 
         <?php if ($stDash === 'Rejeitado'): ?>
-            <div class="card mb2 card-rejected">
+            <div class="card mb2">
                 <h2 class="titulo-separador mb1 text-red">Último Pedido Rejeitado</h2>
                 <div class="hp-fields-grid">
                     <div>
                         <label class="profile-label">Prática:</label>
-                        <div class="stat-number"><?php echo htmlspecialchars($last['pratica']); ?></div>
+                        <div class="summary-value"><?php echo htmlspecialchars($last['pratica']); ?></div>
                     </div>
-                    <div class="rejected-box">
+                    <div> 
                         <label class="profile-label text-red">Motivo</label>
-                        <div class="text-red font-bold"><?php echo htmlspecialchars($last['motRej']); ?></div>
+                        <div class="text-red"><strong><?php echo htmlspecialchars($last['motRej']); ?></strong></div>
                     </div>
                 </div>
             </div>
@@ -66,24 +67,39 @@ function renderDashboard($hp, $last, $temPedidoPendente) {
 
     <?php if ($stDash === 'Pendente'): ?>
         <div class="card mb2">
-            <h2 class="titulo-separador mb1">Pedido em Análise</h2>
-            <div class="alert-container alert-info mb2">O seu pedido encontra-se a aguardar aprovação.</div>
+            <div class="mb1 header-flex">
+                <h2 class="titulo-separador">Pedido em Análise</h2>
+                <span class="badge-yellow role-badge">Pendente</span>
+            </div>
+            
+            <div class="alert-container badge-yellow mb2">
+                <strong>O seu pedido encontra-se a aguardar aprovação pelo administrador.</strong>
+            </div>
+
             <div class="hp-fields-grid">
-                <div><label class="profile-label">Prática:</label><div class="stat-number"><?php echo htmlspecialchars($last['pratica']); ?></div></div>
-                <div><label class="profile-label">Data Envio</label><div class="nome"><?php echo isset($last['requestDate']) ? date('d/m/Y', strtotime($last['requestDate'])) : '-'; ?></div></div>
-                <div><span class="badge-yellow role-badge">Pendente</span></div>
+                <div>
+                    <label class="profile-label">Prática Solicitada</label>
+                    <div class="summary-value"><?php echo htmlspecialchars($last['pratica']); ?></div>
+                </div>
+                <div>
+                    <label class="profile-label">Data de Envio</label>
+                    <div class="summary-value">
+                        <?php echo !empty($last['requestDate']) ? date('d/m/Y', strtotime($last['requestDate'])) : 'Processando...'; ?>
+                    </div>
+                </div>
             </div>
         </div>
     <?php endif; ?>
-<?php if ($stDash === 'Aprovado'): ?>
+
+    <?php if ($stDash === 'Aprovado'): ?>
         
         <div class="page-header-row mb1">
             <h2 class="titulo">O Meu Pedido Atual</h2>
 
             <?php if ($temPedidoPendente): ?>
-            <div class="alert-container badge-yellow">
-                Já existe um pedido a aguardar decisão do administrador.
-            </div>
+                <div class="alert-container badge-yellow">
+                    <strong>Já existe um pedido a aguardar decisão do administrador.</strong>
+                </div>
             <?php else: ?>
                 <?php if ($last['stAp'] === 'Ativo'): ?>
                     <a href="HP.php?tab=dashboard&modal=suspender" class="btn btn-cancel">Pedir Suspensão</a>
@@ -122,7 +138,7 @@ function renderDashboard($hp, $last, $temPedidoPendente) {
                 </div>
                 <div>
                     <span class="profile-label">Data do Último Pedido</span>
-                    <div class="nome"><?php echo isset($last['requestDate']) ? date('d/m/Y', strtotime($last['requestDate'])) : 'N/A'; ?></div>
+                    <div class="nome"><?php echo !empty($last['requestDate']) ? date('d/m/Y', strtotime($last['requestDate'])) : 'N/A'; ?></div>
                 </div>
             </div>
 
@@ -141,9 +157,9 @@ function renderDashboard($hp, $last, $temPedidoPendente) {
                     <tbody><tr>
                         <td>
                             <?php if($last['dosimeterSerial']): ?>
-                                <strong class="serial-mono"><?php echo htmlspecialchars($last['dosimeterSerial']); ?></strong>
+                                <strong><?php echo htmlspecialchars($last['dosimeterSerial']); ?></strong>
                             <?php else: ?>
-                                <span class="text-muted">Por Associar</span>
+                                <span class="com-cinza">Por Associar</span>
                             <?php endif; ?>
                         </td>
                         <td><?php echo $last['assignmentDate']?date('d/m/Y',strtotime($last['assignmentDate'])):'-'; ?></td>
@@ -264,10 +280,14 @@ function renderHistoryTab($hist, $top) {
                     </thead>
                     <tbody>
                         <?php foreach ($hist as $row): 
-                            $isAtivo = ($row['estado'] === 'Em Uso');
+                            if (empty($row['dosimeterSerial']) || empty($row['assignmentDate'])) {
+                                continue; 
+                            }
+                            $estado = $row['estado'] ?? 'Desconhecido';
+                            $isAtivo = ($estado === 'Em Uso');
                             $badgeClass = $isAtivo ? 'badge-blue' : 'badge-gray';
                             $inicio = date('d/m/Y', strtotime($row['assignmentDate']));
-                            $fim = $row['finalDate'] ? date('d/m/Y', strtotime($row['finalDate'])) : '-';
+                            $fim = !empty($row['finalDate']) ? date('d/m/Y', strtotime($row['finalDate'])) : '-';
                         ?>
                         <tr>
                             <td><?php echo htmlspecialchars($row['dosimeterSerial']); ?></td>
@@ -278,7 +298,7 @@ function renderHistoryTab($hist, $top) {
                             
                             <td>
                                 <span class="role-badge <?php echo $badgeClass; ?>">
-                                    <?php echo htmlspecialchars($row['estado']); ?>
+                                    <?php echo htmlspecialchars($estado); ?>
                                 </span>
                             </td>
                         </tr>
