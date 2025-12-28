@@ -1,8 +1,16 @@
 ## Instruções de Execução (Docker)
 O projeto está configurado para ser executado via Docker.
-Na raiz do projeto (onde está o ficheiro `Dockerfile`), abra o terminal e execute: docker build -t gestao-dosimetro .
-Depois da alínea anterior executada, execute: docker run -p 8080:80 gestao-dosimetro
+
+Na raiz do projeto (onde está o ficheiro `Dockerfile`), abra o terminal e execute: 
+`docker build -t gestao-dosimetro .`
+
+Depois da alínea anterior executada, execute: 
+`docker run -p 8080:80 --name gestao-dosimetro gestao-dosimetro`
+
 Depois aceda ao link http://localhost:8080 
+
+## Recomendação
+Depois de testar, se quiser que os dados na base voltem como estavam no início, execute o ficheiro `inicializar.sql`.
 
 ## Contas
 Para testar as diferentes funcionalidades e perfis de utilizador, utilize as seguintes contas pré-configuradas:
