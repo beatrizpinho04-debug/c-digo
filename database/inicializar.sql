@@ -1,7 +1,3 @@
--- Desligar verificações
-PRAGMA FOREIGN KEY = OFF;
-PRAGMA PRIMARY KEY = OFF;
-
 -- Limpar tudo
 DELETE FROM DosimeterAssignmentHistory;
 DELETE FROM DosimeterAssignment;
@@ -12,10 +8,6 @@ DELETE FROM DosimeterRequest;
 DELETE FROM HealthProfessional;
 DELETE FROM User;
 DELETE FROM sqlite_sequence;
-
--- Ligar verificações
-PRAGMA FOREIGN KEY = ON;
-PRAGMA PRIMARY KEY = ON;
 
 -- =================================================================================
 -- Inserir utilizadores
