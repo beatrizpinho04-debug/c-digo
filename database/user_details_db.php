@@ -133,7 +133,7 @@ function getUserDosimeterHistory($db, $idU, $search = '') {
 //4. Histórico de alterações do user
 function getUserChanges($db, $idU, $search = '') {
     $sql = "SELECT CR.*, 
-                   U_ADM.name as admin_name, U_ADM.surname as admin_surname
+                   U_ADM.name as admin_name, U_ADM.surname as admin_surname, U_ADM.email as admin_email
             FROM ChangeRecord CR
             LEFT JOIN User U_ADM ON CR.idAdmin = U_ADM.idU
             WHERE CR.idUser = ?";
@@ -150,10 +150,11 @@ function getUserChanges($db, $idU, $search = '') {
             CR.adminNote LIKE ? OR
             U_ADM.name LIKE ? OR
             U_ADM.surname LIKE ? OR
+            U_ADM.email LIKE ? OR
             CR.requestDate LIKE ? OR
             CR.decisionDate LIKE ?
         )";
-        array_push($params, $term, $term, $term, $term, $term, $dateTerm, $dateTerm);
+        array_push($params, $term, $term, $term, $term, $term, $term, $dateTerm, $dateTerm);
     }
 
     $sql .= " ORDER BY CR.requestDate DESC";
