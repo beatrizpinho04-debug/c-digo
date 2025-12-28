@@ -57,6 +57,12 @@ header_set($title);
                     renderSuspensionModal($modalType);
                 }
             } 
+
+            elseif ($tab === 'pedidos') {
+                $pedidos = getAllRequests($db, $idUsuario);
+                renderOrdersList($pedidos);
+            }
+            
             elseif ($tab === 'historico') {
                 $history = getDosimeterHistory($db, $idUsuario);
                 $top = getLastRequest($db, $idUsuario); 
