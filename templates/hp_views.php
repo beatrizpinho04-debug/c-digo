@@ -22,7 +22,6 @@ function renderHPTabs($currentTab) {
 }
 
 // 2. Dashboard
-// 2. Renderizar Dashboard (LIMPO: Sem ícones, apenas texto e classes)
 function renderDashboard($hp, $last, $temPedidoPendente) {
     $stDash = 'Novo';
     if ($last) {
