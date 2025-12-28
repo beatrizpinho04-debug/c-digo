@@ -329,7 +329,7 @@ label, .profile-label { font-size: 14px; font-weight: 500; color: var(--foregrou
 .tech-item { margin-right: 1.5rem; display: inline-flex; align-items: center; }
 .tech-item strong { font-weight: 600; margin-left: 4px; }
 
-/* Ajuste no Header da Página (Título e Botão) */
+
 .page-header-row {
     display: flex;
     justify-content: space-between;
