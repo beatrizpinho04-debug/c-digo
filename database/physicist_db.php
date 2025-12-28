@@ -85,17 +85,16 @@ function getPhysicistRequestHistory($db, $idU) {
 // 4. Busca os profissionais de saúde ativos (COM PESQUISA)
 // 4. Busca os profissionais de saúde ativos (VERSÃO CORRIGIDA COM PESQUISA)
 function getActiveProfessionals($db, $search = '') {
-    $sql = "SELECT idU, name, surname, email FROM User 
-            WHERE userType = 'Profissional de Saúde' AND userStatus = 1";
+    // Alterado para incluir 'Físico Médico'
+    $sql = "SELECT idU, name, surname, email, userType FROM User 
+            WHERE userType IN ('Profissional de Saúde', 'Físico Médico') AND userStatus = 1";
     
     $params = [];
     if (!empty($search)) {
-        // O operador || serve para juntar nome e apelido no SQLite/PostgreSQL
         $sql .= " AND (name LIKE ? OR surname LIKE ? OR (name || ' ' || surname) LIKE ? OR email LIKE ?)";
         $term = "%$search%";
         $params = [$term, $term, $term, $term];
     }
-
     $sql .= " ORDER BY name ASC";
 
     $stmt = $db->prepare($sql);

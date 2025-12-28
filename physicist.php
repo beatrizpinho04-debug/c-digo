@@ -43,7 +43,6 @@ $tab = isset($_GET['tab']) ? $_GET['tab'] : 'gestao'; // Ajustado para a aba pad
                 <a href="physicist.php?tab=gestao" class="tab-link <?= $tab === 'gestao' ? 'active' : '' ?>">Gestão de Pedidos</a>
                 <a href="physicist.php?tab=profissionais" class="tab-link <?= $tab === 'profissionais' ? 'active' : '' ?>">Profissionais Ativos</a>
                 <a href="physicist.php?tab=meu_dosimetro" class="tab-link <?= $tab === 'meu_dosimetro' ? 'active' : '' ?>">O Meu Dosímetro</a>
-                <a href="physicist.php?tab=historico" class="tab-link <?= $tab === 'historico' ? 'active' : '' ?>">Histórico de Dosímetros</a>
             </div>
 
             <div class="tab-content mt2">
@@ -81,7 +80,8 @@ $tab = isset($_GET['tab']) ? $_GET['tab'] : 'gestao'; // Ajustado para a aba pad
                     case 'meu_dosimetro':
                         $meuPedido = getMyCurrentRequest($db, $_SESSION['idU']);
                         $meuDosimetro = getPhysicistActiveDosimeters($db, $_SESSION['idU']);
-                        renderMyDosimeterArea($meuPedido, $meuDosimetro);
+                        $meuHistorico = getPhysicistDosimeterHistory($db, $_SESSION['idU']);
+                        renderMyDosimeterArea($meuPedido, $meuDosimetro,$meuHistorico);
                         break;
 
                     case 'historico':
