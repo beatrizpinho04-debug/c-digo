@@ -80,10 +80,7 @@ header_set($title);
                 }
                 // -----------------------------------------
             } 
-            elseif ($tab === 'pedidos') {
-                $pedidos = getAllRequests($db, $idUsuario);
-                renderOrdersList($pedidos);
-            }
+           
             elseif ($tab === 'historico') {
                 // Chama a função que acabámos de atualizar no hp_db.php
                 $history = getDosimeterHistory($db, $idUsuario);

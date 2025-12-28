@@ -15,7 +15,6 @@ function renderHPTabs($currentTab) {
     ?>
     <div class="admin-tabs">
         <a href="HP.php?tab=dashboard" class="tab-link <?php echo $currentTab=='dashboard'?'active':''; ?>">Página Inicial</a>
-        <a href="HP.php?tab=pedidos" class="tab-link <?php echo $currentTab=='pedidos'?'active':''; ?>">Todos os Pedidos</a>
         <a href="HP.php?tab=historico" class="tab-link <?php echo $currentTab=='historico'?'active':''; ?>">Histórico de Dosímetros</a>
         <a href="HP.php?tab=alteracoes" class="tab-link <?php echo $currentTab=='alteracoes'?'active':''; ?>">Alterações no Pedido</a>
     </div>
@@ -158,42 +157,8 @@ function renderDashboard($hp, $last, $temPedidoPendente) {
     <?php
 }
 
-// 3. Lista Pedidos
-function renderOrdersList($pedidos) {
-    ?>
-    <div class="card mb2">
-        <div class="mb1 header-flex">
-            <h2 class="titulo-separador">Histórico Completo</h2>
-            <span class="badge-gray role-badge"><?php echo count($pedidos); ?> Registos</span>
-        </div>
-        <div class="table-container">
-            <table class="admin-table">
-                <thead><tr><th>Data</th><th>Prática</th><th>Estado</th><th>Detalhes</th></tr></thead>
-                <tbody>
-                    <?php foreach ($pedidos as $p): 
-                        if ($p['decisionMade'] == 0) { $est='Pendente'; $cls='badge-yellow'; }
-                        elseif ($p['stAp']) { $est='Aprovado'; $cls='badge-green'; }
-                        else { $est='Rejeitado'; $cls='badge-red'; }
-                    ?>
-                    <tr>
-                        <td><?php echo date('d/m/Y', strtotime($p['requestDate'])); ?></td>
-                        <td><?php echo htmlspecialchars($p['pratica']); ?></td>
-                        <td><span class="<?php echo $cls; ?> role-badge"><?php echo $est; ?></span></td>
-                        <td>
-                            <?php if ($est==='Rejeitado'): ?> <span class="text-red">Motivo: <?php echo htmlspecialchars($p['motRej']); ?></span>
-                            <?php elseif ($est==='Aprovado'): ?> <span class="com-cinza">Por: <?php echo htmlspecialchars($p['name'].' '.$p['surname']); ?></span>
-                            <?php else: ?> - <?php endif; ?>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <?php
-}
 
-// 4. Histórico
+// 3. Histórico
 function renderHistoryTab($hist, $top) {
     ?>
     <?php if (($top['status'] ?? '') === 'Ativo'): ?>
@@ -277,7 +242,7 @@ function renderHistoryTab($hist, $top) {
     <?php
 }
 
-// 5. Alterações
+// 4. Alterações
 function renderChangesTab($alt) {
     ?>
     <div class="card mb2">
@@ -344,7 +309,7 @@ function renderRequestModal($profModal, $depModal, $isOpen) {
     <?php
 }
 
-// 7. Modal Suspender/Ativar
+// 6. Modal Suspender/Ativar
 function renderSuspensionModal($type) {
     if ($type === 'suspender') {
         $titulo = "Suspender Monitorização";

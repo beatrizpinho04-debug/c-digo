@@ -26,19 +26,6 @@ function getLastRequest($db, $idUser) {
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-// Obter todos os pedidos
-function getAllRequests($db, $idUser) {
-    $sql = "SELECT dr.requestDate, dr.pratica, dr.decisionMade, ar.status as stAp, ar.approvalDate, 
-            ar.riskCategory, ar.dosimeterType, rr.comment as motRej, u.name, u.surname
-            FROM DosimeterRequest dr
-            LEFT JOIN ApprovedRequest ar ON dr.idR = ar.idR
-            LEFT JOIN RejectedRequest rr ON dr.idR = rr.idR
-            LEFT JOIN User u ON (ar.idP = u.idU OR rr.idP = u.idU)
-            WHERE dr.idU = :id ORDER BY dr.requestDate DESC";
-    $stmt = $db->prepare($sql);
-    $stmt->execute(['id' => $idUser]);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
 
 // Obter histórico de dosímetros
 function getDosimeterHistory($db, $idUser) {
