@@ -40,10 +40,13 @@ function renderPendingRequestsTable($pedidos) { ?>
 
 function renderReviewForm($idR) { 
     $db = getDatabaseConnection();
-    $stmt = $db->prepare("SELECT r.*, u.name, u.surname, u.department 
-                          FROM DosimeterRequest r 
-                          JOIN User u ON r.idU = u.idU 
-                          WHERE r.idR = ?");
+    $stmt = $db->prepare("
+        SELECT r.*, u.name, u.surname, hp.department 
+        FROM DosimeterRequest r 
+        JOIN User u ON r.idU = u.idU 
+        LEFT JOIN HealthProfessional hp ON u.idU = hp.idU
+        WHERE r.idR = ?
+    ");
     $stmt->execute([$idR]);
     $pedido = $stmt->fetch();
 ?>
