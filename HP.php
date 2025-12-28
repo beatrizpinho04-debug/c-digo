@@ -16,30 +16,9 @@ $db = getDatabaseConnection();
 $title = "Profissional de Saúde";
 $tab = isset($_GET['tab']) ? $_GET['tab'] : 'dashboard';
 
-// --- CORREÇÃO IMPORTANTE AQUI ---
-// Captura qual modal deve ser aberto ('abrir', 'suspender' ou 'ativar')
 $modalType = isset($_GET['modal']) ? $_GET['modal'] : null;
-// --------------------------------
 
 $idUsuario = $_SESSION['idU'];
-
-$sqlLastDate = "SELECT requestDate 
-                FROM DosimeterRequest 
-                WHERE idU = :idU 
-                ORDER BY requestDate DESC 
-                LIMIT 1";
-
-$stmtLast = $db->prepare($sqlLastDate);
-$stmtLast->execute(['idU' => $idUsuario]);
-$ultimoPedido = $stmtLast->fetch(PDO::FETCH_ASSOC);
-
-// Formatar a data (para ficar bonita: Dia/Mês/Ano) ou dizer que não existe
-if ($ultimoPedido) {
-    // Transforma 2023-10-25 14:00 em 25/10/2023
-    $dataMostrar = date('d/m/Y', strtotime($ultimoPedido['requestDate']));
-} else {
-    $dataMostrar = "N/A";
-}
 
 header_set($title);
 ?>
@@ -59,36 +38,28 @@ header_set($title);
             <?php renderHPTabs($tab); ?>
 
             <?php 
+          
+            
             if ($tab === 'dashboard') {
 
                 $hp = getHPProfile($db, $idUsuario);
                 $last = getLastRequest($db, $idUsuario);
-
                 $temPedidoPendente = checkPendingChange($db, $idUsuario);
       
                 renderDashboard($hp, $last, $temPedidoPendente);
 
-                // Modal de Novo Pedido (verifica se ?modal=abrir)
                 $profModal = $hp['profession'] ?? 'N/D';
                 $depModal = $hp['department'] ?? 'N/D';
+                
                 renderRequestModal($profModal, $depModal, ($modalType === 'abrir'));
 
-                // --- Modal de Suspensão/Ativação ---
-                // Verifica se o URL tem ?modal=suspender ou ?modal=ativar
                 if ($modalType === 'suspender' || $modalType === 'ativar') {
                     renderSuspensionModal($modalType);
                 }
-                // -----------------------------------------
             } 
-           
             elseif ($tab === 'historico') {
-                // Chama a função que acabámos de atualizar no hp_db.php
                 $history = getDosimeterHistory($db, $idUsuario);
-                
-                // Vai buscar o pedido atual para o cartão de topo
                 $top = getLastRequest($db, $idUsuario); 
-                
-                // Renderiza a vista
                 renderHistoryTab($history, $top);
             }
             elseif ($tab === 'alteracoes') {
