@@ -39,3 +39,6 @@ Profissionais de Saúde:
 -> email: elisa@mail.com; password: pass123
 -> email: fabio@mail.com; password: pass123
 -> email: gustavo@mail.com; password: pass123
+
+## Divisão das tarefas
+Na pasta "Documentos" encontra-se o ficheiro "Divisão de tarefas.pdf" a especificar o que cada membro do grupo contribui no projeto. 
