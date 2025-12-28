@@ -87,7 +87,7 @@ $title = "Perfil";
                     <div class="foto-section-gray">
                         <div class="foto-circle-large">
                             <?php if ($foto_url): ?>
-                                <img src="<?php echo htmlspecialchars($foto_url); ?>" alt="Foto">
+                                <img src="<?php echo htmlspecialchars($foto_url) . '?t=' . time(); ?>" alt="Foto">
                             <?php else: ?>
                                 <span><?php echo $initials; ?></span>
                             <?php endif; ?>

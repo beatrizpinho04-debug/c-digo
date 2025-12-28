@@ -38,7 +38,7 @@
                             </span>
                         </div>
 
-                        <img src="<?php echo htmlspecialchars($profilePic); ?>" alt="Perfil" class="profile-pic">
+                        <img src="<?php echo htmlspecialchars($profilePic). '?t=' . time(); ?>" alt="Perfil" class="profile-pic">
 
                         <div class="action-buttons">
                             <a href="perfil.php" class="btn btn-header" title="Perfil do Utilizador">
