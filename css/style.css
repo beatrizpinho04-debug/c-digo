@@ -33,29 +33,6 @@
   --badge-yellow:#854d0e;
   --badge-yellow-background:#fef9c3;
 }
-/* --- CLASSES UTILITÁRIAS DE COR (Padrão do Grupo)*/
-
-.text-purple { 
-    color: var(--badge-purple) !important; 
-}
-
-.text-red { 
-    color: var(--red) !important; 
-}
-
-.text-green { 
-    color: var(--green) !important; 
-}
-
-.text-primary { 
-    color: var(--primary) !important; 
-}
-
-/* Classe para fundos roxos (usada em botões ou badges especiais) */
-.bg-purple { 
-    background-color: var(--badge-purple) !important; 
-    color: var(--white) !important; 
-}
 
 
 /*----Reset e base----*/
