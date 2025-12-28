@@ -1,8 +1,5 @@
 <?php
 
-/**
- * 1. GESTÃO DE PEDIDOS
- */
 function renderPendingRequestsTable($pedidos) { ?>
     <div class="card">
         <h2 class="titulo-separador mb1">Pedidos de Profissionais de Saúde</h2>
@@ -40,37 +37,49 @@ function renderPendingRequestsTable($pedidos) { ?>
     </div>
 <?php }
 
-/**
- * 2. FORMULÁRIO DE DECISÃO
- */
-function renderReviewForm($idR) { ?>
+
+function renderReviewForm($idR) { 
+    $db = getDatabaseConnection();
+    $stmt = $db->prepare("SELECT r.*, u.name, u.surname, u.department 
+                          FROM DosimeterRequest r 
+                          JOIN User u ON r.idU = u.idU 
+                          WHERE r.idR = ?");
+    $stmt->execute([$idR]);
+    $pedido = $stmt->fetch();
+?>
     <div class="card">
-        <h2 class="titulo-separador mb2">Avaliação Técnica do Pedido #<?= htmlspecialchars($idR) ?></h2>
-        
-        <form action="./process_physicist_decision.php" method="POST">
+    <h2 class="titulo-separador mb1">Avaliação Técnica do Pedido</h2>
+    
+    <div class="foto-section-gray mb2">
+        <div class="user-details-info">
+            <p class="mb05"><strong>Profissional:</strong> <?= htmlspecialchars($pedido['name'] . ' ' . $pedido['surname']) ?></p>
+            <p class="mb05"><strong>Departamento:</strong> <?= htmlspecialchars($pedido['department'] ?? 'Geral') ?></p>
+            <p><strong>Prática:</strong> <?= htmlspecialchars($pedido['pratica']) ?></p>
+        </div>
+    </div>
+
+        <form action="process_physicist_decision.php" method="POST">
             <input type="hidden" name="idR" value="<?= htmlspecialchars($idR) ?>">
             <input type="hidden" name="action" value="evaluate_professional">
 
             <div class="profile-form-grid mb2">
                 <div class="form-group">
-                    <label class="profile-label">Periodicidade de Leitura</label>
-                    <select name="periodicity" class="profile-input" required>
+                    <label class="profile-label">Periodicidade</label>
+                    <select name="periodicity" class="profile-input">
                         <option value="Mensal">Mensal</option>
                         <option value="Trimestral">Trimestral</option>
                     </select>
                 </div>
-
                 <div class="form-group">
                     <label class="profile-label">Categoria de Risco</label>
-                    <select name="riskCategory" class="profile-input" required>
-                        <option value="Categoria A">Categoria A</option>
-                        <option value="Categoria B">Categoria B</option>
+                    <select name="riskCategory" class="profile-input">
+                        <option value="A">Categoria A</option>
+                        <option value="B">Categoria B</option>
                     </select>
                 </div>
-
                 <div class="form-group">
                     <label class="profile-label">Tipo de Dosímetro</label>
-                    <select name="dosimeterType" class="profile-input" required>
+                    <select name="dosimeterType" class="profile-input">
                         <option value="Corpo Inteiro">Corpo Inteiro</option>
                         <option value="Extremidade">Extremidade</option>
                     </select>
@@ -78,8 +87,8 @@ function renderReviewForm($idR) { ?>
             </div>
 
             <div class="form-group mb2">
-                <label class="profile-label text-red">Justificação / Comentários Técnicos</label>
-                <textarea name="comment" class="profile-input" rows="3" placeholder="Obrigatório caso pretenda rejeitar o pedido..."></textarea>
+                <label class="profile-label text-red">Justificação (Obrigatório para rejeição)</label>
+                <textarea name="comment" class="profile-input" rows="3" placeholder="Escreva o motivo técnico aqui..."></textarea>
             </div>
 
             <div class="modal-actions">
@@ -93,9 +102,7 @@ function renderReviewForm($idR) { ?>
     </div>
 <?php }
 
-/**
- * 3. PROFISSIONAIS ATIVOS
- */
+
 function renderProfessionalDetails($u, $pedidos, $histDosimetros, $subtab = 'info') {
     if (!$u) {
         echo "<div class='alert-error'>Utilizador não encontrado.</div>";
@@ -126,21 +133,38 @@ function renderProfessionalDetails($u, $pedidos, $histDosimetros, $subtab = 'inf
         <div class="tab-content">
             <?php if ($subtab === 'info'): ?>
                 <div class="profile-form-grid">
-                    <div>
-                        <p class="profile-label">Email</p>
-                        <p class="mb1"><strong><?= htmlspecialchars($u['email']) ?></strong></p>
-                        
-                        <p class="profile-label">Telemóvel</p>
-                        <p class="mb1"><?= htmlspecialchars($u['phoneN'] ?? 'N/A') ?></p>
-                    </div>
-                    <div>
-                        <p class="profile-label">Profissão</p>
-                        <p class="mb1"><?= htmlspecialchars($u['profession'] ?? 'Físico Médico') ?></p>
-                        
-                        <p class="profile-label">Departamento</p>
-                        <p class="mb1"><?= htmlspecialchars($u['department'] ?? 'Física Médica') ?></p>
-                    </div>
+        
+        <div class="foto-section-gray">
+            <div class="foto-circle-large">
+                <span>@</span>
+            </div>
+            <div class="user-details-info">
+                <p class="profile-label">Email de Contacto</p>
+                <p class="nome-tab"><?= htmlspecialchars($u['email']) ?></p>
+                
+                <div style="margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 0.5rem;">
+                    <p class="profile-label">Telemóvel</p>
+                    <p class="nome-tab"><?= htmlspecialchars($u['phoneN'] ?? 'Não registado') ?></p>
                 </div>
+            </div>
+        </div>
+
+        <div class="foto-section-gray">
+            <div class="foto-circle-large" style="background: var(--primary-dark);">
+                <span>ID</span>
+            </div>
+            <div class="user-details-info">
+                <p class="profile-label">Profissão</p>
+                <p class="nome-tab"><?= htmlspecialchars($u['profession'] ?? 'N/A') ?></p>
+
+                <div style="margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 0.5rem;">
+                    <p class="profile-label">Departamento</p>
+                    <p class="nome-tab"><?= htmlspecialchars($u['department'] ?? 'Geral') ?></p>
+                </div>
+            </div>
+        </div>
+
+    </div>
 
             <?php elseif ($subtab === 'pedidos'): ?>
                 <div class="table-container">
@@ -208,10 +232,7 @@ function renderProfessionalDetails($u, $pedidos, $histDosimetros, $subtab = 'inf
 }
 
 
-/**
- * 5. O MEU DOSÍMETRO (Versão Final: Respostas Fechadas + Justificação Aberta)
- */
-function renderMyDosimeterArea($meuPedido, $meuDosimetro, $meuHistorico = []) { ?>
+function renderMyDosimeterArea($meuPedido, $meuDosimetro, $meuHistorico = [],$temPedidoPendente = false) { ?>
     <div class="summary-card">
         <div class="summary-header">
             <div class="summary-title-group">
@@ -249,11 +270,11 @@ function renderMyDosimeterArea($meuPedido, $meuDosimetro, $meuHistorico = []) { 
                             </div>
 
                             <div class="form-group">
-                                <label class="profile-label">Categoria de Risco:</label>
-                                <select name="riskCategory" class="profile-input" required>
-                                    <option value="Categoria A">Categoria A</option>
-                                    <option value="Categoria B">Categoria B</option>
-                                </select>
+                                <label class="profile-label">Categoria de Risco</label>
+<select name="riskCategory" class="profile-input" required>
+    <option value="A">Categoria A</option>
+    <option value="B">Categoria B</option>
+</select>
                             </div>
 
                             <div class="form-group">
@@ -280,12 +301,24 @@ function renderMyDosimeterArea($meuPedido, $meuDosimetro, $meuHistorico = []) { 
                     <div>
                         <span class="summary-label">Ações Disponíveis</span>
                         <div class="action-buttons mt05">
-                            <?php if ($meuPedido['status'] === 'Ativo'): ?>
-                                <a href="physicist.php?tab=meu_dosimetro&solicitar=suspensao" class="btn btn-no btn-sm">Suspender</a>
-                            <?php elseif ($meuPedido['status'] === 'Suspenso'): ?>
-                                <a href="physicist.php?tab=meu_dosimetro&solicitar=reativacao" class="btn btn-primary btn-sm">Reativar</a>
-                            <?php endif; ?>
-                        </div>
+    <?php if ($temPedidoPendente): ?>
+        <div style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
+            <div>
+                <span class="role-badge badge-yellow">Pedido de alteração em análise</span>
+            </div>
+            <p class="com-cinza" style="font-size: 0.8rem; margin: 0;">
+                Já existe um pedido de suspensão/reativação a aguardar resposta.
+            </p>
+        </div>
+    
+    <?php else: ?>
+        <?php if ($meuPedido['status'] === 'Ativo'): ?>
+            <a href="physicist.php?tab=meu_dosimetro&solicitar=suspensao" class="btn btn-no btn-sm">Suspender</a>
+        <?php elseif ($meuPedido['status'] === 'Suspenso'): ?>
+            <a href="physicist.php?tab=meu_dosimetro&solicitar=reativacao" class="btn btn-primary btn-sm">Reativar</a>
+        <?php endif; ?>
+    <?php endif; ?>
+</div>
                     </div>
                 <?php endif; ?>
             <?php endif; ?>
@@ -296,7 +329,7 @@ function renderMyDosimeterArea($meuPedido, $meuDosimetro, $meuHistorico = []) { 
                 <?php if ($meuDosimetro): ?>
                     <span class="tech-item">Próxima Troca Prevista: <strong><?= date('d/m/Y', strtotime($meuDosimetro['nextReplacementDate'])) ?></strong></span>
                 <?php else: ?>
-                    <span class="tech-item">Aguardando que o Administrador associe um equipamento físico ao seu pedido.</span>
+                    <span class="tech-item">A aguardar que o Administrador associe um dosímetro ao seu pedido.</span>
                 <?php endif; ?>
             </div>
         <?php endif; ?>
@@ -329,9 +362,27 @@ function renderMyDosimeterArea($meuPedido, $meuDosimetro, $meuHistorico = []) { 
                         <tr><td colspan="3" class="text-center msg-nav">Não existem registos anteriores.</td></tr>
                     <?php else: foreach ($meuHistorico as $h): ?>
                         <tr>
-                            <td><span class="nome-tab"><?= htmlspecialchars($h['serial']) ?></span></td>
-                            <td><?= date('d/m/Y', strtotime($h['dateIn'])) ?></td>
-                            <td><?= $h['dateOut'] ? date('d/m/Y', strtotime($h['dateOut'])) : '<span class="role-badge alert-success">Em Uso</span>' ?></td>
+                            <td><span class="nome-tab"><?= htmlspecialchars($h['serial'] ?? '---') ?></span></td>
+                            
+                            <td>
+                                <?php 
+                                if (!empty($h['dateIn'])) {
+                                    echo date('d/m/Y', strtotime($h['dateIn']));
+                                } else {
+                                    echo 'A aguardar';
+                                }
+                                ?>
+                            </td>
+
+                            <td>
+                                <?php 
+                                if (!empty($h['dateOut'])) {
+                                    echo date('d/m/Y', strtotime($h['dateOut']));
+                                } else {
+                                    echo '<span class="role-badge alert-success">Em Uso</span>';
+                                }
+                                ?>
+                            </td>
                         </tr>
                     <?php endforeach; endif; ?>
                 </tbody>
@@ -341,9 +392,6 @@ function renderMyDosimeterArea($meuPedido, $meuDosimetro, $meuHistorico = []) { 
 <?php }
       
 
-/**
- * 6. REGISTOS E ALTERAÇÕES (Histórico)
- */
 function renderFullHistory($historicoDosimetros, $historicoAlteracoes) { ?>
     <div class="card mb2">
         <h3 class="titulo-separador mb1">Histórico de Dosímetros Associados</h3>
@@ -392,9 +440,7 @@ function renderFullHistory($historicoDosimetros, $historicoAlteracoes) { ?>
     </div>
 <?php }
 
-/**
- * TAB: Profissionais Ativos - Listagem com Pesquisa
- */
+
 function renderPhysicianUserList($profissionais, $searchTerm) { ?>
     <div class="card">
         <div class="mb1 header-flex">

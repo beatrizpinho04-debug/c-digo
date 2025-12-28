@@ -1,24 +1,20 @@
 <?php
 session_start();
 
-// Importação dos componentes base
 require_once("database/connection.php");
 require_once("templates/header.php");
 require_once("templates/nav.php");
 require_once("templates/footer.php");
 
-// Importação dos componentes específicos do Físico
 require_once("database/physicist_db.php");
 require_once("templates/physicist_views.php");
 
-// 1. Verifica se existe sessão ativa
 if (!isset($_SESSION['idU'])) {
     $_SESSION['login_error'] = "Acesso negado. Por favor faça login.";
     header("Location: index.php");
     exit();
 }
 
-// 2. Verifica se o tipo de utilizador é Físico Médico
 if ($_SESSION['userType'] !== "Físico Médico") {
     header("Location: index.php");
     exit();
@@ -26,9 +22,13 @@ if ($_SESSION['userType'] !== "Físico Médico") {
 
 $db = getDatabaseConnection();
 $title = "Painel Físico Médico";
+$meuIdU = $_SESSION['idU'];
 
-// Lógica de navegação por abas
-$tab = isset($_GET['tab']) ? $_GET['tab'] : 'gestao'; // Ajustado para a aba padrão correta
+$stmtChange = $db->prepare("SELECT idCR FROM ChangeRecord WHERE idUser = ? AND status = 'Pendente' LIMIT 1");
+$stmtChange->execute([$meuIdU]);
+$temPedidoPendente = $stmtChange->fetch() ? true : false;
+
+$tab = isset($_GET['tab']) ? $_GET['tab'] : 'gestao';
 ?>
 <?php header_set($title); ?>
 
@@ -62,31 +62,36 @@ $tab = isset($_GET['tab']) ? $_GET['tab'] : 'gestao'; // Ajustado para a aba pad
 
                 switch ($tab) {
                     case 'gestao':
-                        // Incluir a mini-dashboard que criámos
                         $pedidos = getPendingRequests($db);
                         if (isset($_GET['id_avaliar'])) {
                             renderReviewForm($_GET['id_avaliar']);
                         } else {
-                            renderManagementDashboard($pedidos); // Adicionado aqui
+                            renderManagementDashboard($pedidos);
                             renderPendingRequestsTable($pedidos);
                         }
                         break;
 
                     case 'profissionais':
-                        // ... (teu código de profissionais igual) ...
+                        if (isset($_GET['id_detalhe'])) {
+                            $idUser = $_GET['id_detalhe'];
+                            $dadosUser = getUserFullDetails($db, $idUser); 
+                            $historicoPedidos = getUserRequestHistory($db, $idUser);
+                            $historicoDosimetros = getPhysicistDosimeterHistory($db, $idUser); 
+                            renderProfessionalDetails($dadosUser, $historicoPedidos, $historicoDosimetros, $subtab);
+                        } else {
+                            $profissionais = getActiveProfessionals($db, $search); 
+                            renderPhysicianUserList($profissionais, $search);
+                        }
                         break;
 
                     case 'meu_dosimetro':
-                        // IMPORTANTE: Verificar se estas funções no physicist_db.php 
-                        // retornam NULL caso não existam registos.
                         $meuPedido = getMyCurrentRequest($db, $_SESSION['idU']);
                         
-                        // Esta função deve retornar o dosímetro APENAS se tiver serial atribuído
                         $meuDosimetro = getPhysicistActiveDosimeters($db, $_SESSION['idU']);
                         
                         $meuHistorico = getPhysicistDosimeterHistory($db, $_SESSION['idU']);
                         
-                        renderMyDosimeterArea($meuPedido, $meuDosimetro, $meuHistorico);
+                        renderMyDosimeterArea($meuPedido, $meuDosimetro, $meuHistorico,$temPedidoPendente);
                         break;
 
                     case 'historico':
