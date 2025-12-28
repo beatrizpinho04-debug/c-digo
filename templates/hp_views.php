@@ -1,5 +1,4 @@
 <?php
-// Helper de Cores
 function getStatusClass($estado) {
     switch (strtolower(trim($estado))) {
         case 'ativo': return 'badge-green';
@@ -10,7 +9,7 @@ function getStatusClass($estado) {
     }
 }
 
-// 1. Renderizar as Abas
+// 1. Abas
 function renderHPTabs($currentTab) {
     ?>
     <div class="admin-tabs">
@@ -21,7 +20,7 @@ function renderHPTabs($currentTab) {
     <?php
 }
 
-// 2. Renderizar Dashboard
+// 2. Dashboard
 function renderDashboard($hp, $last, $temPedidoPendente) {
     $stDash = 'Novo';
     if ($last) {
@@ -193,10 +192,8 @@ function renderHistoryTab($hist, $top) {
                         <tr><td colspan="6" class="msg-nav text-center">Nenhum registo encontrado.</td></tr>
                     <?php else: ?>
                         <?php foreach ($hist as $h): 
-                            // Proteção contra chaves inexistentes
                             $estadoFinal = $h['estado_final'] ?? 'Pendente'; 
                             
-                            // Cores
                             $decisaoClass = '';
                             $decisaoTexto = '';
                             
@@ -210,8 +207,6 @@ function renderHistoryTab($hist, $top) {
                                 $decisaoTexto = 'Rejeitado';
                                 $decisaoClass = 'badge-red';
                             }
-
-                            // Estado Ativo/Suspenso
                             $estadoBadge = '---';
                             if ($estadoFinal === 'Aprovado') {
                                 $stClass = getStatusClass($h['status_ativo'] ?? 'Ativo');
@@ -255,7 +250,6 @@ function renderChangesTab($alt) {
                         <tr><td colspan="4" class="msg-nav text-center">Nenhum registo de alteração.</td></tr>
                     <?php else: ?>
                         <?php foreach ($alt as $a): 
-                            // Proteção de dados
                             $data = !empty($a['requestDate']) ? date('d/m/Y', strtotime($a['requestDate'])) : '-';
                             $tipo = $a['requestType'] ?? 'N/D';
                             $mensagem = $a['message'] ?? ''; 

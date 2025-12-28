@@ -1,16 +1,15 @@
 <?php
 require_once 'connection.php';
 
-// Obter perfil do profissional
+
 function getHPProfile($db, $idUser) {
     $stmt = $db->prepare("SELECT profession, department FROM HealthProfessional WHERE idU = ?");
     $stmt->execute([$idUser]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-// Obter último pedido (para a Dashboard)
+
 function getLastRequest($db, $idUser) {
-    // ADICIONEI "u.email" NA LINHA ABAIXO
     $sql = "SELECT dr.pratica, dr.decisionMade, ar.status as stAp, ar.approvalDate, 
             u.name, u.surname, u.email, rr.comment as motRej, 
             da.dosimeterSerial, da.assignmentDate, da.nextReplacementDate, da.status as stDos,
@@ -26,8 +25,6 @@ function getLastRequest($db, $idUser) {
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-
-// Obter histórico de dosímetros
 function getDosimeterHistory($db, $idUser) {
     $sql = "SELECT 
                 dr.requestDate,
@@ -35,16 +32,13 @@ function getDosimeterHistory($db, $idUser) {
                 dr.decisionMade,
                 ar.approvalDate,
                 rr.comment AS motRej,
-                -- Dados do Físico
                 u.name AS fisico_name,
                 u.email AS fisico_email,
-                -- Estado calculado
                 CASE 
                     WHEN dr.decisionMade = 0 THEN 'Pendente'
                     WHEN ar.idA IS NOT NULL THEN 'Aprovado' 
                     ELSE 'Rejeitado' 
                 END as estado_final,
-                -- Estado Ativo/Suspenso (para pedidos aprovados)
                 ar.status AS status_ativo
             FROM DosimeterRequest dr
             LEFT JOIN ApprovedRequest ar ON dr.idR = ar.idR
@@ -82,8 +76,7 @@ function checkPendingChange($db, $idUser) {
     
     $stmt = $db->prepare($sql);
     $stmt->execute([$idUser]);
-    
-    // fetchColumn() devolve o número exato (0 ou mais)
+
     return $stmt->fetchColumn() > 0;
 }
 ?>
