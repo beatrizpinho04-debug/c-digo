@@ -25,30 +25,63 @@ function getLastRequest($db, $idUser) {
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-function getDosimeterHistory($db, $idUser) {
+// Obter todos os pedidos (COM DETALHES COMPLETOS)
+function getAllRequests($db, $idUser) {
     $sql = "SELECT 
-                dr.requestDate,
-                dr.pratica,
-                dr.decisionMade,
+                dr.requestDate, 
+                dr.pratica, 
+                dr.decisionMade, 
+                ar.status as stAp, 
                 ar.approvalDate,
-                rr.comment AS motRej,
-                u.name AS fisico_name,
-                u.email AS fisico_email,
-                CASE 
-                    WHEN dr.decisionMade = 0 THEN 'Pendente'
-                    WHEN ar.idA IS NOT NULL THEN 'Aprovado' 
-                    ELSE 'Rejeitado' 
-                END as estado_final,
-                ar.status AS status_ativo
+                ar.riskCategory,
+                ar.dosimeterType,
+                ar.periodicity,
+                u.name, 
+                u.surname,
+                u.email,
+                rr.comment as motRej
             FROM DosimeterRequest dr
             LEFT JOIN ApprovedRequest ar ON dr.idR = ar.idR
             LEFT JOIN RejectedRequest rr ON dr.idR = rr.idR
             LEFT JOIN User u ON (ar.idP = u.idU OR rr.idP = u.idU)
-            WHERE dr.idU = :idU
+            WHERE dr.idU = :id 
             ORDER BY dr.requestDate DESC";
+            
+    $stmt = $db->prepare($sql);
+    $stmt->execute(['id' => $idUser]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// Obter histórico de DOSÍMETROS FÍSICOS (Ativos + Histórico)
+function getDosimeterHistory($db, $idUser) {
+    $sql = "SELECT 
+                da.dosimeterSerial, 
+                da.assignmentDate, 
+                da.nextReplacementDate as finalDate, 
+                'Em Uso' as estado,
+                1 as ordem
+            FROM DosimeterAssignment da
+            JOIN ApprovedRequest ar ON da.idA = ar.idA
+            JOIN DosimeterRequest dr ON ar.idR = dr.idR
+            WHERE dr.idU = :id
+
+            UNION ALL
+
+            SELECT 
+                dah.dosimeterSerial, 
+                dah.assignmentDate, 
+                dah.removalDate as finalDate, 
+                'Recolhido' as estado,
+                2 as ordem
+            FROM DosimeterAssignmentHistory dah
+            JOIN ApprovedRequest ar ON dah.idA = ar.idA
+            JOIN DosimeterRequest dr ON ar.idR = dr.idR
+            WHERE dr.idU = :id
+
+            ORDER BY ordem ASC, assignmentDate DESC";
 
     $stmt = $db->prepare($sql);
-    $stmt->execute(['idU' => $idUser]);
+    $stmt->execute(['id' => $idUser]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
@@ -59,8 +92,12 @@ function getChangeHistory($db, $idUser) {
                 cr.requestType,
                 cr.message,
                 cr.adminNote,
-                cr.status
+                cr.status,
+                cr.decisionDate,
+                u.name AS admin_name,
+                u.surname AS admin_surname
             FROM ChangeRecord cr
+            LEFT JOIN User u ON cr.idAdmin = u.idU
             WHERE cr.idUser = :idU
             ORDER BY cr.requestDate DESC";
 
