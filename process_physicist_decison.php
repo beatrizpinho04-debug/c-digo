@@ -14,52 +14,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // AÇÃO 1: Avaliar pedido de um Profissional de Saúde (Já tinhas e está correto)
     if ($action === 'evaluate_professional') {
-        $idR = $_POST['idR'];
-        $outcome = $_POST['outcome']; 
-        
-        if ($outcome === 'approve') {
-            $stmt = $db->prepare("UPDATE DosimeterRequest SET decisionMade = 1 WHERE idR = ?");
-            $stmt->execute([$idR]);
+    $idR = $_POST['idR'];
+    $outcome = $_POST['outcome']; 
+    
+    // 1. Atualiza sempre que a decisão foi tomada
+    $stmt = $db->prepare("UPDATE DosimeterRequest SET decisionMade = 1 WHERE idR = ?");
+    $stmt->execute([$idR]);
 
-            $stmt = $db->prepare("INSERT INTO ApprovedRequest (idR, periodicity, riskCategory, dosimeterType, approvalDate, status) 
-                                  VALUES (?, ?, ?, ?, DATE('now'), 'Ativo')");
-            $stmt->execute([$idR, $_POST['periodicity'], $_POST['riskCategory'], $_POST['dosimeterType']]);
-        } else {
-            $stmt = $db->prepare("UPDATE DosimeterRequest SET decisionMade = 1 WHERE idR = ?");
-            $stmt->execute([$idR]);
-        }
+    if ($outcome === 'approve') {
+        // 2. Insere na ApprovedRequest com os dados do formulário
+        $stmt = $db->prepare("INSERT INTO ApprovedRequest (idR, periodicity, riskCategory, dosimeterType, approvalDate, status) 
+                              VALUES (?, ?, ?, ?, DATE('now'), 'Ativo')");
+        
+        // ORDEM: idR, periodicity, riskCategory, dosimeterType
+        $stmt->execute([
+            $idR, 
+            $_POST['periodicity'], 
+            $_POST['riskCategory'], 
+            $_POST['dosimeterType']
+        ]);
+        $_SESSION['message'] = "Pedido aprovado com sucesso!";
+    } else {
+        $_SESSION['message'] = "Pedido rejeitado.";
     }
+}
 
     // AÇÃO 2: Criar pedido automático para o próprio Físico
     elseif ($action === 'auto_request') {
         $idU = $_SESSION['idU'];
-        $pratica = $_POST['pratica']; 
-        $periodicity = $_POST['periodicity']; // Vem do <select> fechado
+        $pratica = $_POST['pratica'] ?? 'Geral'; 
+        $periodicity = $_POST['periodicity'] ?? 'Mensal';
+        $riskCategory = $_POST['riskCategory'] ?? 'Categoria B';
+        $dosimeterType = $_POST['dosimeterType'] ?? 'Corpo Inteiro';
 
         try {
-            $db->beginTransaction();
-            // 1. Insere pedido já marcado como decidido
-            $stmt = $db->prepare("INSERT INTO DosimeterRequest (idU, pratica, requestDate, decisionMade) VALUES (?, ?, DATE('now'), 1)");
-            $stmt->execute([$idU, $pratica]);
+            // Passo 1: Criar o registo na DosimeterRequest
+            $stmt1 = $db->prepare("INSERT INTO DosimeterRequest (idU, pratica, requestDate, decisionMade) VALUES (?, ?, DATE('now'), 1)");
+            $stmt1->execute([$idU, $pratica]);
+            
+            // Obter o ID gerado
             $idR = $db->lastInsertId();
 
-            // 2. Aprovação imediata (Físico Médico tem autoridade)
-            // Definimos valores padrão para Categoria e Tipo, que o Admin pode ajustar depois se necessário
-            $stmt = $db->prepare("INSERT INTO ApprovedRequest (idR, periodicity, riskCategory, dosimeterType, approvalDate, status) 
-                                  VALUES (?, ?, 'Categoria A', 'Corpo Inteiro', DATE('now'), 'Ativo')");
-            $stmt->execute([$idR, $periodicity]);
+            // Passo 2: Criar o registo na ApprovedRequest
+            $stmt2 = $db->prepare("INSERT INTO ApprovedRequest (idR, periodicity, riskCategory, dosimeterType, approvalDate, status) 
+                                  VALUES (?, ?, ?, ?, DATE('now'), 'Ativo')");
             
-            $db->commit();
-            $_SESSION['message'] = "Dosímetro ativado com sucesso! O Administrador irá atribuir o número de série brevemente.";
-        } catch (Exception $e) {
-            $db->rollBack();
-            $_SESSION['message'] = "Erro ao processar o seu pedido automático.";
-            $_SESSION['message_type'] = "error";
-            header("Location: physicist.php?tab=meu_dosimetro");
-            exit();
-        }
-    }
+            $stmt2->execute([$idR, $periodicity, $riskCategory, $dosimeterType]);
+            
+            $_SESSION['message'] = "Dosímetro solicitado com sucesso!";
+            $_SESSION['message_type'] = "success";
 
+        } catch (PDOException $e) {
+            // Se der erro aqui, vamos imprimir no ecrã para veres
+            die("Erro no SQL: " . $e->getMessage());
+        }
+        
+        header("Location: physicist.php?tab=meu_dosimetro");
+        exit();
+    }
     // AÇÃO 3: Pedir suspensão/reativação (Com Justificação Aberta)
     elseif ($action === 'request_change') {
         $typeRaw = $_POST['type']; // 'suspensao' ou 'reativacao'

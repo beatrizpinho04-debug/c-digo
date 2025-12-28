@@ -38,11 +38,15 @@ function getMyCurrentRequest($db, $idU) {
     $stmt = $db->prepare("SELECT AR.idR, AR.status, DR.pratica 
                           FROM ApprovedRequest AR
                           JOIN DosimeterRequest DR ON AR.idR = DR.idR
-                          WHERE DR.idU = ? 
+                          WHERE DR.idU = ? AND AR.status != 'Inativo'
                           ORDER BY AR.approvalDate DESC LIMIT 1");
     $stmt->execute([$idU]);
-    return $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    // O fetch retorna o array com dados ou FALSE se não encontrar nada.
+    // O PHP trata FALSE como "vazio" no teu IF (!$meuPedido).
+    return $stmt->fetch(PDO::FETCH_ASSOC); 
 }
+
 
 // 6. Busca os dados do dosímetro ativo (Físico ou Profissional)
 function getPhysicistActiveDosimeters($db, $idU) {

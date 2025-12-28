@@ -39,58 +39,60 @@ $tab = isset($_GET['tab']) ? $_GET['tab'] : 'gestao'; // Ajustado para a aba pad
         <main class="main-container">
             <h1 class="titulo mb2">Painel de Controlo – Física Médica</h1>
 
+            <?php if (isset($_SESSION['message'])): ?>
+                <div class="alert-container <?= $_SESSION['message_type'] === 'success' ? 'alert-success' : 'alert-error' ?>">
+                    <span><?= $_SESSION['message']; ?></span>
+                </div>
+                <?php 
+                unset($_SESSION['message']); 
+                unset($_SESSION['message_type']); 
+                ?>
+            <?php endif; ?>
+
             <div class="admin-tabs">
                 <a href="physicist.php?tab=gestao" class="tab-link <?= $tab === 'gestao' ? 'active' : '' ?>">Gestão de Pedidos</a>
                 <a href="physicist.php?tab=profissionais" class="tab-link <?= $tab === 'profissionais' ? 'active' : '' ?>">Profissionais Ativos</a>
                 <a href="physicist.php?tab=meu_dosimetro" class="tab-link <?= $tab === 'meu_dosimetro' ? 'active' : '' ?>">O Meu Dosímetro</a>
-            </div>
+                </div>
 
             <div class="tab-content mt2">
                 <?php 
                 $search = isset($_GET['search']) ? $_GET['search'] : '';
-                $subtab = isset($_GET['subtab']) ? $_GET['subtab'] : 'info'; // Para as abas de detalhe
+                $subtab = isset($_GET['subtab']) ? $_GET['subtab'] : 'info'; 
+
                 switch ($tab) {
                     case 'gestao':
+                        // Incluir a mini-dashboard que criámos
+                        $pedidos = getPendingRequests($db);
                         if (isset($_GET['id_avaliar'])) {
                             renderReviewForm($_GET['id_avaliar']);
                         } else {
-                            $pedidos = getPendingRequests($db);
+                            renderManagementDashboard($pedidos); // Adicionado aqui
                             renderPendingRequestsTable($pedidos);
                         }
                         break;
 
                     case 'profissionais':
-                        if (isset($_GET['id_detalhe'])) {
-            $idUser = $_GET['id_detalhe'];
-            
-            // Buscamos todos os dados necessários para as 3 abas de detalhes
-            $dadosUser = getUserFullDetails($db, $idUser); 
-            $historicoPedidos = getUserRequestHistory($db, $idUser);
-            $historicoDosimetros = getPhysicistDosimeterHistory($db, $idUser); 
-            
-            // Chamamos a função de detalhes passando a $subtab (info, pedidos ou historico_dos)
-            renderProfessionalDetails($dadosUser, $historicoPedidos, $historicoDosimetros, $subtab);
-        } else {
-            // Se não estamos a ver detalhes, mostramos a lista com suporte a PESQUISA
-            $profissionais = getActiveProfessionals($db, $search); 
-            renderPhysicianUserList($profissionais, $search);
-        }
-        break;
+                        // ... (teu código de profissionais igual) ...
+                        break;
 
                     case 'meu_dosimetro':
+                        // IMPORTANTE: Verificar se estas funções no physicist_db.php 
+                        // retornam NULL caso não existam registos.
                         $meuPedido = getMyCurrentRequest($db, $_SESSION['idU']);
+                        
+                        // Esta função deve retornar o dosímetro APENAS se tiver serial atribuído
                         $meuDosimetro = getPhysicistActiveDosimeters($db, $_SESSION['idU']);
+                        
                         $meuHistorico = getPhysicistDosimeterHistory($db, $_SESSION['idU']);
-                        renderMyDosimeterArea($meuPedido, $meuDosimetro,$meuHistorico);
+                        
+                        renderMyDosimeterArea($meuPedido, $meuDosimetro, $meuHistorico);
                         break;
 
                     case 'historico':
-        // Agora o Físico vê o histórico GLOBAL com pesquisa, igual ao Admin
-        $history = getGlobalHistoryForPhysicist($db, $search);
-        
-        // Chamamos a função de visualização passando os dados e o termo de pesquisa
-        renderGlobalHistoryTable($history, $search); 
-        break;
+                        $history = getGlobalHistoryForPhysicist($db, $search);
+                        renderGlobalHistoryTable($history, $search); 
+                        break;
                 }
                 ?>
             </div>

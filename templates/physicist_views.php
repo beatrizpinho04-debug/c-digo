@@ -47,7 +47,7 @@ function renderReviewForm($idR) { ?>
     <div class="card">
         <h2 class="titulo-separador mb2">Avaliação Técnica do Pedido #<?= htmlspecialchars($idR) ?></h2>
         
-        <form action="process_physicist_decision.php" method="POST">
+        <form action="./process_physicist_decision.php" method="POST">
             <input type="hidden" name="idR" value="<?= htmlspecialchars($idR) ?>">
             <input type="hidden" name="action" value="evaluate_professional">
 
@@ -216,30 +216,58 @@ function renderMyDosimeterArea($meuPedido, $meuDosimetro, $meuHistorico = []) { 
         <div class="summary-header">
             <div class="summary-title-group">
                 <span class="summary-label">O Meu Dosímetro</span>
-                <h2 class="summary-value"><?= $meuPedido ? htmlspecialchars($meuPedido['pratica']) : 'Sem Pedido Ativo' ?></h2>
+                <h2 class="summary-value">
+                    <?= $meuPedido ? htmlspecialchars($meuPedido['pratica']) : 'Solicitar Dosímetro' ?>
+                </h2>
             </div>
-            <span class="role-badge <?= ($meuPedido && $meuPedido['status'] === 'Ativo') ? 'badge-green' : 'badge-yellow' ?>">
-                <?= $meuPedido ? htmlspecialchars($meuPedido['status']) : 'Inativo' ?>
-            </span>
+            <?php if ($meuPedido): ?>
+                <span class="role-badge <?= ($meuPedido['status'] === 'Ativo') ? 'badge-green' : 'badge-yellow' ?>">
+                    <?= htmlspecialchars($meuPedido['status']) ?>
+                </span>
+            <?php endif; ?>
         </div>
 
         <div class="summary-body">
             <?php if (!$meuPedido): ?>
                 <div class="header-flex-left">
-                    <p class="subtitulo mb1">Solicite o seu dosímetro para iniciar a monitorização profissional.</p>
-                    <form action="process_physicist_decision.php" method="POST">
+                    <p class="subtitulo mb1">Preencha os dados técnicos para solicitar o seu dosímetro.</p>
+                    <form action="./process_physicist_decision.php" method="POST">
                         <input type="hidden" name="action" value="auto_request">
-                        <div class="profile-form-grid">
-                            <input type="text" name="pratica" class="profile-input" required placeholder="Prática (Ex: Medicina Nuclear)">
-                            <select name="periodicity" class="profile-input" required>
-                                <option value="" disabled selected>Periodicidade...</option>
-                                <option value="Mensal">Mensal</option>
-                                <option value="Trimestral">Trimestral</option>
-                            </select>
+                        
+                        <div class="form-group mb1">
+                            <label class="profile-label">Prática Profissional:</label>
+                            <input type="text" name="pratica" class="profile-input" required placeholder="Ex: Radioterapia">
                         </div>
-                        <button type="submit" class="btn btn-save-profile mt1">Ativar Dosímetro</button>
+
+                        <div class="profile-form-grid mb1">
+                            <div class="form-group">
+                                <label class="profile-label">Periodicidade:</label>
+                                <select name="periodicity" class="profile-input" required>
+                                    <option value="Mensal">Mensal</option>
+                                    <option value="Trimestral">Trimestral</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="profile-label">Categoria de Risco:</label>
+                                <select name="riskCategory" class="profile-input" required>
+                                    <option value="Categoria A">Categoria A</option>
+                                    <option value="Categoria B">Categoria B</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="profile-label">Tipo de Dosímetro:</label>
+                                <select name="dosimeterType" class="profile-input" required>
+                                    <option value="Corpo Inteiro">Corpo Inteiro</option>
+                                    <option value="Extremidade">Extremidade</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-save-profile">Confirmar</button>
                     </form>
                 </div>
+
             <?php else: ?>
                 <div>
                     <span class="summary-label">Número de Série</span>
@@ -247,26 +275,31 @@ function renderMyDosimeterArea($meuPedido, $meuDosimetro, $meuHistorico = []) { 
                         <?= $meuDosimetro ? htmlspecialchars($meuDosimetro['dosimeterSerial']) : 'Pendente de Atribuição' ?>
                     </p>
                 </div>
-                <div>
-                    <span class="summary-label">Ações Disponíveis</span>
-                    <div class="action-buttons mt05">
-                        <?php if ($meuPedido['status'] === 'Ativo'): ?>
-                            <a href="physicist.php?tab=meu_dosimetro&solicitar=suspensao" class="btn btn-no btn-sm">Suspender</a>
-                        <?php elseif ($meuPedido['status'] === 'Suspenso'): ?>
-                            <a href="physicist.php?tab=meu_dosimetro&solicitar=reativacao" class="btn btn-primary btn-sm">Reativar</a>
-                        <?php endif; ?>
+                
+                <?php if ($meuDosimetro): ?>
+                    <div>
+                        <span class="summary-label">Ações Disponíveis</span>
+                        <div class="action-buttons mt05">
+                            <?php if ($meuPedido['status'] === 'Ativo'): ?>
+                                <a href="physicist.php?tab=meu_dosimetro&solicitar=suspensao" class="btn btn-no btn-sm">Suspender</a>
+                            <?php elseif ($meuPedido['status'] === 'Suspenso'): ?>
+                                <a href="physicist.php?tab=meu_dosimetro&solicitar=reativacao" class="btn btn-primary btn-sm">Reativar</a>
+                            <?php endif; ?>
+                        </div>
                     </div>
-                </div>
+                <?php endif; ?>
             <?php endif; ?>
         </div>
 
-       <div class="summary-footer">
-            <?php if ($meuDosimetro): ?>
-                <span class="tech-item">Próxima Troca Prevista: <strong><?= date('d/m/Y', strtotime($meuDosimetro['nextReplacementDate'])) ?></strong></span>
-            <?php else: ?>
-                <span class="tech-item">A aguardar atribuição de equipamento pelo Administrador.</span>
-            <?php endif; ?>
-        </div>
+        <?php if ($meuPedido): ?>
+            <div class="summary-footer">
+                <?php if ($meuDosimetro): ?>
+                    <span class="tech-item">Próxima Troca Prevista: <strong><?= date('d/m/Y', strtotime($meuDosimetro['nextReplacementDate'])) ?></strong></span>
+                <?php else: ?>
+                    <span class="tech-item">Aguardando que o Administrador associe um equipamento físico ao seu pedido.</span>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
     </div>
 
     <?php if (isset($_GET['solicitar'])): ?>
@@ -289,11 +322,7 @@ function renderMyDosimeterArea($meuPedido, $meuDosimetro, $meuHistorico = []) { 
         <div class="table-container">
             <table class="admin-table">
                 <thead>
-                    <tr>
-                        <th>Nº Série</th>
-                        <th>Atribuído em</th>
-                        <th>Troca / Fim</th>
-                    </tr>
+                    <tr><th>Nº Série</th><th>Atribuído em</th><th>Troca / Fim</th></tr>
                 </thead>
                 <tbody>
                     <?php if (empty($meuHistorico)): ?>
@@ -402,6 +431,29 @@ function renderPhysicianUserList($profissionais, $searchTerm) { ?>
                     <?php endforeach; endif; ?>
                 </tbody>
             </table>
+        </div>
+    </div>
+<?php }
+function renderManagementDashboard($pedidos) { 
+    $total = count($pedidos);
+    ?>
+    <div class="card mb2">
+        <div class="header-flex">
+            <div class="header-flex-left">
+                <h3 class="profile-label">Resumo de Trabalho</h3>
+                <p class="nome-tab">
+                    <?php if ($total === 0): ?>
+                        Não existem pedidos pendentes de avaliação.
+                    <?php else: ?>
+                        Tem <strong><?= $total ?></strong> <?= $total === 1 ? 'pedido a aguardar' : 'pedidos a aguardar' ?> a sua revisão técnica.
+                    <?php endif; ?>
+                </p>
+            </div>
+            <?php if ($total > 0): ?>
+                <span class="role-badge badge-purple">
+                    <?= $total ?> Pedidos
+                </span>
+            <?php endif; ?>
         </div>
     </div>
 <?php }
