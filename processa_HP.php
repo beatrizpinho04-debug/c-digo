@@ -57,11 +57,8 @@ try {
                 exit();
             }
             $tipo = ($action === 'suspender_pedido') ? 'Suspender' : 'Ativar';
+        }
 
-    elseif ($action === 'suspender_pedido' || $action === 'ativar_pedido') {
-        
-        $tipo = ($action === 'suspender_pedido') ? 'Suspender' : 'Ativar';
-        
         // 1. Validar a Justificação (Obrigatório)
         // O trim remove espaços em branco antes e depois.
         $motivo = isset($_POST['motivo']) ? trim($_POST['motivo']) : '';
@@ -126,7 +123,9 @@ try {
         exit();
     }
 
-} catch (Exception $e) {
+
+
+catch (Exception $e) {
     $_SESSION['message'] = "Erro: " . $e->getMessage();
     $_SESSION['message_type'] = "error";
     header("Location: HP.php");
