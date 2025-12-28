@@ -244,6 +244,7 @@ try {
         }
         exit();
     }
+    
 } catch (Exception $e) {
     if ($db->inTransaction()) {
         $db->rollBack();

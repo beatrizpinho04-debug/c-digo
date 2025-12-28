@@ -25,7 +25,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
     if (!empty($phoneN)) {
-        // metodo comum: ^ (inicio) \+ (sinal mais) [0-9]{9,15} (9 a 15 digitos) $ (fim)
         if (!preg_match('/^\+[0-9]{11,15}$/', $phoneN)) {
             $_SESSION['message'] = "Erro: O telemóvel deve começar por '+' seguido do indicativo e número (Ex: +351912345678).";
             $_SESSION['message_type'] = "error";
